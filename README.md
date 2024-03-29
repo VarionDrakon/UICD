@@ -1,6 +1,4 @@
-<div align="center">  # UICD
-UICD project for non-commerial activity.
-</div>
+<h4 align="center">#UICD project for non-commerial activity. </h4>
 <div id="header" align="center">
   <img src="resources/img/preview.png" width="1200" height="450"/>
 </div>
