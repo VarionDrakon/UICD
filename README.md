@@ -27,6 +27,7 @@ This section list any major frameworks/libraries used to bootstrap project.
 * [![QT][QT]][QT-url]
 * [![CPP][CPP]][CPP-url]
 * [![QMake][QMake]][QMake-url]
+* [![Arduino][Arduino]][Arduino-url]
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
