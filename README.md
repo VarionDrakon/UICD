@@ -18,9 +18,9 @@
   <ol>
     <li>
       <a href="#about-the-project">About The Project</a>
-      <ul>
+      <ol>
         <li><a href="#built-with">Built With</a></li>
-      </ul>
+      </ol>
     </li>
     <li><a href="#license">License</a></li>
     <li><a href="#contact">Contact</a></li>
@@ -34,9 +34,9 @@
 
 
 Here's what:
-* 
-*
-*
+* The ability to exchange `Holding Registers` via the ModBus protocol with the configurator.
+* Ready-made simple configurator for `UICD` (Recommended for use).
+* The source code and circuit board for `EasyEDA` (However, the source code is only for Arduino, the configurator is [here](https://github.com/VarionDrakon/UICD.Configurator))
 
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
@@ -55,7 +55,7 @@ This section list any major frameworks/libraries used to bootstrap project.
 
 <!-- LICENSE -->
 
-### License
+## License
 
 Distributed under the License. See `LICENSE` for more information.
 
