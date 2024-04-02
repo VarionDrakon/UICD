@@ -1,7 +1,7 @@
 <a name="readme-top"></a>
 <!-- HEADER PROJECT -->
 <div id="header" align="center">
-<h3>#UICD project - for non-commerial activity. </h3>
+<h3>UICD project - for non-commerial activity. </h3>
   <img src="resources/img/preview.png" width="1200" height="450"/>
 
   <p align="center">
@@ -36,7 +36,7 @@
 
 <!-- ABOUT THE PROJECT -->
 <hr>
-### About The Project
+# About The Project
 
 Here's what:
 * 
