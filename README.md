@@ -26,16 +26,17 @@
     <li><a href="#contact">Contact</a></li>
   </ol>
 </details>
-
+<hr>
 
 <!-- ABOUT THE PROJECT -->
-<hr>
 
 ## About The Project
 
 
 Here's what:
-
+* 
+*
+*
 
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
@@ -50,20 +51,20 @@ This section list any major frameworks/libraries used to bootstrap project.
 * [![Arduino][Arduino]][Arduino-url]
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
+<hr>
 
 <!-- LICENSE -->
-<hr>
 
 ### License
 
 Distributed under the License. See `LICENSE` for more information.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
-
-<!-- CONTACT -->
 <hr>
 
-## Contact {#contact}
+<!-- CONTACT -->
+
+## Contact
 
 My name and firstname:
 Varion Drakonov (VarionDrakon (Abbreviated)) 
