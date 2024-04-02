@@ -6,7 +6,7 @@
   <p align="center">
    About prject.
     <br/>
-    <a href="https://github.com/VarionDrakon/LauncherGame/issues">Report Bug</a> · <a href="https://github.com/VarionDrakon/LauncherGame/issues">Request Feature</a>
+    <a href="https://github.com/VarionDrakon/UICD/issues">Report Bug</a> · <a href="https://github.com/VarionDrakon/UICD/issues">Request Feature</a>
   </p>
 </div>
 <hr>
