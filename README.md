@@ -34,9 +34,10 @@
   </ol>
 </details>
 
+
 <!-- ABOUT THE PROJECT -->
 <hr>
-## About The Project {#about-the-project}
+## About The Project
 
 
 Here's what:
@@ -45,7 +46,7 @@ Here's what:
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
-## Built With {#built-with}
+### Built With
 
 This section list any major frameworks/libraries used to bootstrap project.
 
@@ -66,7 +67,7 @@ Distributed under the License. See `LICENSE` for more information.
 
 <!-- CONTACT -->
 <hr>
-### Contact
+## Contact {#contact}
 
 My name and firstname:
 Varion Drakonov (VarionDrakon (Abbreviated)) 
@@ -81,6 +82,7 @@ Links to my social networks for communication:
 * [![Instagramm][Instagramm]][Instagramm-url]
 * [![RUTube][RUTube]][RUTube-url]
 * [![Microsoft][Microsoft]][Microsoft-url]
+
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 [forks-shield]: https://img.shields.io/github/forks/VarionDrakon/UICD?style=for-the-badge
