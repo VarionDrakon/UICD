@@ -1,4 +1,11 @@
 <a name="readme-top"></a>
+
+[![Forks][forks-shield]][forks-url]
+[![Stargazers][stars-shield]][stars-url]
+[![Issues][issues-shield]][issues-url]
+[![Watch][Watch-shield]][Watch-url]
+[![License][license-shield]][license-url]
+<hr>
 <!-- HEADER PROJECT -->
 <div id="header" align="center">
 <h3>UICD project - for non-commerial activity. </h3>
@@ -77,25 +84,24 @@ Links to my social networks for communication:
 * [![Twitter][Twitter]][Twitter-url]
 * [![OK][OK]][OK-url]
 * [![Instagramm][Instagramm]][Instagramm-url]
-* [![RUTube][RUTube]][RUTube-url]
 * [![Microsoft][Microsoft]][Microsoft-url]
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 [forks-shield]: https://img.shields.io/github/forks/VarionDrakon/UICD?style=for-the-badge
-[forks-url]: https://github.com/VarionDrakon/LauncherGame/network/members
+[forks-url]: https://github.com/VarionDrakon/UICD/network/members
 
 [stars-shield]: https://img.shields.io/github/stars/VarionDrakon/UICD?style=for-the-badge 
-[stars-url]: https://github.com/VarionDrakon/LauncherGame/stargazers
+[stars-url]: https://github.com/VarionDrakon/UICD/stargazers
 
 [Watch-shield]: https://img.shields.io/github/watchers/VarionDrakon/UICD?style=for-the-badge
-[Watch-url]: https://github.com/VarionDrakon/LauncherGame/watchers
+[Watch-url]: https://github.com/VarionDrakon/UICD/watchers
 
 [issues-shield]: https://img.shields.io/github/issues-raw/VarionDrakon/UICD?style=for-the-badge
-[issues-url]: https://github.com/VarionDrakon/LauncherGame?/issues
+[issues-url]: https://github.com/VarionDrakon/UICD?/issues
 
 [license-shield]: https://img.shields.io/github/license/VarionDrakon/UICD?style=for-the-badge 
-[license-url]: https://github.com/VarionDrakon/LauncherGame/blob/main/LICENSE
+[license-url]: https://github.com/VarionDrakon/UICD/blob/main/LICENSE
 
 [CPP]: https://img.shields.io/badge/C%2B%2B-00599C?style=for-the-badge&logo=c%2B%2B&logoColor=white
 [CPP-url]: https://devdocs.io/cpp/
@@ -111,9 +117,6 @@ Links to my social networks for communication:
 
 [VK]: https://img.shields.io/badge/VK-4C75A3?style=for-the-badge&logo=vk&logoColor=white
 [VK-url]: https://vk.com/varion.drakonov
-
-[RUTube]: https://img.shields.io/badge/RUTube-00001a?style=for-the-badge&logo=PeerTube&logoColor=white
-[RUTube-url]: https://rutube.ru/channel/28612463/
 
 [Instagramm]: https://img.shields.io/badge/Instagramm-C13584?style=for-the-badge&logo=Instagram&logoColor=white
 [Instagramm-url]: https://www.instagram.com/varion.drakonov
