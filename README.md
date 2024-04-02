@@ -64,7 +64,9 @@ This section list any major frameworks/libraries used to bootstrap project.
 
 ## License
 
-Distributed under the License. See `LICENSE` for more information.
+Distributed under the License. See `LICENSE` for more information. Although in short... Then if you use someone else's component under the Apache 2.0 license in the project that contains your NOTICE file, you must copy its contents to the final product. (Of course I don't have a Notice, but the next paragraph is just about that)
+
+Apache 2.0 is permissive, meaning the final product with Apache 2.0 components can have any license. It requires mentioning the original authorship, as well as specifying all the changes made to the work (Although it is not worth reporting, it is not necessary to do DDoS :D).
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 <hr>
