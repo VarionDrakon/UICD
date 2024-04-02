@@ -39,6 +39,7 @@
 
 ## About The Project
 
+<img src="resources/img/screenshot.png" width="1200" height="450"/>
 
 Here's what:
 * The ability to exchange `Holding Registers` via the ModBus protocol with the configurator.
