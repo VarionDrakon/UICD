@@ -11,9 +11,43 @@
 </div>
 <hr>
 
+<!-- ABOUT THE PROJECT -->
+## About The Project
+
+<div align="center">
+  <a href="https://github.com/VarionDrakon/UICD/tree/main/">
+    <img src="res/ScreenshotApp.png" alt="ScreenshotApp.png">
+  </a>
+</div>
+
+
+Here's what:
+* Check the connection with the remote server.
+
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+### Built With
+
+This section list any major frameworks/libraries used to bootstrap project.
+
+* [![QT][QT]][QT-url]
+* [![CPP][CPP]][CPP-url]
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+<!-- LICENSE -->
+<hr>
+## License
+
+Distributed under the License. See `LICENSE.txt` for more information.
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
 <!-- CONTACT -->
 <hr>
 ## Contact
+
 My name and firstname:
 Varion Drakonov (VarionDrakon (Abbreviated)) 
 
