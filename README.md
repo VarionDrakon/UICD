@@ -11,7 +11,30 @@
 </div>
 <hr>
 
+<!-- TABLE OF CONTENTS -->
+<hr>
+<details>
+  <summary>Table of Contents</summary>
+  <ol>
+    <li>
+      <a href="#about-the-project">About The Project</a>
+      <ul>
+        <li><a href="#built-with">Built With</a></li>
+      </ul>
+    </li>
+    <li>
+      <a href="#getting-started">Getting Started</a>
+    </li>
+    <li><a href="#usage">Usage</a></li>
+    <li><a href="#roadmap">Roadmap</a></li>
+    <li><a href="#contributing">Contributing</a></li>
+    <li><a href="#license">License</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ol>
+</details>
+
 <!-- ABOUT THE PROJECT -->
+<hr>
 ## About The Project
 
 Here's what:
@@ -84,7 +107,6 @@ Links to my social networks for communication:
 
 [QMake]: https://img.shields.io/badge/Qt-qmake-green.svg?style=for-the-badge&logo=qt&logoColor=white
 [QMake-url]: https://doc.qt.io/qt-6/qmake-manual.html
-
 
 [VK]: https://img.shields.io/badge/VK-4C75A3?style=for-the-badge&logo=vk&logoColor=white
 [VK-url]: https://vk.com/varion.drakonov
