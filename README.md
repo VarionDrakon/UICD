@@ -45,6 +45,7 @@ Here's what:
 * The ability to exchange `Holding Registers` via the ModBus protocol with the configurator.
 * Ready-made simple configurator for `UICD` (Recommended for use).
 * The source code and circuit board for `EasyEDA` (However, the source code is only for Arduino, the configurator is [here](https://github.com/VarionDrakon/UICD.Configurator))
+* Also, if you have poor visibility or like a light/dark theme, you can change it.
 
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
