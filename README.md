@@ -75,6 +75,9 @@ Links to my social networks for communication:
 [CPP]: https://img.shields.io/badge/C%2B%2B-00599C?style=for-the-badge&logo=c%2B%2B&logoColor=white
 [CPP-url]: https://devdocs.io/cpp/
 
+[Arduino]: https://img.shields.io/badge/Arduino-00979D?style=for-the-badge&logo=Arduino&logoColor=white
+[Arduino-url]: https://docs.arduino.cc/
+
 [QT]: https://img.shields.io/badge/Qt-41CD52?style=for-the-badge&logo=qt&logoColor=white
 [QT-url]: https://doc.qt.io/
 
