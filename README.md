@@ -26,6 +26,7 @@ This section list any major frameworks/libraries used to bootstrap project.
 
 * [![QT][QT]][QT-url]
 * [![CPP][CPP]][CPP-url]
+* [![QMake][QMake]][QMake-url]
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -76,6 +77,10 @@ Links to my social networks for communication:
 
 [QT]: https://img.shields.io/badge/Qt-41CD52?style=for-the-badge&logo=qt&logoColor=white
 [QT-url]: https://doc.qt.io/
+
+[QMake]: https://img.shields.io/badge/Qt-qmake-green.svg?style=for-the-badge&logo=qt&logoColor=white
+[QMake-url]: https://doc.qt.io/qt-6/qmake-manual.html
+
 
 [VK]: https://img.shields.io/badge/VK-4C75A3?style=for-the-badge&logo=vk&logoColor=white
 [VK-url]: https://vk.com/varion.drakonov
