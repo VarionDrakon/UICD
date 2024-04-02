@@ -36,15 +36,16 @@
 
 <!-- ABOUT THE PROJECT -->
 <hr>
-# About The Project
+## About The Project {#about-the-project}
+
 
 Here's what:
-* 
+
 
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
-### Built With
+## Built With {#built-with}
 
 This section list any major frameworks/libraries used to bootstrap project.
 
