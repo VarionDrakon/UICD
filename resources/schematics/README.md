@@ -8,3 +8,5 @@ The project has the following schemes:
 - `MicroSD` (on `74HC125`), 
 - `RS-485` (on `MAX485` with tightening resistors for low, high interference and echo protection in a long wire).
 
+And here it is board:
+<img src="resources/img/board.png"/>
