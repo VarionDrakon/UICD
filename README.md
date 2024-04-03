@@ -41,6 +41,8 @@
 
 <img src="resources/img/screenshot.png"/>
 
+This is the main project, if you need a project with a configurator and a ModBus implementation in QT, then you need to go here: [UICD.Configurator](https://github.com/VarionDrakon/UICD.Configurator)
+
 Here's what:
 * The ability to exchange `Holding Registers` via the ModBus protocol with the configurator.
 * Ready-made simple configurator for `UICD` (Recommended for use).
