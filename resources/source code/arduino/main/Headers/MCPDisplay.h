@@ -1,0 +1,25 @@
+#ifndef DISPLAY_H
+#define DISPLAY_H
+
+#include <Arduino.h>
+
+#define MCP_RS 0  // Register Select
+#define MCP_EN 2  // Signal - Enable
+#define MCP_D4 4
+#define MCP_D5 5
+#define MCP_D6 6
+#define MCP_D7 7
+
+void MCPDisplayInitialize(byte address, byte column, byte row);
+
+void MCPDisplayWriteBits(byte value);
+
+void MCPDisplayCommandSend(byte cmd);
+
+void MCPDisplayDataSend(byte data);
+
+void MCPDisplayCursorSet(byte col, byte row);
+
+void MCPDisplayPrint(const char* str);
+
+#endif

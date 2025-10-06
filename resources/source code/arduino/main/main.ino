@@ -1,9 +1,9 @@
-#include "Counter.h"
-#include "Display.h"
-#include "Debug.h"
-#include "IODataSD.h"
-#include "ModBus.h"
-#include "ModbusRtu.h"  //Modbus lib
+#include "Headers/Counter.h"
+#include "Headers/MCPDisplay.h"
+#include "Headers/Debug.h"
+#include "Headers/IODataSD.h"
+#include "Headers/ModBus.h"
+#include "Libs/ModbusRtu.h"  //Modbus lib
 #include <SPI.h>
 
 #define TXEN 4
@@ -29,10 +29,14 @@ void setup() {
   slave.begin(9600);               //ModBus speed
   Serial.begin(9600, SERIAL_8N1);  //Serial settings
 
-  Serial.println("Arduino started---------");
+  MCPDisplayInitialize(0x26, 20, 4);
+  
+  MCPDisplayCursorSet(3, 1);
+  MCPDisplayPrint("UICD loading...");
 
   if (!SD.begin(10)) {
-    Serial.println("SD ERROR!");  //Check SD-card
+    MCPDisplayCursorSet(3, 1);
+    MCPDisplayPrint("SD ERROR!");
     return;
   }
 
@@ -44,7 +48,7 @@ void setup() {
     // printData();
   }
   else {
-    Serial.println("Device reset?-----------");    
+    Serial.println("Device reset?-----------");
     commonData.savedBaudrate = 9600;
     commonData.savedSlaveAddr = 10;
     // printData();
