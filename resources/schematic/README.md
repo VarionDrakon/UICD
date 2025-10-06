@@ -1,0 +1,1 @@
+This project file, for use in EasyEDA-Pro (Free).
