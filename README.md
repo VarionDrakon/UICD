@@ -6,7 +6,7 @@
 [![Watch][Watch-shield]][Watch-url]
 [![License][license-shield]][license-url]
 <hr>
-<!-- HEADER PROJECT -->
+
 <div id="header" align="center">
 <h3>UICD project - for non-commerial activity. </h3>
   <img src="resources/img/preview.png"/>
