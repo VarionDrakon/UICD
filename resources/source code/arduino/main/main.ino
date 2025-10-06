@@ -1,5 +1,6 @@
 //Entire text and serial print - is temporary
 
+#include "Display.h"
 #include "ModbusRtu.h"  //Modbus lib
 #include <SD.h>
 #include <SPI.h>
@@ -109,6 +110,55 @@ void setup() {
   au16data[0] = commonData.savedSlaveAddr;
   au16data[1] = (commonData.savedBaudrate >> 16) & 0xFFFF;
   au16data[2] = commonData.savedBaudrate & 0xFFFF;
+
+    // Инициализация MCP23008
+  if (!mcp.begin(0x26)) {
+    Serial.println("MCP23008 not found!");
+    while(1);
+  }
+  
+  for (int i = 0; i < 8; i++) {
+    mcp.pinMode(i, OUTPUT);
+    mcp.digitalWrite(i, LOW);
+  }
+  
+  delay(1000);
+  mcp.digitalWrite(MCP_RS, LOW);
+  
+  write4bits(0x03); delay(15);
+  write4bits(0x03); delay(15);
+  write4bits(0x03); delay(15);
+  write4bits(0x02); delay(15);
+  
+  sendCommand(0x28); delay(5);
+  sendCommand(0x0C); delay(5);
+  sendCommand(0x01); delay(10);
+  sendCommand(0x06); delay(5);
+  
+  // Тест для определения реального размера
+  Serial.println("Testing display size...");
+  
+  // Заполняем весь дисплей символами
+  for (int row = 0; row < 4; row++) {
+    for (int col = 0; col < 20; col++) {
+      setCursor(col, row);
+      sendData('0' + col % 10); // Цифры 0-9
+    }
+  }
+  
+  delay(3000);
+  
+  // Очищаем и выводим адаптивный текст
+  sendCommand(0x01); delay(10);
+  
+  setCursor(0, 0);
+  print("Size: 20x4 OK!");
+  setCursor(0, 1);
+  print("Rows: 4 Cols: 20");
+  setCursor(0, 2);
+  print("MCP23008 I2C");
+  setCursor(0, 3);
+  print("Address: 0x26");
 }
 
 
@@ -173,6 +223,12 @@ void loop() {
     printData();
     autSvdTim = currentMillisSaved;
   }
+
+    static int counter = 0;
+  setCursor(15, 3);
+  print(String(counter % 1000).c_str());
+  counter++;
+  delay(100);
 
   //Splitting into bytes array from long variable
   if (!commonData.savedGnrBott == 0) {
