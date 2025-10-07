@@ -20,30 +20,27 @@ deviceDataChar deviceDataCharObject;
 
 char dataFilename[] = "data.dat";
 
-bool writeDataFile(const String& fileName) {
+bool IODataSDFileWrite(const String& fileName) {
   File dataFile = SD.open(fileName, FILE_WRITE | O_TRUNC | O_APPEND);
   if (dataFile) {
     dataFile.write((uint8_t*)&deviceDataObject, sizeof(deviceDataObject));
     dataFile.close();
-
-    Serial.println("Write data - success!");
+    
     return true;
   }
   else{
-    Serial.println("Write data - ERROR!");
     return false;
   }
 }
 
-bool readDataFile(const String& fileName) {
+bool IODataSDFileRead(const String& fileName) {
   File dataFile = SD.open(fileName, FILE_READ | O_APPEND);
   if (dataFile) {
     dataFile.read((uint8_t*)&deviceDataObject, sizeof(deviceDataObject));
     dataFile.close();
-    Serial.println("Read file - success!");
+    
     return true;
   } else {
-    Serial.println("Read file - ERROR!");
     return false;
   }
 }
@@ -86,4 +83,43 @@ char* deviceConfigurationModbusBaudrateGet() {
 
 char* deviceConfigurationModbusSlaveAddressGet() {
   return ltoa(deviceDataObject.modbusSlaveAddress, deviceDataCharObject.modbusSlaveAddress, 10);
+}
+
+void IODataSDInitialize() {
+  MCPDisplayCursorSet(3, 1);
+  MCPDisplayPrint("ДЕД loading...");
+  delay(500);
+
+  if (!SD.begin(10)) {
+  MCPDisplayCommandSend(0x01);
+  MCPDisplayCursorSet(5, 1);
+  MCPDisplayPrint("SD ERROR!");
+  while(1);
+  }
+
+  if (SD.exists(dataFilename)) {
+    IODataSDFileRead(dataFilename);
+
+    MCPDisplayCommandSend(0x01);
+    delay(10);
+
+    MCPDisplayCursorSet(2, 1);
+    MCPDisplayPrint("Load saved file...");
+    delay(500);
+  } else {
+    MCPDisplayCommandSend(0x01);
+    delay(10);
+
+    MCPDisplayCursorSet(3, 0);
+    MCPDisplayPrint("Device reset?");
+
+    deviceConfigurationModbusBaudrateSet(9600);
+    MCPDisplayCursorSet(3, 1);
+    MCPDisplayPrint("Baudrate = 9600");
+
+    deviceConfigurationModbusSlaveAddressSet(10);
+    MCPDisplayCursorSet(3, 2);
+    MCPDisplayPrint("Slave Address = 10");
+    delay(1000);
+  }
 }

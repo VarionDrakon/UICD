@@ -19,61 +19,33 @@ Element (9):
 volatile uint16_t au16data[length] = { 0, 0, 0, 0, 0, 0, 0, 0, 0 };  //Element [X] - Reserve for future
 volatile uint32_t autSvdTim = 0;                                     //Timer for autosave settings
 unsigned long interval = 5 * 60 * 1000;                              // 5 minutes
-unsigned long intervalSD = 10000;                                    // Timer for write data SD
+unsigned long intervalSD = 3000;                                     // Timer for write data SD
 
 //Default settings
 Modbus slave(10, 9600, TXEN);
 // Modbus slave(10, 9600, TXEN);
 // char dataFilename[] = "data.dat";
 
-void setup() {
+byte currentSlaveAddress = 10;
+unsigned long currentBaudrate = 9600;
 
-  if (!SD.begin(10)) {
-    MCPDisplayCursorSet(3, 1);
-    MCPDisplayPrint("SD ERROR!");
-    return;
-  }
+void setup() {
 
   MCPDisplayInitialize(0x26, 20, 4);
 
-  MCPDisplayCursorSet(3, 1);
-  MCPDisplayPrint("UICD loading...");
-  delay(500);
+  IODataSDInitialize();
+
+  currentSlaveAddress = deviceDataObject.modbusSlaveAddress;
+  currentBaudrate = deviceDataObject.modbusBaudrate;
 
   attachInterrupt(0, frtIntr, FALLING);
   attachInterrupt(1, scdIntr, FALLING);
 
-  if (SD.exists(dataFilename)) {
-    readDataFile(dataFilename);
-
-    MCPDisplayCommandSend(0x01);
-    delay(10);
-    MCPDisplayCursorSet(2, 1);
-    MCPDisplayPrint("Load saved file...");
-    delay(500);
-  } else {
-    MCPDisplayCommandSend(0x01);
-    delay(10);
-
-    MCPDisplayCursorSet(3, 0);
-    MCPDisplayPrint("Device reset?");
-
-    deviceConfigurationModbusBaudrateSet(9600);
-    MCPDisplayCursorSet(3, 1);
-    MCPDisplayPrint("Baudrate = 9600");
-
-    MCPDisplayCursorSet(3, 2);
-    MCPDisplayPrint("Slave Address = 10");
-    deviceConfigurationModbusSlaveAddressSet(10);
-    delay(1000);
-  }
-
-  slave = Modbus(deviceDataObject.modbusSlaveAddress, 
-                deviceDataObject.modbusBaudrate, 
-                TXEN);
-
-  slave.begin();  //ModBus speed
-  Serial.begin(deviceDataObject.modbusBaudrate, SERIAL_8N1);  //Serial settings
+  slave = Modbus(currentSlaveAddress, currentBaudrate, TXEN);
+  // slave = Modbus(deviceDataObject.modbusSlaveAddress, deviceDataObject.modbusBaudrate, TXEN); //ModBus initialize.
+  slave.begin();
+  Serial.begin(currentBaudrate, SERIAL_8N1);
+  // Serial.begin(deviceDataObject.modbusBaudrate, SERIAL_8N1);  //Serial settings
 
   au16data[0] = deviceDataObject.modbusSlaveAddress;
   au16data[1] = (deviceDataObject.modbusBaudrate >> 16) & 0xFFFF;
@@ -103,12 +75,37 @@ void setup() {
   MCPDisplayPrint("R:");
   MCPDisplayCursorSet(4, 3);
   MCPDisplayPrint(totalizerReverseReturn());
-
 }
 
 void loop() {
-  //Modbus handler
-  slave.poll(au16data, length);  //Max read elements
+  // Modbus handler.
+  slave.poll(au16data, length); // Max read elements.
+
+  if (au16data[0] != currentSlaveAddress || ((uint32_t)au16data[1] << 16 | au16data[2]) != currentBaudrate) {
+
+    currentSlaveAddress = au16data[0];
+    currentBaudrate = (uint32_t)au16data[1] << 16 | au16data[2];
+
+    Serial.end();
+    delay(100);
+    Serial.begin(currentBaudrate, SERIAL_8N1);
+    slave = Modbus(currentSlaveAddress, currentBaudrate, TXEN);
+    slave.start();
+
+    deviceDataObject.modbusSlaveAddress = currentSlaveAddress;
+    deviceDataObject.modbusBaudrate = currentBaudrate;
+
+    IODataSDFileWrite(dataFilename);
+
+    MCPDisplayCursorSet(4, 0);
+    MCPDisplayPrint("                ");
+
+    MCPDisplayCursorSet(4, 0);
+    MCPDisplayPrint(deviceConfigurationModbusBaudrateGet());
+    MCPDisplayCursorSet(11, 0);
+    MCPDisplayPrint(deviceConfigurationModbusSlaveAddressGet());
+  }
+
   //realize struct and write data on SD-card IT`S SLOW DOWN WORK MICROCONTROLLER!
   if (forv) {
     totalizerDirectValueAdd();
@@ -135,14 +132,20 @@ void loop() {
     MCPDisplayPrint(totalizerReverseReturn());
   }
 
-  deviceDataObject.modbusSlaveAddress = au16data[0];
-  deviceDataObject.modbusBaudrate = au16data[1];
-  deviceDataObject.modbusBaudrate = (deviceDataObject.modbusBaudrate << 16) | au16data[2];
+  // deviceDataObject.modbusSlaveAddress = au16data[0];
+  // deviceDataObject.modbusBaudrate = au16data[1];
+  // deviceDataObject.modbusBaudrate = (deviceDataObject.modbusBaudrate << 16) | au16data[2];
 
   unsigned long currentMillisSaved = millis();
   if (currentMillisSaved - autSvdTim >= intervalSD) {
-    writeDataFile(dataFilename);
-    // printData();
+    MCPDisplayCursorSet(19, 0);
+    MCPDisplayPrint("S");
+
+    IODataSDFileWrite(dataFilename);
+
+    MCPDisplayCursorSet(19, 0);
+    MCPDisplayPrint(" ");
+
     autSvdTim = currentMillisSaved;
   }
 

@@ -51,12 +51,12 @@ void MCPDisplayInitialize(byte address, byte column, byte row) {
   delay(5);
 
   // Filling the display by rows and columns to initialize the display.
-  for (int r = 0; r < row; r++) {
-    for (int c = 0; c < column; c++) {
-      MCPDisplayCursorSet(c, r);
-      MCPDisplayDataSend('8');
-    }
-  }
+  // for (int r = 0; r < row; r++) {
+  //   for (int c = 0; c < column; c++) {
+  //     MCPDisplayCursorSet(c, r);
+  //     MCPDisplayDataSend('8');
+  //   }
+  // }
 
   delay(1000);  // Waiting for the screen LEDs to warm up.
 
