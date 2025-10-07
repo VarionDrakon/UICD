@@ -82,7 +82,7 @@ Apache 2.0 is permissive, meaning the final product with Apache 2.0 components c
 
 ## Contact
 
-My name and firstname:
+My name:
 Varion Drakonov (VarionDrakon (Abbreviated)) 
 
 Links to my social networks for communication:
