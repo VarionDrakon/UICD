@@ -19,20 +19,14 @@ Element (9):
 volatile uint16_t au16data[length] = { 0, 0, 0, 0, 0, 0, 0, 0, 0 };  //Element [X] - Reserve for future
 volatile uint32_t autSvdTim = 0;                                     //Timer for autosave settings
 unsigned long interval = 5 * 60 * 1000;                              // 5 minutes
-unsigned long intervalSD = 10000;                                     // Timer for write data SD
+unsigned long intervalSD = 10000;                                    // Timer for write data SD
 
 //Default settings
 Modbus slave(10, 9600, TXEN);
-char dataFilename[] = "data.dat";
+// Modbus slave(10, 9600, TXEN);
+// char dataFilename[] = "data.dat";
 
 void setup() {
-  slave.begin(9600);               //ModBus speed
-  Serial.begin(9600, SERIAL_8N1);  //Serial settings
-
-  MCPDisplayInitialize(0x26, 20, 4);
-  
-  MCPDisplayCursorSet(3, 1);
-  MCPDisplayPrint("UICD loading...");
 
   if (!SD.begin(10)) {
     MCPDisplayCursorSet(3, 1);
@@ -40,23 +34,76 @@ void setup() {
     return;
   }
 
+  MCPDisplayInitialize(0x26, 20, 4);
+
+  MCPDisplayCursorSet(3, 1);
+  MCPDisplayPrint("UICD loading...");
+  delay(500);
+
   attachInterrupt(0, frtIntr, FALLING);
   attachInterrupt(1, scdIntr, FALLING);
 
   if (SD.exists(dataFilename)) {
     readDataFile(dataFilename);
-    // printData();
-  }
-  else {
-    Serial.println("Device reset?-----------");
-    commonData.savedBaudrate = 9600;
-    commonData.savedSlaveAddr = 10;
-    // printData();
+
+    MCPDisplayCommandSend(0x01);
+    delay(10);
+    MCPDisplayCursorSet(2, 1);
+    MCPDisplayPrint("Load saved file...");
+    delay(500);
+  } else {
+    MCPDisplayCommandSend(0x01);
+    delay(10);
+
+    MCPDisplayCursorSet(3, 0);
+    MCPDisplayPrint("Device reset?");
+
+    deviceConfigurationModbusBaudrateSet(9600);
+    MCPDisplayCursorSet(3, 1);
+    MCPDisplayPrint("Baudrate = 9600");
+
+    MCPDisplayCursorSet(3, 2);
+    MCPDisplayPrint("Slave Address = 10");
+    deviceConfigurationModbusSlaveAddressSet(10);
+    delay(1000);
   }
 
-  au16data[0] = commonData.savedSlaveAddr;
-  au16data[1] = (commonData.savedBaudrate >> 16) & 0xFFFF;
-  au16data[2] = commonData.savedBaudrate & 0xFFFF;
+  slave = Modbus(deviceDataObject.modbusSlaveAddress, 
+                deviceDataObject.modbusBaudrate, 
+                TXEN);
+
+  slave.begin();  //ModBus speed
+  Serial.begin(deviceDataObject.modbusBaudrate, SERIAL_8N1);  //Serial settings
+
+  au16data[0] = deviceDataObject.modbusSlaveAddress;
+  au16data[1] = (deviceDataObject.modbusBaudrate >> 16) & 0xFFFF;
+  au16data[2] = deviceDataObject.modbusBaudrate & 0xFFFF;
+
+  MCPDisplayCommandSend(0x01);
+  delay(10);
+
+  MCPDisplayCursorSet(0, 0);
+  MCPDisplayPrint("B: ");
+  MCPDisplayCursorSet(4, 0);
+  MCPDisplayPrint(deviceConfigurationModbusBaudrateGet());
+  MCPDisplayCursorSet(11, 0);
+  MCPDisplayPrint(deviceConfigurationModbusSlaveAddressGet());
+
+  MCPDisplayCursorSet(0, 1);
+  MCPDisplayPrint("C:");
+  MCPDisplayCursorSet(4, 1);
+  MCPDisplayPrint(totalizerCommonReturn());
+
+  MCPDisplayCursorSet(0, 2);
+  MCPDisplayPrint("D:");
+  MCPDisplayCursorSet(4, 2);
+  MCPDisplayPrint(totalizerDirectReturn());
+
+  MCPDisplayCursorSet(0, 3);
+  MCPDisplayPrint("R:");
+  MCPDisplayCursorSet(4, 3);
+  MCPDisplayPrint(totalizerReverseReturn());
+
 }
 
 void loop() {
@@ -64,25 +111,33 @@ void loop() {
   slave.poll(au16data, length);  //Max read elements
   //realize struct and write data on SD-card IT`S SLOW DOWN WORK MICROCONTROLLER!
   if (forv) {
-    Serial.println("Forv");
-    commonData.savedFrwBott++;
-    commonData.savedGnrBott++;
+    totalizerDirectValueAdd();
+    totalizerCommonValueAdd();
     forv = false;
     isIntrTrg_1 = false;
     isIntrTrg_2 = false;
+
+    MCPDisplayCursorSet(4, 1);
+    MCPDisplayPrint(totalizerCommonReturn());
+    MCPDisplayCursorSet(4, 2);
+    MCPDisplayPrint(totalizerDirectReturn());
   }
   if (back) {
-    Serial.println("Back");
-    commonData.savedRvrBott++;
-    commonData.savedGnrBott++;
+    totalizerReverseValueAdd();
+    totalizerCommonValueAdd();
     back = false;
     isIntrTrg_1 = false;
     isIntrTrg_2 = false;
+
+    MCPDisplayCursorSet(4, 1);
+    MCPDisplayPrint(totalizerCommonReturn());
+    MCPDisplayCursorSet(4, 3);
+    MCPDisplayPrint(totalizerReverseReturn());
   }
 
-  commonData.savedSlaveAddr = au16data[0];
-  commonData.savedBaudrate = au16data[1];
-  commonData.savedBaudrate = (commonData.savedBaudrate << 16) | au16data[2];
+  deviceDataObject.modbusSlaveAddress = au16data[0];
+  deviceDataObject.modbusBaudrate = au16data[1];
+  deviceDataObject.modbusBaudrate = (deviceDataObject.modbusBaudrate << 16) | au16data[2];
 
   unsigned long currentMillisSaved = millis();
   if (currentMillisSaved - autSvdTim >= intervalSD) {
@@ -92,12 +147,12 @@ void loop() {
   }
 
   //Splitting into bytes array from long variable
-  if (!commonData.savedGnrBott == 0) {
-    au16data[3] = (commonData.savedGnrBott >> 16) & 0xFFFF;  //getting (1 part) most significant and shift right 16 bits (0xFFFF - 4 bytes)
-    au16data[4] = commonData.savedGnrBott & 0xFFFF;          //filtering (2 part) results on 16 bits (0xFFFF - 4 bytes)
-    au16data[5] = (commonData.savedFrwBott >> 16) & 0xFFFF;  //getting (1 part) most significant and shift right 16 bits (0xFFFF - 4 bytes)
-    au16data[6] = commonData.savedFrwBott & 0xFFFF;          //filtering (2 part) results on 16 bits (0xFFFF - 4 bytes)
-    au16data[7] = (commonData.savedRvrBott >> 16) & 0xFFFF;  //getting (1 part) most significant and shift right 16 bits (0xFFFF - 4 bytes)
-    au16data[8] = commonData.savedRvrBott & 0xFFFF;          //filtering (2 part) results on 16 bits (0xFFFF - 4 bytes)
+  if (!deviceDataObject.totalizerCommon == 0) {
+    au16data[3] = (deviceDataObject.totalizerCommon >> 16) & 0xFFFF;   //getting (1 part) most significant and shift right 16 bits (0xFFFF - 4 bytes)
+    au16data[4] = deviceDataObject.totalizerCommon & 0xFFFF;           //filtering (2 part) results on 16 bits (0xFFFF - 4 bytes)
+    au16data[5] = (deviceDataObject.totalizerDirect >> 16) & 0xFFFF;   //getting (1 part) most significant and shift right 16 bits (0xFFFF - 4 bytes)
+    au16data[6] = deviceDataObject.totalizerDirect & 0xFFFF;           //filtering (2 part) results on 16 bits (0xFFFF - 4 bytes)
+    au16data[7] = (deviceDataObject.totalizerReverse >> 16) & 0xFFFF;  //getting (1 part) most significant and shift right 16 bits (0xFFFF - 4 bytes)
+    au16data[8] = deviceDataObject.totalizerReverse & 0xFFFF;          //filtering (2 part) results on 16 bits (0xFFFF - 4 bytes)
   }
 }

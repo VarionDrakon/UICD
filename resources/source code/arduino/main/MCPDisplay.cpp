@@ -58,7 +58,7 @@ void MCPDisplayInitialize(byte address, byte column, byte row) {
     }
   }
 
-  delay(3000);  // Waiting for the screen LEDs to warm up.
+  delay(1000);  // Waiting for the screen LEDs to warm up.
 
   MCPDisplayCommandSend(0x01);
   delay(10);
@@ -115,11 +115,11 @@ Each display line has its own starting address in the display controller memory 
   Line 3: 0x54
 
 The cursor position command always starts with 0x80:
-  0x80 | (col + rowAddr[row]) - We take the base address of the row, add the offset (column), and combine it with the 0x80 command using the bitwise OR (|).
+  0x80 | (column + rowAddr[row]) - We take the base address of the row, add the offset (column), and combine it with the 0x80 command using the bitwise OR (|).
 */
-void MCPDisplayCursorSet(byte col, byte row) {
+void MCPDisplayCursorSet(byte column, byte row) {
   byte rowAddr[] = { 0x00, 0x40, 0x14, 0x54 };
-  MCPDisplayCommandSend(0x80 | (col + rowAddr[row]));
+  MCPDisplayCommandSend(0x80 | (column + rowAddr[row]));
 }
 
 /*
