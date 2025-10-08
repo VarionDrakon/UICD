@@ -1,3 +1,6 @@
+#ifndef MCPDISPLAY_H
+#define MCPDISPLAY_H
+
 #include <Arduino.h>
 
 #define MCP_RS 0  // Register Select.
@@ -19,3 +22,5 @@ void MCPDisplayDataSend(byte data);
 void MCPDisplayCursorSet(byte column, byte row);
 
 void MCPDisplayPrint(const char* str);
+
+#endif

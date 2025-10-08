@@ -1,6 +1,6 @@
-#include "Headers/MCPDisplay.h"
-#include <Wire.h>
-#include <Adafruit_MCP23008.h>
+#include "../Headers/MCPDisplay.h"
+// #include <Wire.h>
+#include "../Libs/Adafruit_MCP23008/Adafruit_MCP23008.h"
 
 Adafruit_MCP23008 mcp;
 
@@ -16,6 +16,9 @@ Loop through all MCP23008 pins from 0 to 7.
  - mcp.digitalWrite(MCP_RS, LOW); - Sets the RS pin to LOW, indicating that the next command will be a command, not data.
 */
 void MCPDisplayInitialize(byte address, byte column, byte row) {
+
+  Wire.begin();
+  Wire.setClock(400000L);
 
   mcp.begin(address);
 
@@ -82,25 +85,25 @@ void MCPDisplayWriteBits(byte value) {
   mcp.digitalWrite(MCP_D7, (value >> 3) & 0x01);
 
   mcp.digitalWrite(MCP_EN, LOW);
-  delayMicroseconds(10);
+  // delayMicroseconds(10);
   mcp.digitalWrite(MCP_EN, HIGH);
-  delayMicroseconds(10);
+  // delayMicroseconds(10);
   mcp.digitalWrite(MCP_EN, LOW);
-  delayMicroseconds(100);
+  // delayMicroseconds(100);
 }
 
 void MCPDisplayCommandSend(byte cmd) {
   mcp.digitalWrite(MCP_RS, LOW);    // We tell the display that we are sending a command.
   MCPDisplayWriteBits(cmd >> 4);    // Send the high-order 4 bits of the command.
   MCPDisplayWriteBits(cmd & 0x0F);  // Send the low-order 4 bits of the command.
-  delay(2);                         // Wait until the display executes the command.
+  // delay(2);                         // Wait until the display executes the command.
 }
 
 void MCPDisplayDataSend(byte data) {
   mcp.digitalWrite(MCP_RS, HIGH);    // We tell the display that we are sending a data.
   MCPDisplayWriteBits(data >> 4);    // Send the high-order 4 bits of the command.
   MCPDisplayWriteBits(data & 0x0F);  // Send the low-order 4 bits of the command.
-  delayMicroseconds(100);            // Wait until the display executes the command.
+  // delayMicroseconds(100);            // Wait until the display executes the command.
 }
 
 /*

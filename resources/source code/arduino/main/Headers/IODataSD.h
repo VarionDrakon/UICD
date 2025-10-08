@@ -1,4 +1,5 @@
 #include "SD.h"
+#include "MCPDisplay.h"
 
 struct deviceData {
   unsigned long totalizerCommon;
@@ -69,7 +70,7 @@ void totalizerReverseValueAdd() {
   deviceDataObject.totalizerReverse++;
 }
 
-void deviceConfigurationModbusBaudrateSet(byte value) {
+void deviceConfigurationModbusBaudrateSet(unsigned long value) {
   deviceDataObject.modbusBaudrate = value;
 }
 
@@ -87,7 +88,7 @@ char* deviceConfigurationModbusSlaveAddressGet() {
 
 void IODataSDInitialize() {
   MCPDisplayCursorSet(3, 1);
-  MCPDisplayPrint("ДЕД loading...");
+  MCPDisplayPrint("UICD loading...");
   delay(500);
 
   if (!SD.begin(10)) {
@@ -110,16 +111,18 @@ void IODataSDInitialize() {
     MCPDisplayCommandSend(0x01);
     delay(10);
 
-    MCPDisplayCursorSet(3, 0);
+    MCPDisplayCursorSet(2, 0);
     MCPDisplayPrint("Device reset?");
 
     deviceConfigurationModbusBaudrateSet(9600);
-    MCPDisplayCursorSet(3, 1);
-    MCPDisplayPrint("Baudrate = 9600");
+    MCPDisplayCursorSet(2, 1);
+    MCPDisplayPrint("Baudrate:");
+    MCPDisplayPrint(deviceConfigurationModbusBaudrateGet());
 
     deviceConfigurationModbusSlaveAddressSet(10);
-    MCPDisplayCursorSet(3, 2);
+    MCPDisplayCursorSet(2, 2);
     MCPDisplayPrint("Slave Address = 10");
+    MCPDisplayPrint(deviceConfigurationModbusSlaveAddressGet());
     delay(1000);
   }
 }
