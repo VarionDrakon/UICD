@@ -81,7 +81,7 @@ volatile bool isIntrTrg_1 = false;      //Triggered sensor 1
 volatile bool isIntrTrg_2 = false;      //Triggered sensor 2
 volatile uint32_t lstIntrTim_1 = 0;     //Timer for sensor 1
 volatile uint32_t lstIntrTim_2 = 0;     //Timer for sensor 2
-const unsigned long debounceDelay = 50; // Debounce delay. OLD varian - if (millis() - secDbn >= 100 && digitalRead(3))
+const unsigned long debounceDelay = 25; // Debounce delay. OLD varian - if (millis() - secDbn >= 100 && digitalRead(3))
 
 void frtIntr() {
   unsigned long currentMillis = millis();

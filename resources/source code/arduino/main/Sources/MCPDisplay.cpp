@@ -17,9 +17,6 @@ Loop through all MCP23008 pins from 0 to 7.
 */
 void MCPDisplayInitialize(byte address, byte column, byte row) {
 
-  Wire.begin();
-  Wire.setClock(400000L);
-
   mcp.begin(address);
 
   MCPDisplayCommandSend(0x01);  // Clear the display (the longest command).

@@ -1,3 +1,22 @@
+/**
+ * @file 	Adafruit_I2CDevice.cpp
+ * @version     ???+1
+ * @date        2025.10.08
+ * @author 	Adafruit Industries
+ * @contact     variondrakon@gmail.com
+ * @contribution Varion Drakonov
+ *
+ * @description
+ *  From me, the only thing that was changed was the i2c bus frequency in line 50.
+ *
+ * @license
+ *  The MIT License (MIT) - The license belongs to 'Adafruit Industries'.
+ *
+ *  Further information:
+ *  https://github.com/adafruit/Adafruit_BusIO
+ *
+ */
+
 #include "Adafruit_I2CDevice.h"
 
 // #define DEBUG_SERIAL Serial
@@ -12,7 +31,7 @@ Adafruit_I2CDevice::Adafruit_I2CDevice(uint8_t addr, TwoWire *theWire) {
   _wire = theWire;
   _begun = false;
 #ifdef ARDUINO_ARCH_SAMD
-  _maxBufferSize = 250; // as defined in Wire.h's RingBuffer
+  _maxBufferSize = 250;  // as defined in Wire.h's RingBuffer
 #elif defined(ESP32)
   _maxBufferSize = I2C_BUFFER_LENGTH;
 #else
@@ -29,6 +48,7 @@ Adafruit_I2CDevice::Adafruit_I2CDevice(uint8_t addr, TwoWire *theWire) {
  */
 bool Adafruit_I2CDevice::begin(bool addr_detect) {
   _wire->begin();
+  _wire->setClock(1000000L);  // This line was added.
   _begun = true;
 
   if (addr_detect) {
@@ -46,9 +66,7 @@ void Adafruit_I2CDevice::end(void) {
   // - AVR core without WIRE_HAS_END
   // - ESP32: end() is implemented since 2.0.1 which is latest at the moment.
   // Temporarily disable for now to give time for user to update.
-#if !(defined(ESP8266) ||                                                      \
-      (defined(ARDUINO_ARCH_AVR) && !defined(WIRE_HAS_END)) ||                 \
-      defined(ARDUINO_ARCH_ESP32))
+#if !(defined(ESP8266) || (defined(ARDUINO_ARCH_AVR) && !defined(WIRE_HAS_END)) || defined(ARDUINO_ARCH_ESP32))
   _wire->end();
   _begun = false;
 #endif
@@ -72,7 +90,7 @@ bool Adafruit_I2CDevice::detected(void) {
   DEBUG_SERIAL.print(_addr, HEX);
 #endif
 #ifdef ARDUINO_ARCH_MBED
-  _wire->write(0); // forces a write request instead of a read
+  _wire->write(0);  // forces a write request instead of a read
 #endif
   if (_wire->endTransmission() == 0) {
 #ifdef DEBUG_SERIAL
@@ -184,7 +202,7 @@ bool Adafruit_I2CDevice::read(uint8_t *buffer, size_t len, bool stop) {
   size_t pos = 0;
   while (pos < len) {
     size_t read_len =
-        ((len - pos) > maxBufferSize()) ? maxBufferSize() : (len - pos);
+      ((len - pos) > maxBufferSize()) ? maxBufferSize() : (len - pos);
     bool read_stop = (pos < (len - read_len)) ? false : stop;
     if (!_read(buffer + pos, read_len, read_stop))
       return false;
@@ -258,7 +276,9 @@ bool Adafruit_I2CDevice::write_then_read(const uint8_t *write_buffer,
  *    @brief  Returns the 7-bit address of this device
  *    @return The 7-bit address of this device
  */
-uint8_t Adafruit_I2CDevice::address(void) { return _addr; }
+uint8_t Adafruit_I2CDevice::address(void) {
+  return _addr;
+}
 
 /*!
  *    @brief  Change the I2C clock speed to desired (relies on
@@ -268,8 +288,7 @@ uint8_t Adafruit_I2CDevice::address(void) { return _addr; }
  *    Not necessarily that the speed was achieved!
  */
 bool Adafruit_I2CDevice::setSpeed(uint32_t desiredclk) {
-#if defined(__AVR_ATmega328__) ||                                              \
-    defined(__AVR_ATmega328P__) // fix arduino core set clock
+#if defined(__AVR_ATmega328__) || defined(__AVR_ATmega328P__)  // fix arduino core set clock
   // calculate TWBR correctly
 
   if ((F_CPU / 18) < desiredclk) {
@@ -295,7 +314,7 @@ bool Adafruit_I2CDevice::setSpeed(uint32_t desiredclk) {
   } else if (atwbr <= 4080) {
     atwbr /= 16;
     TWSR = 0x2;
-  } else { //  if (atwbr <= 16320)
+  } else {  //  if (atwbr <= 16320)
     atwbr /= 64;
     TWSR = 0x3;
   }
@@ -308,8 +327,7 @@ bool Adafruit_I2CDevice::setSpeed(uint32_t desiredclk) {
   Serial.println(atwbr);
 #endif
   return true;
-#elif (ARDUINO >= 157) && !defined(ARDUINO_STM32_FEATHER) &&                   \
-    !defined(TinyWireM_h)
+#elif (ARDUINO >= 157) && !defined(ARDUINO_STM32_FEATHER) && !defined(TinyWireM_h)
   _wire->setClock(desiredclk);
   return true;
 
