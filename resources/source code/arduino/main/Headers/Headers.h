@@ -5,6 +5,6 @@
 #include "Debug.h"
 #include "IODataSD.h"
 #include "MCPDisplay.h"
-#include "ModBus.h"
+#include "Modbus.h"
 
 #endif

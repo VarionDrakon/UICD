@@ -3,5 +3,7 @@
 
 #include "IODataSD.cpp"
 #include "MCPDisplay.cpp"
+#include "Counter.cpp"
+#include "Modbus.cpp"
 
 #endif

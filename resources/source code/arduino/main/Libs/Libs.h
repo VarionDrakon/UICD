@@ -7,7 +7,7 @@
 #include "Adafruit_MCP23008/Adafruit_I2CRegister.h"
 #include "Adafruit_MCP23008/Adafruit_MCP23008.h"
 #include "Adafruit_MCP23008/Adafruit_SPIDevice.h"
-#include "ModbusRtu.h"
+// #include "ModbusRtu.h"
 
 #include "Adafruit_MCP23008/Adafruit_BusIO_Register.cpp"
 #include "Adafruit_MCP23008/Adafruit_GenericDevice.cpp"
