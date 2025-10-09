@@ -2,8 +2,6 @@
 #include "Libs/Libs.h"
 #include "Sources/Sources.h"
 
-#include <SPI.h>
-
 void setup() {
   MCPDisplayInitialize(0x26, 20, 4);
 
@@ -68,7 +66,7 @@ void loop() {
 
   modbusHandlerListener();
 
-  modbusSettingsUpdater();
+  // modbusSettingsUpdater();
 
   modbusHandlerResponse();
 

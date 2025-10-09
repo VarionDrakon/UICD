@@ -1,4 +1,6 @@
 #include <SD.h>
+#include <SPI.h>
+
 #include "MCPDisplay.h"
 
 struct deviceData {
@@ -20,32 +22,19 @@ struct deviceDataChar {
 deviceDataChar deviceDataCharObject;
 
 volatile uint32_t autSvdTim = 0;         //Timer for autosave settings.
-unsigned long interval = 5 * 60 * 1000;  // 5 minutes.
 unsigned long intervalSD = 3000;         // Timer for write data SD.
 char dataFilename[] = "data.dat";        // File name for data saving/write.
 
-bool IODataSDFileWrite(const String& fileName) {
-  File dataFile = SD.open(fileName, FILE_WRITE | O_TRUNC | O_APPEND);
-  if (dataFile) {
-    dataFile.write((uint8_t*)&deviceDataObject, sizeof(deviceDataObject));
-    dataFile.close();
-
-    return true;
-  } else {
-    return false;
-  }
+void IODataSDFileWrite(const String& fileName) {
+  File dataFile = SD.open(fileName, FILE_WRITE);
+  dataFile.write((uint8_t*)&deviceDataObject, sizeof(deviceDataObject));
+  dataFile.close();
 }
 
-bool IODataSDFileRead(const String& fileName) {
-  File dataFile = SD.open(fileName, FILE_READ | O_APPEND);
-  if (dataFile) {
-    dataFile.read((uint8_t*)&deviceDataObject, sizeof(deviceDataObject));
-    dataFile.close();
-
-    return true;
-  } else {
-    return false;
-  }
+void IODataSDFileRead(const String& fileName) {
+  File dataFile = SD.open(fileName, FILE_READ);
+  dataFile.read((uint8_t*)&deviceDataObject, sizeof(deviceDataObject));
+  dataFile.close();
 }
 
 char* totalizerCommonReturn() {
@@ -97,9 +86,9 @@ void IODataSDInitialize() {
     MCPDisplayCommandSend(0x01);
     MCPDisplayCursorSet(5, 1);
     MCPDisplayPrint("SD ERROR!");
-    while (1)
-      ;
+    while (1);
   }
+  SPI.setClockDivider(SPI_CLOCK_DIV4);
 
   if (SD.exists(dataFilename)) {
     IODataSDFileRead(dataFilename);
@@ -143,13 +132,13 @@ void IODataSDInitialize() {
 void IODataSDFileWritePeriodically() {
   unsigned long currentMillisSaved = millis();
   if (currentMillisSaved - autSvdTim >= intervalSD) {
-    MCPDisplayCursorSet(19, 0);
-    MCPDisplayPrint("S");
+    // MCPDisplayCursorSet(19, 0);
+    // MCPDisplayPrint("S");
 
     IODataSDFileWrite(dataFilename);
 
-    MCPDisplayCursorSet(19, 0);
-    MCPDisplayPrint(" ");
+    // MCPDisplayCursorSet(19, 0);
+    // MCPDisplayPrint(" ");
 
     autSvdTim = currentMillisSaved;
   }
