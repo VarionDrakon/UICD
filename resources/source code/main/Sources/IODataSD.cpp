@@ -3,22 +3,53 @@
 deviceData deviceDataObject;
 deviceDataChar deviceDataCharObject;
 
-volatile uint32_t autSvdTim = 0;         //Timer for autosave settings.
-unsigned long intervalSD = 3000;         // Timer for write data SD.
-char dataFilename[] = "data.csv";        // File name for data saving/write.
+volatile uint32_t autSvdTim = 0;                        //Timer for autosave settings.
+unsigned long intervalSD = 3000;                        // Timer for write data SD.
+const char* dataFilenameSave = "save.dat";              // File name for data saving/write.
+const char* dataFilenameSaveTemp = "save.dat.temp";     // File name for data saving/write.
 
-void IODataSDFileWrite(const String& fileName) {
-  File dataFile = SD.open(fileName, FILE_WRITE);
-  dataFile.seek(0);
-  dataFile.write((uint8_t*)&deviceDataObject, sizeof(deviceDataObject));
-  dataFile.flush();
-  // dataFile.close();
+void IODataSDFileWrite(const char* mainFilename = dataFilenameSave, const char* tempFilename = dataFilenameSaveTemp) {
+  File dataFile = SD.open(mainFilename, FILE_WRITE | O_TRUNC);
+
+  if (dataFile) {
+    dataFile.write((uint8_t*)&deviceDataObject, sizeof(deviceDataObject));
+    dataFile.close();
+  } else {
+      File dataFile = SD.open(mainFilename, FILE_WRITE | O_TRUNC);
+
+      if (dataFile) {
+        dataFile.write((uint8_t*)&deviceDataObject, sizeof(deviceDataObject));
+        dataFile.close();
+      } else {
+        while (1) {
+          MCPDisplayCommandSend(0x01);
+          MCPDisplayCursorSet(2, 1);
+          MCPDisplayPrint("SAVE FILE ERROR!");
+        }
+      }
+  }
 }
 
-void IODataSDFileRead(const String& fileName) {
-  File dataFile = SD.open(fileName, FILE_READ);
-  dataFile.read((uint8_t*)&deviceDataObject, sizeof(deviceDataObject));
-  dataFile.close();
+void IODataSDFileRead(const char* mainFilename = dataFilenameSave, const char* tempFilename = dataFilenameSaveTemp) {
+  File dataFile = SD.open(mainFilename, FILE_READ);
+
+  if (dataFile) {
+    dataFile.read((uint8_t*)&deviceDataObject, sizeof(deviceDataObject));
+    dataFile.close();
+  } else {
+      File dataFile = SD.open(mainFilename, FILE_READ);
+
+      if (dataFile) {
+        dataFile.read((uint8_t*)&deviceDataObject, sizeof(deviceDataObject));
+        dataFile.close();
+      } else {
+        while (1) {
+          MCPDisplayCommandSend(0x01);
+          MCPDisplayCursorSet(2, 1);
+          MCPDisplayPrint("READ FILE ERROR!");
+        }
+      }
+  }
 }
 
 char* totalizerCommonReturn() {
@@ -74,8 +105,8 @@ void IODataSDInitialize() {
   }
   SPI.setClockDivider(SPI_CLOCK_DIV4);
 
-  if (SD.exists(dataFilename)) {
-    IODataSDFileRead(dataFilename);
+  if (SD.exists(dataFilenameSave) || SD.exists(dataFilenameSaveTemp)) {
+    IODataSDFileRead();
 
     MCPDisplayCommandSend(0x01);
     delay(10);
@@ -89,6 +120,10 @@ void IODataSDInitialize() {
 
     MCPDisplayCursorSet(2, 0);
     MCPDisplayPrint("Device reset?");
+  
+    deviceDataObject.totalizerCommon = 0;
+    deviceDataObject.totalizerDirect = 0;
+    deviceDataObject.totalizerReverse = 0;
 
     deviceConfigurationModbusBaudrateSet(9600);
     MCPDisplayCursorSet(2, 1);
@@ -116,14 +151,13 @@ void IODataSDInitialize() {
 void IODataSDFileWritePeriodically() {
   unsigned long currentMillisSaved = millis();
   if (currentMillisSaved - autSvdTim >= intervalSD) {
-    // MCPDisplayCursorSet(19, 0);
-    // MCPDisplayPrint("S");
+    MCPDisplayCursorSet(19, 0);
+    MCPDisplayPrint("S");
 
-    IODataSDFileWrite(dataFilename);
+    IODataSDFileWrite();
 
-    // MCPDisplayCursorSet(19, 0);
-    // MCPDisplayPrint(" ");
-
+    MCPDisplayCursorSet(19, 0);
+    MCPDisplayPrint(" ");
     autSvdTim = currentMillisSaved;
   }
 }

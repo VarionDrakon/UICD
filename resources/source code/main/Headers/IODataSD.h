@@ -26,10 +26,11 @@ extern deviceDataChar deviceDataCharObject;
 
 extern volatile uint32_t autSvdTim;
 extern unsigned long intervalSD;
-extern char dataFilename[];
+extern const char* dataFilenameSave;
+extern const char* dataFilenameSaveTemp;
 
-void IODataSDFileWrite(const String& fileName);
-void IODataSDFileRead(const String& fileName);
+void IODataSDFileWrite(const char* mainFilename = dataFilenameSave, const char* tempFilename = dataFilenameSaveTemp);
+void IODataSDFileRead(const char* mainFilename = dataFilenameSave, const char* tempFilename = dataFilenameSaveTemp);
 char* totalizerCommonReturn();
 char* totalizerDirectReturn();
 char* totalizerReverseReturn();
