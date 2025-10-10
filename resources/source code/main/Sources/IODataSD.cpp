@@ -1,34 +1,18 @@
-#include <SD.h>
-#include <SPI.h>
+#include "../Headers/IODataSD.h"
 
-#include "MCPDisplay.h"
-
-struct deviceData {
-  unsigned long totalizerCommon;
-  unsigned long totalizerDirect;
-  unsigned long totalizerReverse;
-  unsigned long modbusBaudrate;
-  byte modbusSlaveAddress;
-};
 deviceData deviceDataObject;
-
-struct deviceDataChar {
-  char totalizerCommon[32];
-  char totalizerDirect[32];
-  char totalizerReverse[32];
-  char modbusBaudrate[32];
-  char modbusSlaveAddress[8];
-};
 deviceDataChar deviceDataCharObject;
 
 volatile uint32_t autSvdTim = 0;         //Timer for autosave settings.
 unsigned long intervalSD = 3000;         // Timer for write data SD.
-char dataFilename[] = "data.dat";        // File name for data saving/write.
+char dataFilename[] = "data.csv";        // File name for data saving/write.
 
 void IODataSDFileWrite(const String& fileName) {
   File dataFile = SD.open(fileName, FILE_WRITE);
+  dataFile.seek(0);
   dataFile.write((uint8_t*)&deviceDataObject, sizeof(deviceDataObject));
-  dataFile.close();
+  dataFile.flush();
+  // dataFile.close();
 }
 
 void IODataSDFileRead(const String& fileName) {

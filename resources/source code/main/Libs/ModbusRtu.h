@@ -38,6 +38,9 @@
  *
  */
 
+#ifndef MODBUSRTU_H
+#define MODBUSRTU_H
+
 #include <inttypes.h>
 #include "Arduino.h"
 
@@ -1324,3 +1327,5 @@ int8_t Modbus::process_FC16( uint16_t *regs, uint8_t /*u8size*/ )
 
     return u8CopyBufferSize;
 }
+
+#endif

@@ -1,8 +1,6 @@
 #ifndef MCPDISPLAY_H
 #define MCPDISPLAY_H
 
-#include <Arduino.h>
-
 #define MCP_RS 0  // Register Select.
 #define MCP_EN 2  // Signal - Enable.
 // Data bits for 4-bit interface (These are the pins/outputs of the microcontroller):
@@ -10,6 +8,10 @@
 #define MCP_D5 5
 #define MCP_D6 6
 #define MCP_D7 7
+
+#include <Arduino.h>
+
+#include "../Libs/Libs.h"
 
 void MCPDisplayInitialize(byte address, byte column, byte row);
 

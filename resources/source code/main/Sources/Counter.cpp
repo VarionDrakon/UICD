@@ -1,3 +1,5 @@
+#include "../Headers/Counter.h"
+
 volatile bool back = false;             //Triggered sensor 1
 volatile bool forv = false;             //Triggered sensor 2
 volatile bool isIntrTrg_1 = false;      //Triggered sensor 1

@@ -1,8 +1,6 @@
 #include "../Headers/MCPDisplay.h"
-// #include <Wire.h>
-#include "../Libs/Adafruit_MCP23008/Adafruit_MCP23008.h"
 
-Adafruit_MCP23008 mcp;
+extern Adafruit_MCP23008 mcp;
 
 /*
 Loop through all MCP23008 pins from 0 to 7.

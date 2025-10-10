@@ -1,7 +1,6 @@
 #include "../Libs/ModbusRtu.h"
+#include "../Headers/Headers.h"
 
-#define TXEN 4
-#define length 9  //Length of sent arrray
 /*
 Element (9):
 [0] - slave addres;
@@ -10,10 +9,10 @@ Element (9):
 [5], [6] - totalize 1 - FORWARD;
 [7], [8] - totalize 2 - REVERSE;
 */
-volatile uint16_t au16data[length] = { 0, 0, 0, 0, 0, 0, 0, 0, 0 };  //Element [X] - Reserve for future
+uint16_t au16data[length] = { 0, 0, 0, 0, 0, 0, 0, 0, 0 };  //Element [X] - Reserve for future
 
 //Default settings
-Modbus slave(10, 9600, TXEN);
+Modbus slave(10, 9600, modbusPin);
 // Modbus slave(10, 9600, TXEN);
 // char dataFilename[] = "data.dat";
 
@@ -24,7 +23,7 @@ void modbusInitialize() {
   currentSlaveAddress = deviceDataObject.modbusSlaveAddress;
   currentBaudrate = deviceDataObject.modbusBaudrate;
 
-  slave = Modbus(currentSlaveAddress, currentBaudrate, TXEN);
+  slave = Modbus(currentSlaveAddress, currentBaudrate, modbusPin);
   // slave = Modbus(deviceDataObject.modbusSlaveAddress, deviceDataObject.modbusBaudrate, TXEN); //ModBus initialize.
   slave.begin();
   Serial.begin(currentBaudrate, SERIAL_8N1);
@@ -89,7 +88,7 @@ void modbusSettingsUpdater() {
     Serial.end();
     delay(100);
     Serial.begin(currentBaudrate, SERIAL_8N1);
-    slave = Modbus(currentSlaveAddress, currentBaudrate, TXEN);
+    slave = Modbus(currentSlaveAddress, currentBaudrate, modbusPin);
     slave.start();
 
     deviceDataObject.modbusSlaveAddress = currentSlaveAddress;
