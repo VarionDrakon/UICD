@@ -4,6 +4,8 @@
 #include <SD.h>
 #include <SPI.h>
 
+#include <Wire.h>
+
 #include "MCPDisplay.h"
 
 struct deviceData {
@@ -26,11 +28,11 @@ extern deviceDataChar deviceDataCharObject;
 
 extern volatile uint32_t autSvdTim;
 extern unsigned long intervalSD;
-extern const char* dataFilenameSave;
-extern const char* dataFilenameSaveTemp;
+// extern const char* dataFilenameSave;
+// extern const char* dataFilenameSaveTemp;
 
-void IODataSDFileWrite(const char* mainFilename = dataFilenameSave, const char* tempFilename = dataFilenameSaveTemp);
-void IODataSDFileRead(const char* mainFilename = dataFilenameSave, const char* tempFilename = dataFilenameSaveTemp);
+void IODataSDFileWrite(const unsigned long &value);
+void IODataSDFileRead(unsigned long &value);
 char* totalizerCommonReturn();
 char* totalizerDirectReturn();
 char* totalizerReverseReturn();

@@ -94,7 +94,7 @@ void modbusSettingsUpdater() {
     deviceDataObject.modbusSlaveAddress = currentSlaveAddress;
     deviceDataObject.modbusBaudrate = currentBaudrate;
 
-    IODataSDFileWrite();
+    // IODataSDFileWrite();
 
     MCPDisplayCursorSet(4, 0);
     MCPDisplayPrint("                ");
