@@ -97,8 +97,8 @@ void buttonHandle() {
         MCPDisplayPrint("PIN_LEFT");
     }
     if (buttonStatus[4] == LOW) {
-            UIDisplayMain();
-            MCPDisplayCursorSet(17, 0);
-            MCPDisplayPrint("PIN_DOWN");
+        UIDisplayMain();
+        MCPDisplayCursorSet(17, 0);
+        MCPDisplayPrint("PIN_DOWN");
     }
 };
