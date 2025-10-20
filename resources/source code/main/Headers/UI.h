@@ -15,6 +15,6 @@ void UIInitialize();
 
 void buttonHandle();
 
-void UIMainDisplay();
+void UIDisplayMain();
 
 #endif

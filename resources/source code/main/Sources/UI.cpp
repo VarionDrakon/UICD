@@ -35,6 +35,34 @@ void UIInitialize() {
     
 };
 
+
+void UIDisplayMain() {
+    MCPDisplayCommandSend(0x01);
+    delay(10);
+
+    MCPDisplayCursorSet(0, 0);
+    MCPDisplayPrint("B: ");
+    MCPDisplayCursorSet(4, 0);
+    MCPDisplayPrint(deviceConfigurationModbusBaudrateGet());
+    MCPDisplayCursorSet(11, 0);
+    MCPDisplayPrint(deviceConfigurationModbusSlaveAddressGet());
+
+    MCPDisplayCursorSet(0, 1);
+    MCPDisplayPrint("C:");
+    MCPDisplayCursorSet(4, 1);
+    MCPDisplayPrint(totalizerCommonReturn());
+
+    MCPDisplayCursorSet(0, 2);
+    MCPDisplayPrint("D:");
+    MCPDisplayCursorSet(4, 2);
+    MCPDisplayPrint(totalizerDirectReturn());
+
+    MCPDisplayCursorSet(0, 3);
+    MCPDisplayPrint("R:");
+    MCPDisplayCursorSet(4, 3);
+    MCPDisplayPrint(totalizerReverseReturn());
+};
+
 void buttonHandle() {
     delay(50);
     buttonStatus[0] = digitalRead(PIN_RIGHT);
@@ -73,31 +101,4 @@ void buttonHandle() {
             MCPDisplayCursorSet(17, 0);
             MCPDisplayPrint("PIN_DOWN");
     }
-};
-
-void UIDisplayMain() {
-    MCPDisplayCommandSend(0x01);
-    delay(10);
-
-    MCPDisplayCursorSet(0, 0);
-    MCPDisplayPrint("B: ");
-    MCPDisplayCursorSet(4, 0);
-    MCPDisplayPrint(deviceConfigurationModbusBaudrateGet());
-    MCPDisplayCursorSet(11, 0);
-    MCPDisplayPrint(deviceConfigurationModbusSlaveAddressGet());
-
-    MCPDisplayCursorSet(0, 1);
-    MCPDisplayPrint("C:");
-    MCPDisplayCursorSet(4, 1);
-    MCPDisplayPrint(totalizerCommonReturn());
-
-    MCPDisplayCursorSet(0, 2);
-    MCPDisplayPrint("D:");
-    MCPDisplayCursorSet(4, 2);
-    MCPDisplayPrint(totalizerDirectReturn());
-
-    MCPDisplayCursorSet(0, 3);
-    MCPDisplayPrint("R:");
-    MCPDisplayCursorSet(4, 3);
-    MCPDisplayPrint(totalizerReverseReturn());
 };
