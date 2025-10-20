@@ -11,35 +11,13 @@ void setup() {
 
   sensorsInitialize();
 
-  modbusInitialize();
-
-  MCPDisplayCommandSend(0x01);
-  delay(10);
-
   deviceConfigurationModbusBaudrateSet(9600);
   deviceConfigurationModbusSlaveAddressSet(10);
 
-  MCPDisplayCursorSet(0, 0);
-  MCPDisplayPrint("B: ");
-  MCPDisplayCursorSet(4, 0);
-  MCPDisplayPrint(deviceConfigurationModbusBaudrateGet());
-  MCPDisplayCursorSet(11, 0);
-  MCPDisplayPrint(deviceConfigurationModbusSlaveAddressGet());
+  modbusInitialize();
 
-  MCPDisplayCursorSet(0, 1);
-  MCPDisplayPrint("C:");
-  MCPDisplayCursorSet(4, 1);
-  MCPDisplayPrint(totalizerCommonReturn());
-
-  MCPDisplayCursorSet(0, 2);
-  MCPDisplayPrint("D:");
-  MCPDisplayCursorSet(4, 2);
-  MCPDisplayPrint(totalizerDirectReturn());
-
-  MCPDisplayCursorSet(0, 3);
-  MCPDisplayPrint("R:");
-  MCPDisplayCursorSet(4, 3);
-  MCPDisplayPrint(totalizerReverseReturn());
+  UIInitialize();
+  
 }
 
 void loop() {
@@ -77,7 +55,9 @@ void loop() {
 
   modbusSettingsUpdater();
 
-  // IODataSDFileWritePeriodically();
+  IODataSDFileWritePeriodically();
+
+  buttonHandle();
 
   // deviceDataObject.modbusSlaveAddress = au16data[0];
   // deviceDataObject.modbusBaudrate = au16data[1];

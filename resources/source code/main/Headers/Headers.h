@@ -6,5 +6,6 @@
 #include "IODataSD.h"
 #include "MCPDisplay.h"
 #include "Modbus.h"
+#include "UI.h"
 
 #endif

@@ -46,5 +46,4 @@ char* deviceConfigurationModbusSlaveAddressGet();
 void IODataSDInitialize();
 void IODataSDFileWritePeriodically();
 
-
 #endif

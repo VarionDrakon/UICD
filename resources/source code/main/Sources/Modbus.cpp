@@ -13,9 +13,6 @@ uint16_t au16data[length] = { 0, 0, 0, 0, 0, 0, 0, 0, 0 };  //Element [X] - Rese
 
 //Default settings
 Modbus slave(10, 9600, modbusPin);
-// Modbus slave(10, 9600, TXEN);
-// char dataFilename[] = "data.dat";
-
 byte currentSlaveAddress = 10;
 unsigned long currentBaudrate = 9600;
 
@@ -24,10 +21,8 @@ void modbusInitialize() {
   currentBaudrate = deviceDataObject.modbusBaudrate;
 
   slave = Modbus(currentSlaveAddress, currentBaudrate, modbusPin);
-  // slave = Modbus(deviceDataObject.modbusSlaveAddress, deviceDataObject.modbusBaudrate, TXEN); //ModBus initialize.
   slave.begin();
   Serial.begin(currentBaudrate, SERIAL_8N1);
-  // Serial.begin(deviceDataObject.modbusBaudrate, SERIAL_8N1);  //Serial settings
 
   au16data[0] = deviceDataObject.modbusSlaveAddress;
   au16data[1] = (deviceDataObject.modbusBaudrate >> 16) & 0xFFFF;
