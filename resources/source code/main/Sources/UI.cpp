@@ -1,11 +1,11 @@
 #include "Arduino.h"
 #include "../Headers/Headers.h"
 
-#define PIN_RIGHT 9 // [PB1]
-#define PIN_DOWN  8 // [PD5]
-#define PIN_OK    7 // [PD7]
-#define PIN_UP    6 // [PB0]
-#define PIN_LEFT  5 // [PD6]
+#define PIN_RIGHT 9 // [PB1] | Physical pinout of the microcircuit: 13
+#define PIN_UP    6 // [PB0] | Physical pinout of the microcircuit: 12
+#define PIN_OK    7 // [PD7] | Physical pinout of the microcircuit: 11
+#define PIN_LEFT  5 // [PD6] | Physical pinout of the microcircuit: 10
+#define PIN_DOWN  8 // [PD5] | Physical pinout of the microcircuit: 9
 
 bool buttonStatus[5] = { 
     false, // [0] PIN_RIGHT
@@ -14,6 +14,14 @@ bool buttonStatus[5] = {
     false, // [3] PIN_LEFT
     false  // [4] PIN_DOWN
 };
+
+
+
+struct menuItems {
+    int settingsSelectionIndex = 0;
+    char* dictionaryMenuItem[5] = {"> ", "ModBus", "Totalizer`s", "Information",  "Exit"};
+};
+menuItems menuItemsObject;
 
 enum UIState {
     MAIN,
@@ -32,6 +40,7 @@ void buttonInitialize() {
 void UIInitialize() {
 
     buttonInitialize();
+    UIDisplayMain();
     
 };
 
@@ -63,8 +72,109 @@ void UIDisplayMain() {
     MCPDisplayPrint(totalizerReverseReturn());
 };
 
+void UIDisplayMenuMain() {
+    MCPDisplayCommandSend(0x01);
+    delay(10);
+
+    switch (menuItemsObject.settingsSelectionIndex)
+    {
+    case 0:
+        MCPDisplayCursorSet(0, 0);
+        MCPDisplayPrint(menuItemsObject.dictionaryMenuItem[0]);
+
+        MCPDisplayCursorSet(3, 0);
+        MCPDisplayPrint(menuItemsObject.dictionaryMenuItem[1]);
+
+        MCPDisplayCursorSet(0, 1);
+        MCPDisplayPrint(menuItemsObject.dictionaryMenuItem[2]);
+
+        MCPDisplayCursorSet(0, 2);
+        MCPDisplayPrint(menuItemsObject.dictionaryMenuItem[3]);
+
+        MCPDisplayCursorSet(0, 3);
+        MCPDisplayPrint(menuItemsObject.dictionaryMenuItem[4]);
+        break;
+    case 1:
+        MCPDisplayCursorSet(0, 1);
+        MCPDisplayPrint(menuItemsObject.dictionaryMenuItem[0]);
+
+        MCPDisplayCursorSet(0, 0);
+        MCPDisplayPrint(menuItemsObject.dictionaryMenuItem[1]);
+
+        MCPDisplayCursorSet(3, 1);
+        MCPDisplayPrint(menuItemsObject.dictionaryMenuItem[2]);
+
+        MCPDisplayCursorSet(0, 2);
+        MCPDisplayPrint(menuItemsObject.dictionaryMenuItem[3]);
+
+        MCPDisplayCursorSet(0, 3);
+        MCPDisplayPrint(menuItemsObject.dictionaryMenuItem[4]);
+        break;
+    case 2:
+        MCPDisplayCursorSet(0, 2);
+        MCPDisplayPrint(menuItemsObject.dictionaryMenuItem[0]);
+        
+        MCPDisplayCursorSet(0, 0);
+        MCPDisplayPrint(menuItemsObject.dictionaryMenuItem[1]);
+
+        MCPDisplayCursorSet(0, 1);
+        MCPDisplayPrint(menuItemsObject.dictionaryMenuItem[2]);
+
+        MCPDisplayCursorSet(3, 2);
+        MCPDisplayPrint(menuItemsObject.dictionaryMenuItem[3]);
+
+        MCPDisplayCursorSet(0, 3);
+        MCPDisplayPrint(menuItemsObject.dictionaryMenuItem[4]);
+        break;
+    case 3:
+        MCPDisplayCursorSet(0, 3);
+        MCPDisplayPrint(menuItemsObject.dictionaryMenuItem[0]);
+
+        MCPDisplayCursorSet(0, 0);
+        MCPDisplayPrint(menuItemsObject.dictionaryMenuItem[1]);
+        
+        MCPDisplayCursorSet(0, 1);
+        MCPDisplayPrint(menuItemsObject.dictionaryMenuItem[2]);
+
+        MCPDisplayCursorSet(0, 2);
+        MCPDisplayPrint(menuItemsObject.dictionaryMenuItem[3]);
+
+        MCPDisplayCursorSet(3, 3);
+        MCPDisplayPrint(menuItemsObject.dictionaryMenuItem[4]);
+        break;
+    }
+};
+
+void UIDisplayMenuIndex(bool action = false) {
+    if (action == false) {
+        if (menuItemsObject.settingsSelectionIndex <= 0) {
+            menuItemsObject.settingsSelectionIndex = 0;
+        }
+        else {
+            menuItemsObject.settingsSelectionIndex--;
+        }
+    }
+    else {
+        if (menuItemsObject.settingsSelectionIndex >= 3) {
+            menuItemsObject.settingsSelectionIndex = 3;
+        }
+        else {
+            menuItemsObject.settingsSelectionIndex++;
+        }
+    }
+}
+
+void UIDisplayMenuHandler() {
+    if (menuItemsObject.settingsSelectionIndex == 0) {
+        UIDisplayMenuMain();
+    }
+    if (menuItemsObject.settingsSelectionIndex == 3) {
+        menuItemsObject.settingsSelectionIndex = 0;
+        UIDisplayMain();
+    }
+}
+
 void buttonHandle() {
-    delay(50);
     buttonStatus[0] = digitalRead(PIN_RIGHT);
     buttonStatus[1] = digitalRead(PIN_UP);
     buttonStatus[2] = digitalRead(PIN_OK);
@@ -73,32 +183,27 @@ void buttonHandle() {
 
 
     if (buttonStatus[0] == LOW) {
-        MCPDisplayCommandSend(0x01);
-        delay(10);
-        MCPDisplayCursorSet(5, 2);
-        MCPDisplayPrint("PIN_RIGHT");
+        delay(50);
+        MCPDisplayCursorSet(17, 0);
+        MCPDisplayPrint("R");
     }
     if (buttonStatus[1] == LOW) {
-        MCPDisplayCommandSend(0x01);
-        delay(10);
-        MCPDisplayCursorSet(5, 2);
-        MCPDisplayPrint("PIN_UP");
+        delay(50);
+        UIDisplayMenuIndex();
+        UIDisplayMenuMain();
     }
     if (buttonStatus[2] == LOW) {
-        MCPDisplayCommandSend(0x01);
-        delay(10);
-        MCPDisplayCursorSet(5, 2);
-        MCPDisplayPrint("PIN_OK");
+        delay(50);
+        UIDisplayMenuHandler();
     }
     if (buttonStatus[3] == LOW) {
-        MCPDisplayCommandSend(0x01);
-        delay(10);
-        MCPDisplayCursorSet(5, 2);
-        MCPDisplayPrint("PIN_LEFT");
+        delay(50);
+        MCPDisplayCursorSet(17, 0);
+        MCPDisplayPrint("L");
     }
     if (buttonStatus[4] == LOW) {
-        UIDisplayMain();
-        MCPDisplayCursorSet(17, 0);
-        MCPDisplayPrint("PIN_DOWN");
+        delay(50);
+        UIDisplayMenuIndex(true);
+        UIDisplayMenuMain();
     }
 };
