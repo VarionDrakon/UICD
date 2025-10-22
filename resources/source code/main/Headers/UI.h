@@ -13,16 +13,22 @@ extern bool buttonStatus[5];
 
 void buttonInitialize();
 
-void UIInitialize();
+void UIDisplayInitialize();
 
-void buttonHandle();
+void UIButtonsHandler();
 
-void UIDisplayMain();
+void UIDisplayDefault();
 
 void UIDisplayMenuMain();
 
-void UIDisplayMenuIndex(bool action = false);
+void UIDisplayMenuConnection();
 
-void UIDisplayMenuHandler();
+void UIDisplayMenuTotalizers();
+
+void UIDisplayMenuInformation();
+
+void UIDisplayMenuIndex(int menuIndexLimit, bool action = false);
+
+void UIDisplayHandler();
 
 #endif

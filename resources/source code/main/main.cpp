@@ -16,8 +16,8 @@ void setup() {
 
   modbusInitialize();
 
-  UIInitialize();
-  
+  UIDisplayInitialize();
+
 }
 
 void loop() {
@@ -57,7 +57,7 @@ void loop() {
 
   IODataSDFileWritePeriodically();
 
-  buttonHandle();
+  UIButtonsHandler();
 
   // deviceDataObject.modbusSlaveAddress = au16data[0];
   // deviceDataObject.modbusBaudrate = au16data[1];
