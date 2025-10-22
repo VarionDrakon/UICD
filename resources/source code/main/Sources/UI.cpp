@@ -158,11 +158,6 @@ void UIDisplayMenuConnection() {
     MCPDisplayCursorSet(11, 0);
     MCPDisplayPrint("Modbus");
 
-    MCPDisplayCursorSet(11, 1);
-    MCPDisplayPrint("19200");
-    MCPDisplayCursorSet(11, 2);
-    MCPDisplayPrint("256");
-
     switch (UIDisplayMenuItemsObject.settingsIndexSelection) {
     case 0:
         MCPDisplayCursorSet(0, 1);
