@@ -11,7 +11,7 @@ struct menuItems;
 
 extern bool buttonStatus[5];
 
-void buttonInitialize();
+void UIButtonsInitialize();
 
 void UIDisplayInitialize();
 
@@ -24,6 +24,10 @@ void UIDisplayMenuMain();
 void UIDisplayMenuConnection();
 
 void UIDisplayMenuTotalizers();
+
+void UIDisplayMenuTotalizersSelectedRequestReset();
+
+void UIDisplayMenuTotalizersSelectedReset();
 
 void UIDisplayMenuInformation();
 

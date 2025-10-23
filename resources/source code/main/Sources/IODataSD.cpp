@@ -108,12 +108,24 @@ void totalizerCommonValueAdd() {
   deviceDataObject.totalizerCommon++;
 }
 
+void totalizerCommonValueReset() {
+  deviceDataObject.totalizerCommon = 0;
+}
+
 void totalizerDirectValueAdd() {
   deviceDataObject.totalizerDirect++;
 }
 
+void totalizerDirectValueReset() {
+  deviceDataObject.totalizerDirect = 0;
+}
+
 void totalizerReverseValueAdd() {
   deviceDataObject.totalizerReverse++;
+}
+
+void totalizerReverseValueReset() {
+  deviceDataObject.totalizerReverse = 0;
 }
 
 void deviceConfigurationModbusBaudrateSet(unsigned long value) {

@@ -24,6 +24,7 @@ bool buttonStatus[5] = {
 struct UIDisplayMenuItems {
     int settingsIndexSelection = 0;
     int settingsIndexLimit = 0;
+    int settingsIndexTotalizersSelected = 0;
 };
 UIDisplayMenuItems UIDisplayMenuItemsObject;
 
@@ -32,11 +33,12 @@ enum UIDisplaySectionList {
     sectionMenu,
     sectionMenuConnections,
     sectionMenuTotalizers,
+    sectionMenuTotalizersSelectedRequestReset,
     sectionMenuInformations
 };
 UIDisplaySectionList UIDisplaySectionListObject = sectionDefault;
 
-void buttonInitialize() {
+void UIButtonsInitialize() {
     pinMode(PIN_RIGHT, INPUT_PULLUP);
     pinMode(PIN_UP, INPUT_PULLUP);
     pinMode(PIN_OK, INPUT_PULLUP);
@@ -46,10 +48,13 @@ void buttonInitialize() {
 
 void UIDisplayInitialize() {
     UIDisplayHandler();
+    UIButtonsInitialize();
 };
 
 
 void UIDisplayDefault() {
+    UIDisplayMenuItemsObject.settingsIndexLimit = 0;
+    UIDisplaySectionListObject = sectionDefault;
     MCPDisplayCommandSend(0x01);
     delay(10);
 
@@ -150,13 +155,19 @@ void UIDisplayMenuMain() {
 };
 
 void UIDisplayMenuConnection() {
+    UIDisplayMenuItemsObject.settingsIndexLimit = 2;
     MCPDisplayCommandSend(0x01);
     delay(10);
 
-    MCPDisplayCursorSet(4, 0);
+    MCPDisplayCursorSet(1, 0);
     MCPDisplayPrint("Menu:");
-    MCPDisplayCursorSet(11, 0);
+    MCPDisplayCursorSet(6, 0);
     MCPDisplayPrint("Modbus");
+
+    MCPDisplayCursorSet(11, 1);
+    MCPDisplayPrint("19200");
+    MCPDisplayCursorSet(11, 2);
+    MCPDisplayPrint("256");
 
     switch (UIDisplayMenuItemsObject.settingsIndexSelection) {
     case 0:
@@ -202,13 +213,14 @@ void UIDisplayMenuConnection() {
 }
 
 void UIDisplayMenuTotalizers() {
+    UIDisplayMenuItemsObject.settingsIndexLimit = 2;
     MCPDisplayCommandSend(0x01);
     delay(10);
 
-    MCPDisplayCursorSet(4, 0);
+    MCPDisplayCursorSet(1, 0);
     MCPDisplayPrint("Menu:");
-    MCPDisplayCursorSet(11, 0);
-    MCPDisplayPrint("TTLZRS");
+    MCPDisplayCursorSet(6, 0);
+    MCPDisplayPrint("Totalizers");
 
     switch (UIDisplayMenuItemsObject.settingsIndexSelection) {
     case 0:
@@ -216,10 +228,10 @@ void UIDisplayMenuTotalizers() {
         MCPDisplayPrint(">");
 
         MCPDisplayCursorSet(2, 1);
-        MCPDisplayPrint("None");
+        MCPDisplayPrint("Reset totalizer: F");
 
         MCPDisplayCursorSet(0, 2);
-        MCPDisplayPrint("None");
+        MCPDisplayPrint("Reset totalizer: R");
 
         MCPDisplayCursorSet(0, 3);
         MCPDisplayPrint("Exit");
@@ -229,10 +241,10 @@ void UIDisplayMenuTotalizers() {
         MCPDisplayPrint(">");
 
         MCPDisplayCursorSet(0, 1);
-        MCPDisplayPrint("None");
+        MCPDisplayPrint("Reset totalizer: F");
 
         MCPDisplayCursorSet(2, 2);
-        MCPDisplayPrint("None");
+        MCPDisplayPrint("Reset totalizer: R");
 
         MCPDisplayCursorSet(0, 3);
         MCPDisplayPrint("Exit");
@@ -242,10 +254,10 @@ void UIDisplayMenuTotalizers() {
         MCPDisplayPrint(">");
 
         MCPDisplayCursorSet(0, 1);
-        MCPDisplayPrint("None");
+        MCPDisplayPrint("Reset totalizer: F");
 
         MCPDisplayCursorSet(0, 2);
-        MCPDisplayPrint("None");
+        MCPDisplayPrint("Reset totalizer: R");
 
         MCPDisplayCursorSet(2, 3);
         MCPDisplayPrint("Exit");
@@ -254,18 +266,14 @@ void UIDisplayMenuTotalizers() {
 }
 
 void UIDisplayMenuInformation() {
+    UIDisplayMenuItemsObject.settingsIndexLimit = 2;
     MCPDisplayCommandSend(0x01);
     delay(10);
 
     MCPDisplayCursorSet(4, 0);
     MCPDisplayPrint("Menu:");
-    MCPDisplayCursorSet(11, 0);
+    MCPDisplayCursorSet(6, 0);
     MCPDisplayPrint("Info");
-
-    MCPDisplayCursorSet(11, 1);
-    MCPDisplayPrint("19200");
-    MCPDisplayCursorSet(11, 2);
-    MCPDisplayPrint("256");
 
     switch (UIDisplayMenuItemsObject.settingsIndexSelection) {
     case 0:
@@ -310,29 +318,88 @@ void UIDisplayMenuInformation() {
     }
 }
 
+void UIDisplayMenuTotalizersSelectedRequestReset() {
+    UIDisplayMenuItemsObject.settingsIndexLimit = 1;
+    MCPDisplayCommandSend(0x01);
+    delay(10);
+
+    MCPDisplayCursorSet(1, 0);
+    MCPDisplayPrint("Menu:");
+    MCPDisplayCursorSet(6, 0);
+    MCPDisplayPrint("Totalizers");
+
+    MCPDisplayCursorSet(0, 1);
+    MCPDisplayPrint("Reset totalizer ");
+
+    MCPDisplayCursorSet(17, 1);
+    MCPDisplayPrint(itoa(UIDisplayMenuItemsObject.settingsIndexTotalizersSelected, " ", 10));
+
+    MCPDisplayCursorSet(18, 1);
+    MCPDisplayPrint("?");
+
+    switch (UIDisplayMenuItemsObject.settingsIndexSelection)
+    {
+    case 0:
+        MCPDisplayCursorSet(0, 2);
+        MCPDisplayPrint(">");
+
+        MCPDisplayCursorSet(3, 2);
+        MCPDisplayPrint("Yes");
+
+        MCPDisplayCursorSet(0, 3);
+        MCPDisplayPrint("No");
+        break;
+    case 1:
+        MCPDisplayCursorSet(0, 3);
+        MCPDisplayPrint(">");
+
+        MCPDisplayCursorSet(0, 2);
+        MCPDisplayPrint("Yes");
+
+        MCPDisplayCursorSet(3, 3);
+        MCPDisplayPrint("No");
+        break;
+    }
+}
+
+void UIDisplayMenuTotalizersSelectedReset() {
+    switch (UIDisplayMenuItemsObject.settingsIndexTotalizersSelected)
+    {
+    case 0:
+        totalizerCommonValueReset();
+        UIDisplaySectionListObject = sectionMenuTotalizers;
+        break;
+    case 1:
+        totalizerDirectValueReset();
+        UIDisplaySectionListObject = sectionMenuTotalizers;
+        break;
+    case 2:
+        totalizerReverseValueReset();
+        UIDisplaySectionListObject = sectionMenuTotalizers;
+        break;
+    }
+}
+
 void UIDisplayHandler() {
     switch (UIDisplaySectionListObject)
     {
     case sectionDefault:
-        UIDisplaySectionListObject = sectionDefault;
-        UIDisplayMenuItemsObject.settingsIndexLimit = 0;
         UIDisplayDefault();
         break;
     case sectionMenu:
         UIDisplayMenuMain();
-        UIDisplayMenuItemsObject.settingsIndexLimit = 3;
         break;
     case sectionMenuConnections:
         UIDisplayMenuConnection();
-        UIDisplayMenuItemsObject.settingsIndexLimit = 2;
         break;
     case sectionMenuTotalizers:
         UIDisplayMenuTotalizers();
-        UIDisplayMenuItemsObject.settingsIndexLimit = 2;
+        break;
+    case sectionMenuTotalizersSelectedRequestReset:
+        UIDisplayMenuTotalizersSelectedRequestReset();
         break;
     case sectionMenuInformations:
         UIDisplayMenuInformation();
-        UIDisplayMenuItemsObject.settingsIndexLimit = 2;
         break;
     }
 }
@@ -492,19 +559,72 @@ void UIButtonsHandler() {
             MCPDisplayCursorSet(17, 0);
             MCPDisplayPrint("L");
         }
+
         if (buttonStatus[BUTTON_OK] == LOW) {
             delay(50);
 
             switch (UIDisplayMenuItemsObject.settingsIndexSelection) {
             case 0:
+                UIDisplayMenuItemsObject.settingsIndexTotalizersSelected = 1;
+                UIDisplaySectionListObject = sectionMenuTotalizersSelectedRequestReset;
                 break;
             case 1:
+                UIDisplayMenuItemsObject.settingsIndexTotalizersSelected = 2;
+                UIDisplaySectionListObject = sectionMenuTotalizersSelectedRequestReset;
                 break;
             case 2:
                 UIDisplaySectionListObject = sectionMenu;
                 break;
             }
             UIDisplayMenuItemsObject.settingsIndexSelection = 0;
+            MCPDisplayCursorSet(17, 0);
+            MCPDisplayPrint("O");
+            UIDisplayHandler();
+        }
+        break;
+    case sectionMenuTotalizersSelectedRequestReset:
+        if (buttonStatus[BUTTON_UP] == LOW) {
+            delay(50);
+
+            if (UIDisplayMenuItemsObject.settingsIndexSelection > 0) {
+                UIDisplayMenuItemsObject.settingsIndexSelection--;
+            }
+            else {
+                UIDisplayMenuItemsObject.settingsIndexSelection = UIDisplayMenuItemsObject.settingsIndexLimit;
+            }
+            UIDisplayHandler();
+            MCPDisplayCursorSet(17, 0);
+            MCPDisplayPrint("U");
+        }
+
+        if (buttonStatus[BUTTON_DOWN] == LOW) {
+            delay(50);
+
+            if (UIDisplayMenuItemsObject.settingsIndexSelection < UIDisplayMenuItemsObject.settingsIndexLimit) {
+                UIDisplayMenuItemsObject.settingsIndexSelection++;
+            }
+            else {
+                UIDisplayMenuItemsObject.settingsIndexSelection = 0;
+            }
+            UIDisplayHandler();
+            MCPDisplayCursorSet(17, 0);
+            MCPDisplayPrint("D");
+        }
+        
+        if (buttonStatus[BUTTON_OK] == LOW) {
+            delay(50);
+
+            switch (UIDisplayMenuItemsObject.settingsIndexSelection) {
+            case 0:
+                UIDisplayMenuTotalizersSelectedReset();
+                break;
+            case 1:
+                UIDisplaySectionListObject = sectionMenuTotalizers;
+                break;
+            }
+            UIDisplayMenuItemsObject.settingsIndexSelection = 0;
+            UIDisplayMenuItemsObject.settingsIndexTotalizersSelected = 0; // Reset selected totalizer!
+
             MCPDisplayCursorSet(17, 0);
             MCPDisplayPrint("O");
             UIDisplayHandler();
@@ -557,4 +677,4 @@ void UIButtonsHandler() {
         }
         break;
     }
-};
+}
