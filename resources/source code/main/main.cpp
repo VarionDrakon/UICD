@@ -53,7 +53,7 @@ void loop() {
 
   modbusHandlerResponse();
 
-  modbusSettingsUpdater();
+  // modbusSettingsUpdater();
 
   IODataSDFileWritePeriodically();
 

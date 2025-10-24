@@ -5,6 +5,10 @@
 #define modbusPin 4
 
 extern uint16_t au16data[length];
+extern int modbusBaudrateListIndex;
+extern uint32_t modbusBaudrateList[];
+extern int modbusBaudrateListIndexLimit;
+extern bool modbusBaudrateListNotTrue;
 
 void modbusInitialize();
 

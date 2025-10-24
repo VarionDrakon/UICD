@@ -51,7 +51,6 @@ void UIDisplayInitialize() {
     UIButtonsInitialize();
 };
 
-
 void UIDisplayDefault() {
     UIDisplayMenuItemsObject.settingsIndexLimit = 0;
     UIDisplaySectionListObject = sectionDefault;
@@ -86,70 +85,34 @@ void UIDisplayMenuMain() {
     MCPDisplayCommandSend(0x01);
     delay(10);
 
+    MCPDisplayCursorSet(0, 0);
+    MCPDisplayPrint("Connections");
+
+    MCPDisplayCursorSet(0, 1);
+    MCPDisplayPrint("Totalizers");
+
+    MCPDisplayCursorSet(0, 2);
+    MCPDisplayPrint("Informations");
+
+    MCPDisplayCursorSet(0, 3);
+    MCPDisplayPrint("Exit");
+
     switch (UIDisplayMenuItemsObject.settingsIndexSelection) {
     case 0:
         MCPDisplayCursorSet(0, 0);
-        MCPDisplayPrint(">");
-
-        MCPDisplayCursorSet(2, 0);
-        MCPDisplayPrint("Connections");
-
-        MCPDisplayCursorSet(0, 1);
-        MCPDisplayPrint("Totalizers");
-
-        MCPDisplayCursorSet(0, 2);
-        MCPDisplayPrint("Informations");
-
-        MCPDisplayCursorSet(0, 3);
-        MCPDisplayPrint("Exit");
+        MCPDisplayPrint("> Connections");
         break;
     case 1:
         MCPDisplayCursorSet(0, 1);
-        MCPDisplayPrint(">");
-
-        MCPDisplayCursorSet(0, 0);
-        MCPDisplayPrint("Connections");
-
-        MCPDisplayCursorSet(2, 1);
-        MCPDisplayPrint("Totalizers");
-
-        MCPDisplayCursorSet(0, 2);
-        MCPDisplayPrint("Informations");
-
-        MCPDisplayCursorSet(0, 3);
-        MCPDisplayPrint("Exit");
+        MCPDisplayPrint(">  Totalizers");
         break;
     case 2:
         MCPDisplayCursorSet(0, 2);
-        MCPDisplayPrint(">");
-        
-        MCPDisplayCursorSet(0, 0);
-        MCPDisplayPrint("Connections");
-
-        MCPDisplayCursorSet(0, 1);
-        MCPDisplayPrint("Totalizers");
-
-        MCPDisplayCursorSet(2, 2);
-        MCPDisplayPrint("Informations");
-
-        MCPDisplayCursorSet(0, 3);
-        MCPDisplayPrint("Exit");
+        MCPDisplayPrint("> Informations");
         break;
     case 3:
         MCPDisplayCursorSet(0, 3);
-        MCPDisplayPrint(">");
-
-        MCPDisplayCursorSet(0, 0);
-        MCPDisplayPrint("Connections");
-        
-        MCPDisplayCursorSet(0, 1);
-        MCPDisplayPrint("Totalizers");
-
-        MCPDisplayCursorSet(0, 2);
-        MCPDisplayPrint("Informations");
-
-        MCPDisplayCursorSet(2, 3);
-        MCPDisplayPrint("Exit");
+        MCPDisplayPrint("> Exit");
         break;
     }
 };
@@ -161,53 +124,35 @@ void UIDisplayMenuConnection() {
 
     MCPDisplayCursorSet(1, 0);
     MCPDisplayPrint("Menu:");
-    MCPDisplayCursorSet(6, 0);
+    MCPDisplayCursorSet(7, 0);
     MCPDisplayPrint("Modbus");
 
+    MCPDisplayCursorSet(0, 1);
+    MCPDisplayPrint("Baudrate");
+
+    MCPDisplayCursorSet(0, 2);
+    MCPDisplayPrint("Address");
+
+    MCPDisplayCursorSet(0, 3);
+    MCPDisplayPrint("Exit");
+
     MCPDisplayCursorSet(11, 1);
-    MCPDisplayPrint("19200");
+    MCPDisplayPrint(deviceConfigurationModbusBaudrateGet());
     MCPDisplayCursorSet(11, 2);
-    MCPDisplayPrint("256");
+    MCPDisplayPrint(deviceConfigurationModbusSlaveAddressGet());
 
     switch (UIDisplayMenuItemsObject.settingsIndexSelection) {
     case 0:
         MCPDisplayCursorSet(0, 1);
-        MCPDisplayPrint(">");
-
-        MCPDisplayCursorSet(2, 1);
-        MCPDisplayPrint("Baudrate");
-
-        MCPDisplayCursorSet(0, 2);
-        MCPDisplayPrint("Address");
-
-        MCPDisplayCursorSet(0, 3);
-        MCPDisplayPrint("Exit");
+        MCPDisplayPrint("> Baudrate");
         break;
     case 1:
         MCPDisplayCursorSet(0, 2);
-        MCPDisplayPrint(">");
-
-        MCPDisplayCursorSet(0, 1);
-        MCPDisplayPrint("Baudrate");
-
-        MCPDisplayCursorSet(2, 2);
-        MCPDisplayPrint("Address");
-
-        MCPDisplayCursorSet(0, 3);
-        MCPDisplayPrint("Exit");
+        MCPDisplayPrint("> Address");
         break;
     case 2:
         MCPDisplayCursorSet(0, 3);
-        MCPDisplayPrint(">");
-
-        MCPDisplayCursorSet(0, 1);
-        MCPDisplayPrint("Baudrate");
-
-        MCPDisplayCursorSet(0, 2);
-        MCPDisplayPrint("Address");
-
-        MCPDisplayCursorSet(2, 3);
-        MCPDisplayPrint("Exit");
+        MCPDisplayPrint("> Exit");
         break;
     }
 }
@@ -219,48 +164,30 @@ void UIDisplayMenuTotalizers() {
 
     MCPDisplayCursorSet(1, 0);
     MCPDisplayPrint("Menu:");
-    MCPDisplayCursorSet(6, 0);
+    MCPDisplayCursorSet(7, 0);
     MCPDisplayPrint("Totalizers");
+
+    MCPDisplayCursorSet(0, 1);
+    MCPDisplayPrint("Reset totalizer: F");
+
+    MCPDisplayCursorSet(0, 2);
+    MCPDisplayPrint("Reset totalizer: R");
+
+    MCPDisplayCursorSet(0, 3);
+    MCPDisplayPrint("Exit");
 
     switch (UIDisplayMenuItemsObject.settingsIndexSelection) {
     case 0:
         MCPDisplayCursorSet(0, 1);
-        MCPDisplayPrint(">");
-
-        MCPDisplayCursorSet(2, 1);
-        MCPDisplayPrint("Reset totalizer: F");
-
-        MCPDisplayCursorSet(0, 2);
-        MCPDisplayPrint("Reset totalizer: R");
-
-        MCPDisplayCursorSet(0, 3);
-        MCPDisplayPrint("Exit");
+        MCPDisplayPrint("> Reset totalizer: F");
         break;
     case 1:
         MCPDisplayCursorSet(0, 2);
-        MCPDisplayPrint(">");
-
-        MCPDisplayCursorSet(0, 1);
-        MCPDisplayPrint("Reset totalizer: F");
-
-        MCPDisplayCursorSet(2, 2);
-        MCPDisplayPrint("Reset totalizer: R");
-
-        MCPDisplayCursorSet(0, 3);
-        MCPDisplayPrint("Exit");
+        MCPDisplayPrint("> Reset totalizer: R");
         break;
     case 2:
         MCPDisplayCursorSet(0, 3);
-        MCPDisplayPrint(">");
-
-        MCPDisplayCursorSet(0, 1);
-        MCPDisplayPrint("Reset totalizer: F");
-
-        MCPDisplayCursorSet(0, 2);
-        MCPDisplayPrint("Reset totalizer: R");
-
-        MCPDisplayCursorSet(2, 3);
-        MCPDisplayPrint("Exit");
+        MCPDisplayPrint("> Exit");
         break;
     }
 }
@@ -270,94 +197,68 @@ void UIDisplayMenuInformation() {
     MCPDisplayCommandSend(0x01);
     delay(10);
 
-    MCPDisplayCursorSet(4, 0);
+    MCPDisplayCursorSet(1, 0);
     MCPDisplayPrint("Menu:");
-    MCPDisplayCursorSet(6, 0);
+    MCPDisplayCursorSet(7, 0);
     MCPDisplayPrint("Info");
+
+    MCPDisplayCursorSet(0, 1);
+    MCPDisplayPrint("None");
+
+    MCPDisplayCursorSet(0, 2);
+    MCPDisplayPrint("None");
+
+    MCPDisplayCursorSet(0, 3);
+    MCPDisplayPrint("Exit");
 
     switch (UIDisplayMenuItemsObject.settingsIndexSelection) {
     case 0:
         MCPDisplayCursorSet(0, 1);
-        MCPDisplayPrint(">");
-
-        MCPDisplayCursorSet(2, 1);
-        MCPDisplayPrint("None");
-
-        MCPDisplayCursorSet(0, 2);
-        MCPDisplayPrint("None");
-
-        MCPDisplayCursorSet(0, 3);
-        MCPDisplayPrint("Exit");
+        MCPDisplayPrint("> None");
         break;
     case 1:
         MCPDisplayCursorSet(0, 2);
-        MCPDisplayPrint(">");
-
-        MCPDisplayCursorSet(0, 1);
-        MCPDisplayPrint("None");
-
-        MCPDisplayCursorSet(2, 2);
-        MCPDisplayPrint("None");
-
-        MCPDisplayCursorSet(0, 3);
-        MCPDisplayPrint("Exit");
+        MCPDisplayPrint("> None");
         break;
     case 2:
         MCPDisplayCursorSet(0, 3);
-        MCPDisplayPrint(">");
-
-        MCPDisplayCursorSet(0, 1);
-        MCPDisplayPrint("None");
-
-        MCPDisplayCursorSet(0, 2);
-        MCPDisplayPrint("None");
-
-        MCPDisplayCursorSet(2, 3);
-        MCPDisplayPrint("Exit");
+        MCPDisplayPrint("> Exit");
         break;
     }
 }
 
 void UIDisplayMenuTotalizersSelectedRequestReset() {
+    char buffer[4];
     UIDisplayMenuItemsObject.settingsIndexLimit = 1;
     MCPDisplayCommandSend(0x01);
     delay(10);
 
     MCPDisplayCursorSet(1, 0);
     MCPDisplayPrint("Menu:");
-    MCPDisplayCursorSet(6, 0);
+    MCPDisplayCursorSet(7, 0);
     MCPDisplayPrint("Totalizers");
 
     MCPDisplayCursorSet(0, 1);
     MCPDisplayPrint("Reset totalizer ");
-
     MCPDisplayCursorSet(17, 1);
-    MCPDisplayPrint(itoa(UIDisplayMenuItemsObject.settingsIndexTotalizersSelected, " ", 10));
-
+    MCPDisplayPrint(itoa(UIDisplayMenuItemsObject.settingsIndexTotalizersSelected, buffer, 10));
     MCPDisplayCursorSet(18, 1);
     MCPDisplayPrint("?");
+
+    MCPDisplayCursorSet(0, 2);
+    MCPDisplayPrint("Yes");
+    MCPDisplayCursorSet(0, 3);
+    MCPDisplayPrint("No");
 
     switch (UIDisplayMenuItemsObject.settingsIndexSelection)
     {
     case 0:
         MCPDisplayCursorSet(0, 2);
-        MCPDisplayPrint(">");
-
-        MCPDisplayCursorSet(3, 2);
-        MCPDisplayPrint("Yes");
-
-        MCPDisplayCursorSet(0, 3);
-        MCPDisplayPrint("No");
+        MCPDisplayPrint("> Yes");
         break;
     case 1:
         MCPDisplayCursorSet(0, 3);
-        MCPDisplayPrint(">");
-
-        MCPDisplayCursorSet(0, 2);
-        MCPDisplayPrint("Yes");
-
-        MCPDisplayCursorSet(3, 3);
-        MCPDisplayPrint("No");
+        MCPDisplayPrint("> No");
         break;
     }
 }
@@ -487,7 +388,6 @@ void UIButtonsHandler() {
             MCPDisplayCursorSet(17, 0);
             MCPDisplayPrint("U");
         }
-
         if (buttonStatus[BUTTON_DOWN] == LOW) {
             delay(50);
 
@@ -500,6 +400,30 @@ void UIButtonsHandler() {
             UIDisplayHandler();
             MCPDisplayCursorSet(17, 0);
             MCPDisplayPrint("D");
+        }
+        if (buttonStatus[BUTTON_RIGHT] == LOW) {
+            delay(50);
+            modbusBaudrateListIndex++;
+            modbusSettingsUpdater();
+
+            if (modbusBaudrateListIndex > modbusBaudrateListIndexLimit) modbusBaudrateListIndex = 0;
+            deviceDataObject.modbusBaudrate = modbusBaudrateList[modbusBaudrateListIndex];
+
+            MCPDisplayCursorSet(17, 0);
+            MCPDisplayPrint("R");
+            UIDisplayHandler();
+        }
+        if (buttonStatus[BUTTON_LEFT] == LOW) {
+            delay(50);
+            modbusBaudrateListIndex--;
+            modbusSettingsUpdater();
+
+            if (modbusBaudrateListIndex < 0) modbusBaudrateListIndex = modbusBaudrateListIndexLimit;
+            deviceDataObject.modbusBaudrate = modbusBaudrateList[modbusBaudrateListIndex];
+
+            MCPDisplayCursorSet(17, 0);
+            MCPDisplayPrint("L");
+            UIDisplayHandler();
         }
         if (buttonStatus[BUTTON_OK] == LOW) {
             delay(50);
@@ -533,7 +457,6 @@ void UIButtonsHandler() {
             MCPDisplayCursorSet(17, 0);
             MCPDisplayPrint("U");
         }
-
         if (buttonStatus[BUTTON_DOWN] == LOW) {
             delay(50);
 
@@ -547,19 +470,6 @@ void UIButtonsHandler() {
             MCPDisplayCursorSet(17, 0);
             MCPDisplayPrint("D");
         }
-        if (buttonStatus[BUTTON_RIGHT] == LOW) {
-            delay(50);
-
-            MCPDisplayCursorSet(17, 0);
-            MCPDisplayPrint("R");
-        }
-        if (buttonStatus[BUTTON_LEFT] == LOW) {
-            delay(50);
-
-            MCPDisplayCursorSet(17, 0);
-            MCPDisplayPrint("L");
-        }
-
         if (buttonStatus[BUTTON_OK] == LOW) {
             delay(50);
 
