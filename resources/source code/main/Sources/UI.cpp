@@ -404,11 +404,12 @@ void UIButtonsHandler() {
         if (buttonStatus[BUTTON_RIGHT] == LOW) {
             delay(50);
             modbusBaudrateListIndex++;
-            modbusSettingsUpdater();
 
             if (modbusBaudrateListIndex > modbusBaudrateListIndexLimit) modbusBaudrateListIndex = 0;
             deviceDataObject.modbusBaudrate = modbusBaudrateList[modbusBaudrateListIndex];
 
+            modbusHandlerReloader();
+            
             MCPDisplayCursorSet(17, 0);
             MCPDisplayPrint("R");
             UIDisplayHandler();
@@ -416,10 +417,11 @@ void UIButtonsHandler() {
         if (buttonStatus[BUTTON_LEFT] == LOW) {
             delay(50);
             modbusBaudrateListIndex--;
-            modbusSettingsUpdater();
 
             if (modbusBaudrateListIndex < 0) modbusBaudrateListIndex = modbusBaudrateListIndexLimit;
             deviceDataObject.modbusBaudrate = modbusBaudrateList[modbusBaudrateListIndex];
+
+            modbusHandlerReloader();
 
             MCPDisplayCursorSet(17, 0);
             MCPDisplayPrint("L");

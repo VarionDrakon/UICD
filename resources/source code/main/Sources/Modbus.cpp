@@ -12,17 +12,20 @@ Element (9):
 uint16_t au16data[length] = { 0, 0, 0, 0, 0, 0, 0, 0, 0 };  //Element [X] - Reserve for future
 
 int modbusBaudrateListIndex = 3;
-uint32_t modbusBaudrateList[] = { 1200, 2400, 4800, 9600, 19200, 38400, 57600, 115200 };
-int modbusBaudrateListIndexLimit = sizeof(modbusBaudrateList);
+const int modbusBaudrateListIndexLimit = 8;
+uint32_t modbusBaudrateList[modbusBaudrateListIndexLimit] = { 1200, 2400, 4800, 9600, 19200, 38400, 57600, 115200 };
 bool modbusBaudrateValueFound = false;
 
+byte modbusSlaveAddressValueCurrent = 0;
+unsigned long modbusBaudrateValueCurrent = 0;
+
 // Class instance ModBus.
-Modbus slave(deviceDataObject.modbusSlaveAddress, deviceDataObject.modbusBaudrate, modbusPin);
+Modbus slave(modbusSlaveAddressValueCurrent, modbusBaudrateValueCurrent, modbusPin);
 
 void modbusInitialize() {
 
-  for (int i = 0; i < sizeof(modbusBaudrateList); i++ ) {
-    if (deviceDataObject.modbusBaudrate == modbusBaudrateList[i]) {
+  for (int i = 0; i < modbusBaudrateListIndexLimit; i++ ) {
+    if (modbusBaudrateValueCurrent == modbusBaudrateList[i]) {
       modbusBaudrateValueFound = true;
       break;
     }
@@ -33,9 +36,18 @@ void modbusInitialize() {
     deviceDataObject.modbusSlaveAddress = 10;
   }
 
-  slave = Modbus(deviceDataObject.modbusSlaveAddress, deviceDataObject.modbusBaudrate, modbusPin);
-  slave.begin();
-  Serial.begin(deviceDataObject.modbusBaudrate, SERIAL_8N1);
+  modbusHandlerReloader();
+}
+
+void modbusHandlerReloader() {
+  modbusSlaveAddressValueCurrent = deviceDataObject.modbusSlaveAddress;
+  modbusBaudrateValueCurrent = deviceDataObject.modbusBaudrate;
+  
+  Serial.end();
+  delay(100);
+  Serial.begin(modbusBaudrateValueCurrent, SERIAL_8N1);
+  slave = Modbus(modbusSlaveAddressValueCurrent, modbusBaudrateValueCurrent, modbusPin);
+  slave.start();
 
   au16data[0] = deviceDataObject.modbusSlaveAddress;
   au16data[1] = (deviceDataObject.modbusBaudrate >> 16) & 0xFFFF;
@@ -51,7 +63,6 @@ void modbusInitialize() {
 */
 void modbusHandlerListener() {
   slave.poll(au16data, length); // Max read elements.
-  modbusSettingsUpdater();
 }
 
 /*
@@ -94,13 +105,7 @@ void modbusSettingsUpdater() {
     deviceDataObject.modbusSlaveAddress = au16data[0];
     deviceDataObject.modbusBaudrate = (uint32_t)au16data[1] << 16 | au16data[2];
 
-    Serial.end();
-    delay(100);
-    Serial.begin(deviceDataObject.modbusBaudrate, SERIAL_8N1);
-    slave = Modbus(deviceDataObject.modbusSlaveAddress, deviceDataObject.modbusBaudrate, modbusPin);
-    slave.start();
-
-    // IODataSDFileWrite();
+    modbusHandlerReloader();
 
     MCPDisplayCursorSet(4, 0);
     MCPDisplayPrint("                ");
