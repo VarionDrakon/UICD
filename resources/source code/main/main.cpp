@@ -22,32 +22,20 @@ void setup() {
 
 void loop() {
   //realize struct and write data on SD-card IT`S SLOW DOWN WORK MICROCONTROLLER!
-  if (forv) {
-    totalizerDirectValueAdd();
-    totalizerCommonValueAdd();
-    forv = false;
-    isIntrTrg_1 = false;
-    isIntrTrg_2 = false;
-
-    MCPDisplayCursorSet(4, 1);
-    MCPDisplayPrint(totalizerCommonReturn());
+  // if (forv) {   
+    // MCPDisplayCursorSet(4, 1);
+    // MCPDisplayPrint(totalizerCommonReturn());
     MCPDisplayCursorSet(4, 2);
     MCPDisplayPrint(totalizerDirectReturn());
     IODataSDFileWrite(deviceDataObject.totalizerCommon);
-  }
-  if (back) {
-    totalizerReverseValueAdd();
-    totalizerCommonValueAdd();
-    back = false;
-    isIntrTrg_1 = false;
-    isIntrTrg_2 = false;
-
+  // } 
+  // if (back) {
     MCPDisplayCursorSet(4, 1);
     MCPDisplayPrint(totalizerCommonReturn());
     MCPDisplayCursorSet(4, 3);
     MCPDisplayPrint(totalizerReverseReturn());
-    IODataSDFileWrite(deviceDataObject.totalizerCommon);
-  }
+    // IODataSDFileWrite(deviceDataObject.totalizerCommon);
+  // }
 
   modbusHandlerListener();
 
