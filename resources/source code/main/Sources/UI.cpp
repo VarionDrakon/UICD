@@ -78,6 +78,8 @@ void UIDisplayDefault() {
     MCPDisplayPrint("R:");
     MCPDisplayCursorSet(4, 3);
     MCPDisplayPrint(totalizerReverseReturn());
+
+    IODataSDFileWrite(deviceDataObject.totalizerCommon);
 };
 
 void UIDisplayMenuMain() {

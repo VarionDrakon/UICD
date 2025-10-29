@@ -4,8 +4,8 @@ volatile bool back = false;             // Triggered sensor 1
 volatile bool forv = false;             // Triggered sensor 2
 volatile bool isIntrTrg_1 = false;      // Triggered sensor 1
 volatile bool isIntrTrg_2 = false;      // Triggered sensor 2
-volatile uint32_t lstIntrTim_1 = 0;     // Timer for sensor 1
-volatile uint32_t lstIntrTim_2 = 0;     // Timer for sensor 2
+volatile bool isIntrTrg_1Prev = false;
+volatile bool isIntrTrg_2Prev = false;
 const uint32_t debounceDelay = 1;       // Debounce delay. OLD varian - if (millis() - secDbn >= 100 && digitalRead(3)) 
 
 void sensorsInitialize() {
@@ -14,51 +14,45 @@ void sensorsInitialize() {
 }
 
 void frtIntr() {
-  // unsigned long currentMillis = millis();
-  // if (currentMillis - lstIntrTim_1 >= debounceDelay) {
-  //   lstIntrTim_1 = currentMillis;
+  isIntrTrg_1 = true;
 
-    bool tempIsIntrTrg_2 = isIntrTrg_2;
-    forv = tempIsIntrTrg_2;
-    isIntrTrg_1 = true;
-  // }
-    if (forv) {
-      forv = false;
+  if (isIntrTrg_1Prev == false) {
+    isIntrTrg_1Prev = true;
+    if (isIntrTrg_2 == true && isIntrTrg_1 == true) {
+      forv = true;
       isIntrTrg_1 = false;
       isIntrTrg_2 = false;
-      totalizerDirectValueAdd();
-      totalizerCommonValueAdd();
+      sensorHandler();
     }
-    if (back) {
-      back = false;
-      isIntrTrg_1 = false;
-      isIntrTrg_2 = false;
-      totalizerReverseValueAdd();
-      totalizerCommonValueAdd();
-    }
+  }
 }
 
 void scdIntr() {
-  // unsigned long currentMillis = millis();
-  // if (currentMillis - lstIntrTim_2 >= debounceDelay) {
-  //   lstIntrTim_2 = currentMillis;
-
-    bool tempIsIntrTrg_1 = isIntrTrg_1;
-    back = tempIsIntrTrg_1;
-    isIntrTrg_2 = true;
-    if (forv) {
-      forv = false;
+  isIntrTrg_2 = true;
+  if (isIntrTrg_2Prev == false) {
+    isIntrTrg_2Prev = true;
+    if (isIntrTrg_2 == true && isIntrTrg_1 == true) {
+      back = true;
       isIntrTrg_1 = false;
       isIntrTrg_2 = false;
+      sensorHandler();
+    }
+  }
+}
+
+void sensorHandler() {
+    if (forv) {
+      forv = false;
+      isIntrTrg_1Prev = false;
+      isIntrTrg_2Prev = false;
       totalizerDirectValueAdd();
       totalizerCommonValueAdd();
     }
     if (back) {
       back = false;
-      isIntrTrg_1 = false;
-      isIntrTrg_2 = false;
+      isIntrTrg_1Prev = false;
+      isIntrTrg_2Prev = false;
       totalizerReverseValueAdd();
       totalizerCommonValueAdd();
     }
-  // }
 }

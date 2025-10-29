@@ -27,7 +27,7 @@ void loop() {
     // MCPDisplayPrint(totalizerCommonReturn());
     MCPDisplayCursorSet(4, 2);
     MCPDisplayPrint(totalizerDirectReturn());
-    IODataSDFileWrite(deviceDataObject.totalizerCommon);
+    
   // } 
   // if (back) {
     MCPDisplayCursorSet(4, 1);
