@@ -51,11 +51,13 @@ void UIDisplayInitialize() {
     UIButtonsInitialize();
 };
 
-void UIDisplayDefault() {
-    UIDisplayMenuItemsObject.settingsIndexLimit = 0;
-    UIDisplaySectionListObject = sectionDefault;
+void UIDisplayClear() {
     MCPDisplayCommandSend(0x01);
     delay(10);
+}
+
+void UIDisplayDefault() {
+    UIDisplayMenuItemsObject.settingsIndexLimit = 0;
 
     MCPDisplayCursorSet(0, 0);
     MCPDisplayPrint("B: ");
@@ -84,8 +86,6 @@ void UIDisplayDefault() {
 
 void UIDisplayMenuMain() {
     UIDisplayMenuItemsObject.settingsIndexLimit = 3;
-    MCPDisplayCommandSend(0x01);
-    delay(10);
 
     MCPDisplayCursorSet(0, 0);
     MCPDisplayPrint("Connections");
@@ -121,8 +121,6 @@ void UIDisplayMenuMain() {
 
 void UIDisplayMenuConnection() {
     UIDisplayMenuItemsObject.settingsIndexLimit = 2;
-    MCPDisplayCommandSend(0x01);
-    delay(10);
 
     MCPDisplayCursorSet(1, 0);
     MCPDisplayPrint("Menu:");
@@ -161,8 +159,6 @@ void UIDisplayMenuConnection() {
 
 void UIDisplayMenuTotalizers() {
     UIDisplayMenuItemsObject.settingsIndexLimit = 2;
-    MCPDisplayCommandSend(0x01);
-    delay(10);
 
     MCPDisplayCursorSet(1, 0);
     MCPDisplayPrint("Menu:");
@@ -196,8 +192,6 @@ void UIDisplayMenuTotalizers() {
 
 void UIDisplayMenuInformation() {
     UIDisplayMenuItemsObject.settingsIndexLimit = 2;
-    MCPDisplayCommandSend(0x01);
-    delay(10);
 
     MCPDisplayCursorSet(1, 0);
     MCPDisplayPrint("Menu:");
@@ -232,8 +226,6 @@ void UIDisplayMenuInformation() {
 void UIDisplayMenuTotalizersSelectedRequestReset() {
     char buffer[4];
     UIDisplayMenuItemsObject.settingsIndexLimit = 1;
-    MCPDisplayCommandSend(0x01);
-    delay(10);
 
     MCPDisplayCursorSet(1, 0);
     MCPDisplayPrint("Menu:");
@@ -287,21 +279,27 @@ void UIDisplayHandler() {
     switch (UIDisplaySectionListObject)
     {
     case sectionDefault:
+        UIDisplayClear();
         UIDisplayDefault();
         break;
     case sectionMenu:
+        UIDisplayClear();
         UIDisplayMenuMain();
         break;
     case sectionMenuConnections:
+        UIDisplayClear();
         UIDisplayMenuConnection();
         break;
     case sectionMenuTotalizers:
+        UIDisplayClear();
         UIDisplayMenuTotalizers();
         break;
     case sectionMenuTotalizersSelectedRequestReset:
+        UIDisplayClear();
         UIDisplayMenuTotalizersSelectedRequestReset();
         break;
     case sectionMenuInformations:
+        UIDisplayClear();
         UIDisplayMenuInformation();
         break;
     }

@@ -25,15 +25,15 @@ void loop() {
   // if (forv) {   
     // MCPDisplayCursorSet(4, 1);
     // MCPDisplayPrint(totalizerCommonReturn());
-    MCPDisplayCursorSet(4, 2);
-    MCPDisplayPrint(totalizerDirectReturn());
+    // MCPDisplayCursorSet(4, 2);
+    // MCPDisplayPrint(totalizerDirectReturn());
     
   // } 
   // if (back) {
-    MCPDisplayCursorSet(4, 1);
-    MCPDisplayPrint(totalizerCommonReturn());
-    MCPDisplayCursorSet(4, 3);
-    MCPDisplayPrint(totalizerReverseReturn());
+    // MCPDisplayCursorSet(4, 1);
+    // MCPDisplayPrint(totalizerCommonReturn());
+    // MCPDisplayCursorSet(4, 3);
+    // MCPDisplayPrint(totalizerReverseReturn());
     // IODataSDFileWrite(deviceDataObject.totalizerCommon);
   // }
 

@@ -35,4 +35,6 @@ void UIDisplayMenuIndex(int menuIndexLimit, bool action = false);
 
 void UIDisplayHandler();
 
+void UIDisplayClear();
+
 #endif
