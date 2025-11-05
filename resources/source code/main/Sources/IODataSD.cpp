@@ -8,86 +8,43 @@ unsigned long intervalSD = 3000;                        // Timer for write data 
 // const char* dataFilenameSave = "save.dat";              // File name for data saving/write.
 // const char* dataFilenameSaveTemp = "save.dat.temp";     // File name for data saving/write.
 
-void IODataSDFileWrite(const unsigned long &value) {
-  // File dataFile = SD.open(mainFilename, FILE_WRITE | O_TRUNC);
-
-  // if (dataFile) {
-  //   dataFile.write((uint8_t*)&deviceDataObject, sizeof(deviceDataObject));
-  //   dataFile.close();
-  // } else {
-  //     File dataFile = SD.open(mainFilename, FILE_WRITE | O_TRUNC);
-
-  //     if (dataFile) {
-  //       dataFile.write((uint8_t*)&deviceDataObject, sizeof(deviceDataObject));
-  //       dataFile.close();
-  //     } else {
-  //       while (1) {
-  //         MCPDisplayCommandSend(0x01);
-  //         MCPDisplayCursorSet(2, 1);
-  //         MCPDisplayPrint("SAVE FILE ERROR!");
-  //       }
-  //     }
-  // }
-
-  // for (int i = 0; i < 5; i++) {
+void IODataSDFileWrite(const unsigned long &value, const unsigned int offset) {
     Wire.beginTransmission(0x50);
-    Wire.write(0x00);
-    Wire.write(0x00);
+    Wire.write((uint8_t)(offset >> 8));
+    Wire.write((uint8_t)(offset & 0xFF));
+    // For big-endian EEPROM:
     Wire.write((uint8_t)(value >> 24));
     Wire.write((uint8_t)(value >> 16));
     Wire.write((uint8_t)(value >> 8));
     Wire.write((uint8_t)(value & 0xFF));
+    // For little-endian EEPROM:
+    // Wire.write((uint8_t)(value & 0xFF));
+    // Wire.write((uint8_t)(value >> 8));
+    // Wire.write((uint8_t)(value >> 16));
+    // Wire.write((uint8_t)(value >> 24));
     Wire.endTransmission();
     delay(5);
-  // }
-
 }
 
-void IODataSDFileRead(unsigned long &value) {
-  // File dataFile = SD.open(mainFilename, FILE_READ);
-
-  // if (dataFile) {
-  //   dataFile.read((uint8_t*)&deviceDataObject, sizeof(deviceDataObject));
-  //   dataFile.close();
-  // } else {
-  //     File dataFile = SD.open(mainFilename, FILE_READ);
-
-  //     if (dataFile) {
-  //       dataFile.read((uint8_t*)&deviceDataObject, sizeof(deviceDataObject));
-  //       dataFile.close();
-  //     } else {
-  //       while (1) {
-  //         MCPDisplayCommandSend(0x01);
-  //         MCPDisplayCursorSet(2, 1);
-  //         MCPDisplayPrint("READ FILE ERROR!");
-  //       }
-  //     }
-  // }
-
+void IODataSDFileRead(unsigned long &value, const unsigned int offset) {
   Wire.beginTransmission(0x50);
-  Wire.write(0x00);
-  Wire.write(0x00);
+  Wire.write((uint8_t)(offset >> 8));
+  Wire.write((uint8_t)(offset & 0xFF));
   Wire.endTransmission();
   delay(5);
-
   Wire.requestFrom(0x50, 4);
-
   if (Wire.available() >= 4) {
-
     unsigned long readValue = 0;
-
+    // For big-endian EEPROM:
     readValue = ((uint8_t)Wire.read()) << 24;
     readValue |= ((uint8_t)Wire.read()) << 16;
     readValue |= ((uint8_t)Wire.read()) << 8;
     readValue |= ((uint8_t)Wire.read());
-
-    // char strData[11] = {0};
-
-    // ultoa(readValue, strData, 10);
-    
-    // MCPDisplayCursorSet(0, 0);
-    // MCPDisplayPrint(strData);
-
+    // For little-endian EEPROM:
+    // readValue = ((uint8_t)Wire.read());
+    // readValue |= ((uint8_t)Wire.read()) << 8;
+    // readValue |= ((uint8_t)Wire.read()) << 16;
+    // readValue |= ((uint8_t)Wire.read()) << 24;
     value = readValue;
   }
 }
@@ -155,47 +112,9 @@ void IODataSDInitialize() {
   MCPDisplayPrint("UICD loading...");
   delay(500);
 
-  IODataSDFileRead(deviceDataObject.totalizerCommon);
-
-  // if (!SD.begin(10)) {
-  //   MCPDisplayCommandSend(0x01);
-  //   MCPDisplayCursorSet(5, 1);
-  //   MCPDisplayPrint("SD ERROR!");
-  //   while (1);
-  // }
-  // SPI.setClockDivider(SPI_CLOCK_DIV4);
-
-  // if (SD.exists(dataFilenameSave) || SD.exists(dataFilenameSaveTemp)) {
-  //   IODataSDFileRead();
-
-  //   MCPDisplayCommandSend(0x01);
-  //   delay(10);
-
-  //   MCPDisplayCursorSet(2, 1);
-  //   MCPDisplayPrint("Load saved file...");
-  //   delay(500);
-  // } else {
-  //   MCPDisplayCommandSend(0x01);
-  //   delay(10);
-
-  //   MCPDisplayCursorSet(2, 0);
-  //   MCPDisplayPrint("Device reset?");
-  
-  //   deviceDataObject.totalizerCommon = 0;
-  //   deviceDataObject.totalizerDirect = 0;
-  //   deviceDataObject.totalizerReverse = 0;
-
-  //   deviceConfigurationModbusBaudrateSet(9600);
-  //   MCPDisplayCursorSet(2, 1);
-  //   MCPDisplayPrint("Baudrate:");
-  //   MCPDisplayPrint(deviceConfigurationModbusBaudrateGet());
-
-  //   deviceConfigurationModbusSlaveAddressSet(10);
-  //   MCPDisplayCursorSet(2, 2);
-  //   MCPDisplayPrint("Slave Address = 10");
-  //   MCPDisplayPrint(deviceConfigurationModbusSlaveAddressGet());
-  //   delay(1000);
-  // }
+  IODataSDFileRead(deviceDataObject.totalizerCommon, 0);
+  IODataSDFileRead(deviceDataObject.totalizerDirect, 4);
+  IODataSDFileRead(deviceDataObject.totalizerReverse,8);
 }
 
 /*
@@ -214,7 +133,9 @@ void IODataSDFileWritePeriodically() {
     MCPDisplayCursorSet(19, 0);
     MCPDisplayPrint("S");
 
-    IODataSDFileWrite(deviceDataObject.totalizerCommon);
+    IODataSDFileWrite(deviceDataObject.totalizerCommon, 0);
+    IODataSDFileWrite(deviceDataObject.totalizerDirect, 4);
+    IODataSDFileWrite(deviceDataObject.totalizerReverse,8);
 
     MCPDisplayCursorSet(19, 0);
     MCPDisplayPrint(" ");

@@ -31,8 +31,8 @@ extern unsigned long intervalSD;
 // extern const char* dataFilenameSave;
 // extern const char* dataFilenameSaveTemp;
 
-void IODataSDFileWrite(const unsigned long &value);
-void IODataSDFileRead(unsigned long &value);
+void IODataSDFileWrite(const unsigned long &value, const unsigned int offset);
+void IODataSDFileRead(unsigned long &value, const unsigned int offset);
 char* totalizerCommonReturn();
 char* totalizerDirectReturn();
 char* totalizerReverseReturn();
