@@ -1,60 +1,67 @@
 #include "../Headers/Headers.h"
 
-volatile bool back = false;             // Triggered sensor 1
-volatile bool forv = false;             // Triggered sensor 2
-volatile bool isIntrTrg_1 = false;      // Triggered sensor 1
-volatile bool isIntrTrg_2 = false;      // Triggered sensor 2
-volatile bool isIntrTrg_1Prev = false;
-volatile bool isIntrTrg_2Prev = false;
-const uint32_t debounceDelay = 1;       // Debounce delay. OLD varian - if (millis() - secDbn >= 100 && digitalRead(3)) 
+enum SensorState {
+  counterSensorWaiting,
+  counterSensorFirstTriggered,
+  counterSensorSecondaryTriggered
+};
+
+volatile SensorState state = counterSensorWaiting;
+volatile unsigned long counterSensorFirstLastInterruptTime = 0;
+volatile unsigned long counterSensorSecondaryLastInterruptTime = 0;
+const uint32_t counterSensorMinTriggerInterval = 3;
 
 void sensorsInitialize() {
-  attachInterrupt(0, frtIntr, FALLING);
-  attachInterrupt(1, scdIntr, FALLING);
+  attachInterrupt(0, counterSensorFirst, FALLING);
+  attachInterrupt(1, counterSensorSecondary, FALLING);
 }
 
-void frtIntr() {
-  isIntrTrg_1 = true;
-
-  if (isIntrTrg_1Prev == false) {
-    isIntrTrg_1Prev = true;
-    if (isIntrTrg_2 == true && isIntrTrg_1 == true) {
-      forv = true;
-      isIntrTrg_1 = false;
-      isIntrTrg_2 = false;
-      sensorHandler();
+void counterSensorFirst() {
+  unsigned long currentTime = millis();
+  if (currentTime - counterSensorFirstLastInterruptTime > counterSensorMinTriggerInterval) {
+    counterSensorFirstLastInterruptTime = currentTime;
+    
+    switch(state) {
+      case counterSensorWaiting:
+        state = counterSensorFirstTriggered;
+        break;
+      case counterSensorSecondaryTriggered:
+        counterSensorHandleBackward();
+        state = counterSensorWaiting;
+        break;
+      default:
+        break;
     }
   }
 }
 
-void scdIntr() {
-  isIntrTrg_2 = true;
-  if (isIntrTrg_2Prev == false) {
-    isIntrTrg_2Prev = true;
-    if (isIntrTrg_2 == true && isIntrTrg_1 == true) {
-      back = true;
-      isIntrTrg_1 = false;
-      isIntrTrg_2 = false;
-      sensorHandler();
+void counterSensorSecondary() {
+  unsigned long currentTime = millis();
+  if (currentTime - counterSensorSecondaryLastInterruptTime > counterSensorMinTriggerInterval) {
+    counterSensorSecondaryLastInterruptTime = currentTime;
+    
+    switch(state) {
+      case counterSensorWaiting:
+        state = counterSensorSecondaryTriggered;
+        break;
+      case counterSensorFirstTriggered:
+        counterSensorHandleForward();
+        state = counterSensorWaiting;
+        break;
+      default:
+        break;
     }
   }
 }
 
-void sensorHandler() {
-    if (forv) {
-      forv = false;
-      isIntrTrg_1Prev = false;
-      isIntrTrg_2Prev = false;
-      UIDisplayNeedRefresh = true;
-      totalizerDirectValueAdd();
-      totalizerCommonValueAdd();
-    }
-    if (back) {
-      back = false;
-      isIntrTrg_1Prev = false;
-      isIntrTrg_2Prev = false;
-      UIDisplayNeedRefresh = true;
-      totalizerReverseValueAdd();
-      totalizerCommonValueAdd();
-    }
+void counterSensorHandleForward() {
+  UIDisplayNeedRefresh = true;
+  totalizerDirectValueAdd();
+  totalizerCommonValueAdd();
+}
+
+void counterSensorHandleBackward() {
+  UIDisplayNeedRefresh = true;
+  totalizerReverseValueAdd();
+  totalizerCommonValueAdd();
 }
