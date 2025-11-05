@@ -9,15 +9,23 @@ enum SensorState {
 volatile SensorState state = counterSensorWaiting;
 volatile unsigned long counterSensorFirstLastInterruptTime = 0;
 volatile unsigned long counterSensorSecondaryLastInterruptTime = 0;
-const uint32_t counterSensorMinTriggerInterval = 5;
-static unsigned long counterSensorMinDebounceTime = 0;
+const uint32_t counterSensorMinTriggerInterval = 20;
 
 void sensorsInitialize() {
   attachInterrupt(0, counterSensorFirst, FALLING);
   attachInterrupt(1, counterSensorSecondary, FALLING);
 }
 
+void sensorsStateTimeout() {
+  unsigned long currentTime = millis();
+  if (state != counterSensorWaiting && (currentTime - 0 > 1000)) {
+    state = counterSensorWaiting;
+  }
+}
+
+
 void counterSensorFirst() {
+  static unsigned int counterSensorMinDebounceTime = 0;
   unsigned long currentTime = millis();
   if (currentTime - counterSensorFirstLastInterruptTime > counterSensorMinTriggerInterval) {
     counterSensorFirstLastInterruptTime = currentTime;
@@ -39,6 +47,7 @@ void counterSensorFirst() {
 }
 
 void counterSensorSecondary() {
+  static unsigned int counterSensorMinDebounceTime = 0;
   unsigned long currentTime = millis();
   if (currentTime - counterSensorSecondaryLastInterruptTime > counterSensorMinTriggerInterval) {
     counterSensorSecondaryLastInterruptTime = currentTime;
