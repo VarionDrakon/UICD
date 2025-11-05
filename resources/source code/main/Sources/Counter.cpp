@@ -45,6 +45,7 @@ void sensorHandler() {
       forv = false;
       isIntrTrg_1Prev = false;
       isIntrTrg_2Prev = false;
+      UIDisplayNeedRefresh = true;
       totalizerDirectValueAdd();
       totalizerCommonValueAdd();
     }
@@ -52,6 +53,7 @@ void sensorHandler() {
       back = false;
       isIntrTrg_1Prev = false;
       isIntrTrg_2Prev = false;
+      UIDisplayNeedRefresh = true;
       totalizerReverseValueAdd();
       totalizerCommonValueAdd();
     }

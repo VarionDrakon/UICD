@@ -21,21 +21,6 @@ void setup() {
 }
 
 void loop() {
-  //realize struct and write data on SD-card IT`S SLOW DOWN WORK MICROCONTROLLER!
-  // if (forv) {   
-    // MCPDisplayCursorSet(4, 1);
-    // MCPDisplayPrint(totalizerCommonReturn());
-    // MCPDisplayCursorSet(4, 2);
-    // MCPDisplayPrint(totalizerDirectReturn());
-    
-  // } 
-  // if (back) {
-    // MCPDisplayCursorSet(4, 1);
-    // MCPDisplayPrint(totalizerCommonReturn());
-    // MCPDisplayCursorSet(4, 3);
-    // MCPDisplayPrint(totalizerReverseReturn());
-    // IODataSDFileWrite(deviceDataObject.totalizerCommon);
-  // }
 
   modbusHandlerListener();
 
@@ -46,6 +31,8 @@ void loop() {
   IODataSDFileWritePeriodically();
 
   UIButtonsHandler();
+
+  UIDisplayHandler();
 
   // deviceDataObject.modbusSlaveAddress = au16data[0];
   // deviceDataObject.modbusBaudrate = au16data[1];

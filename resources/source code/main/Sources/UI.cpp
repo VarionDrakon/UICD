@@ -37,6 +37,8 @@ enum UIDisplaySectionList {
     sectionMenuInformations
 };
 UIDisplaySectionList UIDisplaySectionListObject = sectionDefault;
+bool UIDisplayNeedRefresh = true;
+bool UIDisplayNeedClear = true;
 
 void UIButtonsInitialize() {
     pinMode(PIN_RIGHT, INPUT_PULLUP);
@@ -61,23 +63,38 @@ void UIDisplayDefault() {
 
     MCPDisplayCursorSet(0, 0);
     MCPDisplayPrint("B: ");
+
+    MCPDisplayCursorSet(4, 0);
+    MCPDisplayPrint("       ");
     MCPDisplayCursorSet(4, 0);
     MCPDisplayPrint(deviceConfigurationModbusBaudrateGet());
+
+    MCPDisplayCursorSet(11, 0);
+    MCPDisplayPrint("         ");
     MCPDisplayCursorSet(11, 0);
     MCPDisplayPrint(deviceConfigurationModbusSlaveAddressGet());
 
     MCPDisplayCursorSet(0, 1);
     MCPDisplayPrint("C:");
+
+    MCPDisplayCursorSet(4, 1);
+    MCPDisplayPrint("                ");
     MCPDisplayCursorSet(4, 1);
     MCPDisplayPrint(totalizerCommonReturn());
 
     MCPDisplayCursorSet(0, 2);
     MCPDisplayPrint("D:");
+
+    MCPDisplayCursorSet(4, 2);
+    MCPDisplayPrint("                ");
     MCPDisplayCursorSet(4, 2);
     MCPDisplayPrint(totalizerDirectReturn());
 
     MCPDisplayCursorSet(0, 3);
     MCPDisplayPrint("R:");
+
+    MCPDisplayCursorSet(4, 3);
+    MCPDisplayPrint("                ");
     MCPDisplayCursorSet(4, 3);
     MCPDisplayPrint(totalizerReverseReturn());
 
@@ -276,32 +293,32 @@ void UIDisplayMenuTotalizersSelectedReset() {
 }
 
 void UIDisplayHandler() {
-    switch (UIDisplaySectionListObject)
-    {
-    case sectionDefault:
-        UIDisplayClear();
-        UIDisplayDefault();
-        break;
-    case sectionMenu:
-        UIDisplayClear();
-        UIDisplayMenuMain();
-        break;
-    case sectionMenuConnections:
-        UIDisplayClear();
-        UIDisplayMenuConnection();
-        break;
-    case sectionMenuTotalizers:
-        UIDisplayClear();
-        UIDisplayMenuTotalizers();
-        break;
-    case sectionMenuTotalizersSelectedRequestReset:
-        UIDisplayClear();
-        UIDisplayMenuTotalizersSelectedRequestReset();
-        break;
-    case sectionMenuInformations:
-        UIDisplayClear();
-        UIDisplayMenuInformation();
-        break;
+    if (UIDisplayNeedRefresh == true || UIDisplayNeedClear == true) {
+        if (UIDisplayNeedClear == true)  UIDisplayClear();
+        UIDisplayNeedRefresh = false;
+        UIDisplayNeedClear = false;
+
+        switch (UIDisplaySectionListObject)
+        {
+        case sectionDefault:
+            UIDisplayDefault();
+            break;
+        case sectionMenu:
+            UIDisplayMenuMain();
+            break;
+        case sectionMenuConnections:
+            UIDisplayMenuConnection();
+            break;
+        case sectionMenuTotalizers:
+            UIDisplayMenuTotalizers();
+            break;
+        case sectionMenuTotalizersSelectedRequestReset:
+            UIDisplayMenuTotalizersSelectedRequestReset();
+            break;
+        case sectionMenuInformations:
+            UIDisplayMenuInformation();
+            break;
+        }
     }
 }
 
@@ -317,10 +334,8 @@ void UIButtonsHandler() {
     case sectionDefault:
         if (buttonStatus[BUTTON_OK] == LOW) {
             delay(50);
-            MCPDisplayCursorSet(17, 0);
-            MCPDisplayPrint("O");
             UIDisplaySectionListObject = sectionMenu;
-            UIDisplayHandler();
+            UIDisplayNeedClear = true;
         }
         break;
     case sectionMenu:
@@ -333,11 +348,8 @@ void UIButtonsHandler() {
             else {
                 UIDisplayMenuItemsObject.settingsIndexSelection = UIDisplayMenuItemsObject.settingsIndexLimit;
             }
-            UIDisplayHandler();
-            MCPDisplayCursorSet(17, 0);
-            MCPDisplayPrint("U");
+            UIDisplayNeedClear = true;
         }
-
         if (buttonStatus[BUTTON_DOWN] == LOW) {
             delay(50);
 
@@ -347,9 +359,7 @@ void UIButtonsHandler() {
             else {
                 UIDisplayMenuItemsObject.settingsIndexSelection = 0;
             }
-            UIDisplayHandler();
-            MCPDisplayCursorSet(17, 0);
-            MCPDisplayPrint("D");
+            UIDisplayNeedClear = true;
         }
         if (buttonStatus[BUTTON_OK] == LOW) {
             delay(50);
@@ -369,9 +379,7 @@ void UIButtonsHandler() {
                 break;
             }
             UIDisplayMenuItemsObject.settingsIndexSelection = 0;
-            MCPDisplayCursorSet(17, 0);
-            MCPDisplayPrint("O");
-            UIDisplayHandler();
+            UIDisplayNeedClear = true;
         }
         break;
     case sectionMenuConnections:
@@ -384,9 +392,7 @@ void UIButtonsHandler() {
             else {
                 UIDisplayMenuItemsObject.settingsIndexSelection = UIDisplayMenuItemsObject.settingsIndexLimit;
             }
-            UIDisplayHandler();
-            MCPDisplayCursorSet(17, 0);
-            MCPDisplayPrint("U");
+            UIDisplayNeedClear = true;
         }
         if (buttonStatus[BUTTON_DOWN] == LOW) {
             delay(50);
@@ -397,9 +403,7 @@ void UIButtonsHandler() {
             else {
                 UIDisplayMenuItemsObject.settingsIndexSelection = 0;
             }
-            UIDisplayHandler();
-            MCPDisplayCursorSet(17, 0);
-            MCPDisplayPrint("D");
+            UIDisplayNeedClear = true;
         }
         if (buttonStatus[BUTTON_RIGHT] == LOW) {
             delay(50);
@@ -416,10 +420,7 @@ void UIButtonsHandler() {
                 deviceDataObject.modbusSlaveAddress++;
                 modbusHandlerReloader();
             }
-            
-            MCPDisplayCursorSet(17, 0);
-            MCPDisplayPrint("R");
-            UIDisplayHandler();
+            UIDisplayNeedClear = true;
         }
         if (buttonStatus[BUTTON_LEFT] == LOW) {
             delay(50);
@@ -428,21 +429,16 @@ void UIButtonsHandler() {
 
                 if (modbusBaudrateListIndex < 0) modbusBaudrateListIndex = modbusBaudrateListIndexLimit;
                 deviceDataObject.modbusBaudrate = modbusBaudrateList[modbusBaudrateListIndex];
-
                 modbusHandlerReloader();
             }
             else if (UIDisplayMenuItemsObject.settingsIndexSelection == 1) {
                 deviceDataObject.modbusSlaveAddress--;
                 modbusHandlerReloader();
             }
-
-            MCPDisplayCursorSet(17, 0);
-            MCPDisplayPrint("L");
-            UIDisplayHandler();
+            UIDisplayNeedClear = true;
         }
         if (buttonStatus[BUTTON_OK] == LOW) {
             delay(50);
-
             switch (UIDisplayMenuItemsObject.settingsIndexSelection) {
             case 0:
                 break;
@@ -453,9 +449,7 @@ void UIButtonsHandler() {
                 break;
             }
             UIDisplayMenuItemsObject.settingsIndexSelection = 0;
-            MCPDisplayCursorSet(17, 0);
-            MCPDisplayPrint("O");
-            UIDisplayHandler();
+            UIDisplayNeedClear = true;
         }
         break;
     case sectionMenuTotalizers:
@@ -468,9 +462,7 @@ void UIButtonsHandler() {
             else {
                 UIDisplayMenuItemsObject.settingsIndexSelection = UIDisplayMenuItemsObject.settingsIndexLimit;
             }
-            UIDisplayHandler();
-            MCPDisplayCursorSet(17, 0);
-            MCPDisplayPrint("U");
+            UIDisplayNeedClear = true;
         }
         if (buttonStatus[BUTTON_DOWN] == LOW) {
             delay(50);
@@ -481,9 +473,7 @@ void UIButtonsHandler() {
             else {
                 UIDisplayMenuItemsObject.settingsIndexSelection = 0;
             }
-            UIDisplayHandler();
-            MCPDisplayCursorSet(17, 0);
-            MCPDisplayPrint("D");
+            UIDisplayNeedClear = true;
         }
         if (buttonStatus[BUTTON_OK] == LOW) {
             delay(50);
@@ -502,9 +492,7 @@ void UIButtonsHandler() {
                 break;
             }
             UIDisplayMenuItemsObject.settingsIndexSelection = 0;
-            MCPDisplayCursorSet(17, 0);
-            MCPDisplayPrint("O");
-            UIDisplayHandler();
+            UIDisplayNeedClear = true;
         }
         break;
     case sectionMenuTotalizersSelectedRequestReset:
@@ -517,11 +505,8 @@ void UIButtonsHandler() {
             else {
                 UIDisplayMenuItemsObject.settingsIndexSelection = UIDisplayMenuItemsObject.settingsIndexLimit;
             }
-            UIDisplayHandler();
-            MCPDisplayCursorSet(17, 0);
-            MCPDisplayPrint("U");
+            UIDisplayNeedClear = true;
         }
-
         if (buttonStatus[BUTTON_DOWN] == LOW) {
             delay(50);
 
@@ -531,11 +516,8 @@ void UIButtonsHandler() {
             else {
                 UIDisplayMenuItemsObject.settingsIndexSelection = 0;
             }
-            UIDisplayHandler();
-            MCPDisplayCursorSet(17, 0);
-            MCPDisplayPrint("D");
+            UIDisplayNeedClear = true;
         }
-        
         if (buttonStatus[BUTTON_OK] == LOW) {
             delay(50);
 
@@ -549,10 +531,7 @@ void UIButtonsHandler() {
             }
             UIDisplayMenuItemsObject.settingsIndexSelection = 0;
             UIDisplayMenuItemsObject.settingsIndexTotalizersSelected = 0; // Reset selected totalizer!
-
-            MCPDisplayCursorSet(17, 0);
-            MCPDisplayPrint("O");
-            UIDisplayHandler();
+            UIDisplayNeedClear = true;
         }
         break;
     case sectionMenuInformations:
@@ -565,11 +544,8 @@ void UIButtonsHandler() {
             else {
                 UIDisplayMenuItemsObject.settingsIndexSelection = UIDisplayMenuItemsObject.settingsIndexLimit;
             }
-            UIDisplayHandler();
-            MCPDisplayCursorSet(17, 0);
-            MCPDisplayPrint("U");
+            UIDisplayNeedClear = true;
         }
-
         if (buttonStatus[BUTTON_DOWN] == LOW) {
             delay(50);
 
@@ -579,9 +555,7 @@ void UIButtonsHandler() {
             else {
                 UIDisplayMenuItemsObject.settingsIndexSelection = 0;
             }
-            UIDisplayHandler();
-            MCPDisplayCursorSet(17, 0);
-            MCPDisplayPrint("D");
+            UIDisplayNeedClear = true;
         }
         if (buttonStatus[BUTTON_OK] == LOW) {
             delay(50);
@@ -596,9 +570,7 @@ void UIButtonsHandler() {
                 break;
             }
             UIDisplayMenuItemsObject.settingsIndexSelection = 0;
-            MCPDisplayCursorSet(17, 0);
-            MCPDisplayPrint("O");
-            UIDisplayHandler();
+            UIDisplayNeedClear = true;
         }
         break;
     }

@@ -10,7 +10,8 @@
 struct menuItems;
 
 extern bool buttonStatus[5];
-
+extern bool UIDisplayNeedRefresh;
+extern bool UIDisplayNeedClear;
 void UIButtonsInitialize();
 
 void UIDisplayInitialize();
