@@ -39,7 +39,7 @@ enum UIDisplaySectionList {
 UIDisplaySectionList UIDisplaySectionListObject = sectionDefault;
 bool UIDisplayNeedClear = true;
 bool UIDisplayNeedRefresh = true;
-static int UIDisplayTimeUpdate = 300;
+static unsigned int UIDisplayTimeUpdate = 300;
 
 void UIButtonsInitialize() {
     pinMode(PIN_RIGHT, INPUT_PULLUP);
