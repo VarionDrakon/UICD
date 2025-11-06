@@ -39,7 +39,9 @@ enum UIDisplaySectionList {
 UIDisplaySectionList UIDisplaySectionListObject = sectionDefault;
 bool UIDisplayNeedClear = true;
 bool UIDisplayNeedRefresh = true;
-static unsigned int UIDisplayTimeUpdate = 300;
+
+static unsigned long UIDisplayTimeUpdate = 300;
+static unsigned long UIDisplayTimeUpdateTimeLast = 0;
 
 void UIButtonsInitialize() {
     pinMode(PIN_RIGHT, INPUT_PULLUP);
@@ -83,15 +85,16 @@ void UIDisplayDefault() {
         MCPDisplayCursorSet(0, 3);
         MCPDisplayPrint("R:");
 
+        UIDisplayTimeUpdateTimeLast = millis();
+
         UIDisplayNeedClear = false;
     }
     
     UIDisplayMenuItemsObject.settingsIndexLimit = 0;
-    static unsigned int lastUpdateTime = 0;
     unsigned long currentTime = millis();
 
-    if (currentTime - lastUpdateTime >= UIDisplayTimeUpdate) {
-        lastUpdateTime = currentTime;
+    if (currentTime - UIDisplayTimeUpdateTimeLast >= UIDisplayTimeUpdate) {
+        UIDisplayTimeUpdateTimeLast = currentTime;
         if (UIDisplayNeedRefresh) {
             MCPDisplayCursorSet(4, 0);
             MCPDisplayPrint("       ");
@@ -254,7 +257,7 @@ void UIDisplayMenuInformation() {
     if (UIDisplayNeedRefresh == false) return;
     UIDisplayNeedRefresh = false;
     
-    UIDisplayMenuItemsObject.settingsIndexSelection = 3;
+    UIDisplayMenuItemsObject.settingsIndexSelection = 0;
 
     MCPDisplayCursorSet(1, 0);
     MCPDisplayPrint("Menu:");
@@ -272,14 +275,6 @@ void UIDisplayMenuInformation() {
 
     switch (UIDisplayMenuItemsObject.settingsIndexSelection) {
     case 0:
-        MCPDisplayCursorSet(0, 1);
-        MCPDisplayPrint("> None");
-        break;
-    case 1:
-        MCPDisplayCursorSet(0, 2);
-        MCPDisplayPrint("> None");
-        break;
-    case 2:
         MCPDisplayCursorSet(0, 3);
         MCPDisplayPrint("> Exit");
         break;
@@ -625,10 +620,6 @@ void UIButtonsHandler() {
 
             switch (UIDisplayMenuItemsObject.settingsIndexSelection) {
             case 0:
-                break;
-            case 1:
-                break;
-            case 2:
                 UIDisplaySectionListObject = sectionMenu;
                 break;
             }
