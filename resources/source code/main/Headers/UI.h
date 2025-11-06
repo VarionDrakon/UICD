@@ -7,8 +7,17 @@
 #define PIN_LEFT 10
 #define PIN_DOWN 9
 
-struct menuItems;
+enum UIDisplaySectionList {
+    sectionDefault,
+    sectionMenu,
+    sectionMenuConnections,
+    sectionMenuTotalizers,
+    sectionMenuTotalizersSelectedRequestReset,
+    sectionMenuInformations
+};
+extern UIDisplaySectionList UIDisplaySectionListObject;
 
+struct menuItems;
 extern bool buttonStatus[5];
 extern bool UIDisplayNeedClear;
 extern bool UIDisplayNeedRefresh;

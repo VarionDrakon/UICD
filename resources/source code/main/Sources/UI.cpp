@@ -28,14 +28,6 @@ struct UIDisplayMenuItems {
 };
 UIDisplayMenuItems UIDisplayMenuItemsObject;
 
-enum UIDisplaySectionList {
-    sectionDefault,
-    sectionMenu,
-    sectionMenuConnections,
-    sectionMenuTotalizers,
-    sectionMenuTotalizersSelectedRequestReset,
-    sectionMenuInformations
-};
 UIDisplaySectionList UIDisplaySectionListObject = sectionDefault;
 bool UIDisplayNeedClear = true;
 bool UIDisplayNeedRefresh = true;

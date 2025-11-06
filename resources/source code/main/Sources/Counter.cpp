@@ -70,11 +70,11 @@ void counterSensorSecondary() {
 void counterSensorHandleForward() {
   totalizerDirectValueAdd();
   totalizerCommonValueAdd();
-  UIDisplayNeedRefresh = true;
+  if (UIDisplaySectionListObject == sectionDefault) UIDisplayNeedRefresh = true;
 }
 
 void counterSensorHandleBackward() {
   totalizerReverseValueAdd();
   totalizerCommonValueAdd();
-  UIDisplayNeedRefresh = true;
+  if (UIDisplaySectionListObject == sectionDefault) UIDisplayNeedRefresh = true;
 }
