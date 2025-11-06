@@ -27,7 +27,7 @@ void loop() {
   modbusHandlerResponse();
 
   modbusSettingsUpdater();
-
+  
   IODataSDFileWritePeriodically();
 
   UIButtonsHandler();

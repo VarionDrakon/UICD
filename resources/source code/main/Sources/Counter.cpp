@@ -23,7 +23,6 @@ void sensorsStateTimeout() {
   }
 }
 
-
 void counterSensorFirst() {
   static unsigned int counterSensorMinDebounceTime = 0;
   unsigned long currentTime = millis();
@@ -69,13 +68,13 @@ void counterSensorSecondary() {
 }
 
 void counterSensorHandleForward() {
-  UIDisplayNeedRefresh = true;
   totalizerDirectValueAdd();
   totalizerCommonValueAdd();
+  UIDisplayNeedRefresh = true;
 }
 
 void counterSensorHandleBackward() {
-  UIDisplayNeedRefresh = true;
   totalizerReverseValueAdd();
   totalizerCommonValueAdd();
+  UIDisplayNeedRefresh = true;
 }
