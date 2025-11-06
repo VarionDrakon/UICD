@@ -39,7 +39,7 @@ enum UIDisplaySectionList {
 UIDisplaySectionList UIDisplaySectionListObject = sectionDefault;
 bool UIDisplayNeedClear = true;
 bool UIDisplayNeedRefresh = true;
-static int UIDisplayTimerUpdate = 600;
+static int UIDisplayTimeUpdate = 300;
 
 void UIButtonsInitialize() {
     pinMode(PIN_RIGHT, INPUT_PULLUP);
@@ -90,7 +90,7 @@ void UIDisplayDefault() {
     static unsigned int lastUpdateTime = 0;
     unsigned long currentTime = millis();
 
-    if (currentTime - lastUpdateTime >= UIDisplayTimerUpdate) {
+    if (currentTime - lastUpdateTime >= UIDisplayTimeUpdate) {
         lastUpdateTime = currentTime;
         if (UIDisplayNeedRefresh) {
             MCPDisplayCursorSet(4, 0);
