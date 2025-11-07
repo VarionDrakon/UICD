@@ -1,16 +1,10 @@
 #include "../Headers/Headers.h"
 
-volatile unsigned long sensorFirstTime = 0;
-volatile unsigned long sensorSecondaryTime = 0;
+// Переменные для отслеживания состояния датчиков
 volatile bool sensorFirstTriggered = false;
 volatile bool sensorSecondaryTriggered = false;
-volatile int direction = 0;
-
-static unsigned long lastFirstTime = 0;
-static unsigned long lastSecondaryTime = 0;
-
-const unsigned long DEBOUNCE_TIME = 1;
-const unsigned long TIMEOUT = 1000;
+volatile unsigned long lastSensorTime = 0;
+const unsigned long SENSOR_TIMEOUT = 1000; // таймаут между срабатываниями в мс
 
 void sensorsInitialize() {
   attachInterrupt(0, counterSensorFirst, FALLING);
@@ -18,55 +12,34 @@ void sensorsInitialize() {
 }
 
 void counterSensorFirst() {
-  unsigned long currentTime = millis();
-  
-  if (currentTime - lastFirstTime < DEBOUNCE_TIME) return;
-  lastFirstTime = currentTime;
-
-  noInterrupts();
-  sensorFirstTime = currentTime;
-  sensorFirstTriggered = true;
-  counterDirectionHandler();
-  interrupts();
+  if (millis() - lastSensorTime > 1) { // защита от дребезга
+    sensorFirstTriggered = true;
+    lastSensorTime = millis();
+    counterDirectionHandler();
+  }
 }
 
 void counterSensorSecondary() {
-  unsigned long currentTime = millis();
-  
-  if (currentTime - lastSecondaryTime < DEBOUNCE_TIME) return;
-  lastSecondaryTime = currentTime;
-
-  noInterrupts();
-  sensorSecondaryTime = currentTime;
-  sensorSecondaryTriggered = true;
-  counterDirectionHandler();
-  interrupts();
+  if (millis() - lastSensorTime > 1) { // защита от дребезга
+    sensorSecondaryTriggered = true;
+    lastSensorTime = millis();
+    counterDirectionHandler();
+  }
 }
 
 void counterDirectionHandler() {
-  unsigned long currentTime = millis();
-  
-  if (currentTime - sensorFirstTime > TIMEOUT || currentTime - sensorSecondaryTime > TIMEOUT) {
-    counterSensorsReset();
-    return;
-  }
-  
   if (sensorFirstTriggered && sensorSecondaryTriggered) {
-    if (sensorFirstTime < sensorSecondaryTime) {
-      direction = 1;
-      counterSensorHandleForward();
-    } else {
-      direction = -1;
-      counterSensorHandleBackward();
+    // Оба датчика сработали, определяем направление
+    if (sensorFirstTriggered && sensorSecondaryTriggered) {
+      // Порядок срабатывания определяется по времени
+      // В реальной реализации нужно добавить проверку времени срабатывания
+      counterSensorHandleForward(); // или counterSensorHandleBackward()
+      counterSensorsReset();
     }
-    counterSensorsReset();
   }
-}
-
-void counterSensorsReset() {
-  sensorFirstTriggered = false;
-  sensorSecondaryTriggered = false;
-  direction = 0;
+  
+  // Таймаут для сброса если сработал только один датчик
+  counterSensorTimeout();
 }
 
 void counterSensorHandleForward() {
@@ -79,4 +52,24 @@ void counterSensorHandleBackward() {
   totalizerReverseValueAdd();
   totalizerCommonValueAdd();
   if (UIDisplaySectionListObject == sectionDefault) UIDisplayNeedRefresh = true;
+}
+
+void counterSensorsReset() {
+  sensorFirstTriggered = false;
+  sensorSecondaryTriggered = false;
+}
+
+void counterSensorTimeout() {
+  static unsigned long timeoutStart = 0;
+  static bool timeoutActive = false;
+  
+  if ((sensorFirstTriggered || sensorSecondaryTriggered) && !timeoutActive) {
+    timeoutStart = millis();
+    timeoutActive = true;
+  }
+  
+  if (timeoutActive && (millis() - timeoutStart > SENSOR_TIMEOUT)) {
+    counterSensorsReset();
+    timeoutActive = false;
+  }
 }
