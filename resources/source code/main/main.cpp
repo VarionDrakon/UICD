@@ -34,6 +34,8 @@ void loop() {
 
   UIDisplayHandler();
 
+  counterDirectionHandler();
+
   // deviceDataObject.modbusSlaveAddress = au16data[0];
   // deviceDataObject.modbusBaudrate = au16data[1];
   // deviceDataObject.modbusBaudrate = (deviceDataObject.modbusBaudrate << 16) | au16data[2];

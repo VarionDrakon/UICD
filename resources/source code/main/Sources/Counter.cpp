@@ -1,70 +1,72 @@
 #include "../Headers/Headers.h"
 
-enum SensorState {
-  counterSensorWaiting,
-  counterSensorFirstTriggered,
-  counterSensorSecondaryTriggered
-};
+volatile unsigned long sensorFirstTime = 0;
+volatile unsigned long sensorSecondaryTime = 0;
+volatile bool sensorFirstTriggered = false;
+volatile bool sensorSecondaryTriggered = false;
+volatile int direction = 0; 
 
-volatile SensorState state = counterSensorWaiting;
-volatile unsigned long counterSensorFirstLastInterruptTime = 0;
-volatile unsigned long counterSensorSecondaryLastInterruptTime = 0;
-const uint32_t counterSensorMinTriggerInterval = 20;
+
+const unsigned long DEBOUNCE_TIME = 50;
+const unsigned long TIMEOUT = 1000;
 
 void sensorsInitialize() {
   attachInterrupt(0, counterSensorFirst, FALLING);
   attachInterrupt(1, counterSensorSecondary, FALLING);
 }
 
-void sensorsStateTimeout() {
-  unsigned long currentTime = millis();
-  if (state != counterSensorWaiting && (currentTime - 0 > 1000)) {
-    state = counterSensorWaiting;
-  }
-}
-
 void counterSensorFirst() {
-  static unsigned int counterSensorMinDebounceTime = 0;
+  noInterrupts();
   unsigned long currentTime = millis();
-  if (currentTime - counterSensorFirstLastInterruptTime > counterSensorMinTriggerInterval) {
-    counterSensorFirstLastInterruptTime = currentTime;
-
-      if (currentTime - counterSensorMinDebounceTime < counterSensorMinTriggerInterval) {
-        return;
-      }
-    
-    switch(state) {
-      case counterSensorWaiting:
-        state = counterSensorFirstTriggered;
-        break;
-      case counterSensorSecondaryTriggered:
-        counterSensorHandleBackward();
-        state = counterSensorWaiting;
-        break;
-    }
-  }
+  static unsigned long lastFirstTime = 0;
+  
+  if (currentTime - lastFirstTime < DEBOUNCE_TIME) return;
+  lastFirstTime = currentTime;
+  
+  sensorFirstTime = currentTime;
+  sensorFirstTriggered = true;
+  counterDirectionHandler();
+  interrupts();
 }
 
 void counterSensorSecondary() {
-  static unsigned int counterSensorMinDebounceTime = 0;
+  noInterrupts();
   unsigned long currentTime = millis();
-  if (currentTime - counterSensorSecondaryLastInterruptTime > counterSensorMinTriggerInterval) {
-    counterSensorSecondaryLastInterruptTime = currentTime;
-    
-    if (currentTime - counterSensorMinDebounceTime < counterSensorMinTriggerInterval) {
-      return;
-    }
+  static unsigned long lastSecondaryTime = 0;
+  
+  if (currentTime - lastSecondaryTime < DEBOUNCE_TIME) return;
+  lastSecondaryTime = currentTime;
 
-    switch(state) {
-      case counterSensorWaiting:
-        state = counterSensorSecondaryTriggered;
-        break;
-      case counterSensorFirstTriggered:
-        counterSensorHandleForward();
-        state = counterSensorWaiting;
-        break;
-    }
+  sensorSecondaryTime = currentTime;
+  sensorSecondaryTriggered = true;
+  counterDirectionHandler();
+  interrupts();
+}
+
+void counterDirectionHandler() {
+  unsigned long currentTime = millis();
+  
+  if (currentTime - sensorFirstTime > TIMEOUT || currentTime - sensorSecondaryTime > TIMEOUT) {
+    counterSensorsReset();
+    return;
   }
+  
+  if (sensorFirstTriggered && sensorSecondaryTriggered) {
+    if (sensorFirstTime < sensorSecondaryTime) {
+      direction = 1;
+      counterSensorHandleForward();
+    } else {
+      direction = -1;
+      counterSensorHandleBackward();
+    }
+    counterSensorsReset();
+  }
+}
+
+void counterSensorsReset() {
+  sensorFirstTriggered = false;
+  sensorSecondaryTriggered = false;
+  direction = 0;
 }
 
 void counterSensorHandleForward() {

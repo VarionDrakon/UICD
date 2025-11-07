@@ -8,5 +8,8 @@ void counterSensorFirst();
 void counterSensorSecondary();
 void counterSensorHandleForward();
 void counterSensorHandleBackward();
+void counterSensorsReset();
+void counterSensorTimeout();
+void counterDirectionHandler();
 
 #endif
