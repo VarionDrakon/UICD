@@ -1,10 +1,6 @@
 #include "../Headers/Headers.h"
 
-// Переменные для отслеживания состояния датчиков
-volatile bool sensorFirstTriggered = false;
-volatile bool sensorSecondaryTriggered = false;
-volatile unsigned long lastSensorTime = 0;
-const unsigned long SENSOR_TIMEOUT = 1000; // таймаут между срабатываниями в мс
+volatile uint8_t sensorState = 0;
 
 void sensorsInitialize() {
   attachInterrupt(0, counterSensorFirst, FALLING);
@@ -12,64 +8,47 @@ void sensorsInitialize() {
 }
 
 void counterSensorFirst() {
-  if (millis() - lastSensorTime > 1) { // защита от дребезга
-    sensorFirstTriggered = true;
-    lastSensorTime = millis();
-    counterDirectionHandler();
+  static uint32_t lastTime = 0;
+  if (millis() - lastTime < 10) return;
+  lastTime = millis();
+  
+  if (sensorState == 0) {
+    sensorState = 1;
+  } 
+  else if (sensorState == 2) {
+    counterSensorHandleBackward();
+    sensorState = 0;
   }
 }
 
 void counterSensorSecondary() {
-  if (millis() - lastSensorTime > 1) { // защита от дребезга
-    sensorSecondaryTriggered = true;
-    lastSensorTime = millis();
-    counterDirectionHandler();
-  }
-}
-
-void counterDirectionHandler() {
-  if (sensorFirstTriggered && sensorSecondaryTriggered) {
-    // Оба датчика сработали, определяем направление
-    if (sensorFirstTriggered && sensorSecondaryTriggered) {
-      // Порядок срабатывания определяется по времени
-      // В реальной реализации нужно добавить проверку времени срабатывания
-      counterSensorHandleForward(); // или counterSensorHandleBackward()
-      counterSensorsReset();
-    }
-  }
+  static uint32_t lastTime = 0;
+  if (millis() - lastTime < 10) return;
+  lastTime = millis();
   
-  // Таймаут для сброса если сработал только один датчик
-  counterSensorTimeout();
+  if (sensorState == 0) {
+    sensorState = 2;
+  } 
+  else if (sensorState == 1) {
+    counterSensorHandleForward();
+    sensorState = 0;
+  }
 }
 
 void counterSensorHandleForward() {
   totalizerDirectValueAdd();
   totalizerCommonValueAdd();
   if (UIDisplaySectionListObject == sectionDefault) UIDisplayNeedRefresh = true;
+  counterSensorsReset();
 }
 
 void counterSensorHandleBackward() {
   totalizerReverseValueAdd();
   totalizerCommonValueAdd();
   if (UIDisplaySectionListObject == sectionDefault) UIDisplayNeedRefresh = true;
+  counterSensorsReset();
 }
 
 void counterSensorsReset() {
-  sensorFirstTriggered = false;
-  sensorSecondaryTriggered = false;
-}
-
-void counterSensorTimeout() {
-  static unsigned long timeoutStart = 0;
-  static bool timeoutActive = false;
-  
-  if ((sensorFirstTriggered || sensorSecondaryTriggered) && !timeoutActive) {
-    timeoutStart = millis();
-    timeoutActive = true;
-  }
-  
-  if (timeoutActive && (millis() - timeoutStart > SENSOR_TIMEOUT)) {
-    counterSensorsReset();
-    timeoutActive = false;
-  }
+  sensorState = 0;
 }
