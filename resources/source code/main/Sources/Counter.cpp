@@ -4,10 +4,12 @@ volatile unsigned long sensorFirstTime = 0;
 volatile unsigned long sensorSecondaryTime = 0;
 volatile bool sensorFirstTriggered = false;
 volatile bool sensorSecondaryTriggered = false;
-volatile int direction = 0; 
+volatile int direction = 0;
 
+static unsigned long lastFirstTime = 0;
+static unsigned long lastSecondaryTime = 0;
 
-const unsigned long DEBOUNCE_TIME = 50;
+const unsigned long DEBOUNCE_TIME = 1;
 const unsigned long TIMEOUT = 1000;
 
 void sensorsInitialize() {
@@ -16,13 +18,12 @@ void sensorsInitialize() {
 }
 
 void counterSensorFirst() {
-  noInterrupts();
   unsigned long currentTime = millis();
-  static unsigned long lastFirstTime = 0;
   
   if (currentTime - lastFirstTime < DEBOUNCE_TIME) return;
   lastFirstTime = currentTime;
-  
+
+  noInterrupts();
   sensorFirstTime = currentTime;
   sensorFirstTriggered = true;
   counterDirectionHandler();
@@ -30,13 +31,12 @@ void counterSensorFirst() {
 }
 
 void counterSensorSecondary() {
-  noInterrupts();
   unsigned long currentTime = millis();
-  static unsigned long lastSecondaryTime = 0;
   
   if (currentTime - lastSecondaryTime < DEBOUNCE_TIME) return;
   lastSecondaryTime = currentTime;
 
+  noInterrupts();
   sensorSecondaryTime = currentTime;
   sensorSecondaryTriggered = true;
   counterDirectionHandler();
