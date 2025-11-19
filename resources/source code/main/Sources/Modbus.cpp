@@ -70,7 +70,7 @@ void modbusHandlerListener() {
 */
 void modbusHandlerResponse() {
   //Splitting into bytes array from long variable
-  if (!deviceDataObject.totalizerCommon == 0) {
+  if (deviceDataObject.totalizerCommon != 0) {
     au16data[3] = (deviceDataObject.totalizerCommon >> 16) & 0xFFFF;   //getting (1 part) most significant and shift right 16 bits (0xFFFF - 4 bytes)
     au16data[4] = deviceDataObject.totalizerCommon & 0xFFFF;           //filtering (2 part) results on 16 bits (0xFFFF - 4 bytes)
     au16data[5] = (deviceDataObject.totalizerDirect >> 16) & 0xFFFF;   //getting (1 part) most significant and shift right 16 bits (0xFFFF - 4 bytes)

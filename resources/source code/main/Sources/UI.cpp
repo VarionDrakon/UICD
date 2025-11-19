@@ -35,6 +35,8 @@ bool UIDisplayNeedRefresh = true;
 static unsigned long UIDisplayTimeUpdate = 300;
 static unsigned long UIDisplayTimeUpdateTimeLast = 0;
 
+static unsigned int UIDisplayButtonTimeoutPressing = 150;
+
 void UIButtonsInitialize() {
     pinMode(PIN_RIGHT, INPUT_PULLUP);
     pinMode(PIN_UP, INPUT_PULLUP);
@@ -50,15 +52,6 @@ void UIDisplayInitialize() {
 
 void UIDisplayClear() {
     MCPDisplayCommandSend(0x01);
-    // delay(10);
-    // MCPDisplayCursorSet(0, 0);
-    // MCPDisplayPrint("                    ");
-    // MCPDisplayCursorSet(0, 1);
-    // MCPDisplayPrint("                    ");
-    // MCPDisplayCursorSet(0, 2);
-    // MCPDisplayPrint("                    ");
-    // MCPDisplayCursorSet(0, 3);
-    // MCPDisplayPrint("                    ");
 }
 
 void UIDisplayDefault() {
@@ -366,7 +359,7 @@ void UIButtonsHandler() {
     {
     case sectionDefault:
         if (buttonStatus[BUTTON_OK] == LOW) {
-            delay(50);
+            delay(UIDisplayButtonTimeoutPressing);
             UIDisplaySectionListObject = sectionMenu;
             UIDisplayNeedClear = true;
             UIDisplayNeedRefresh = true;
@@ -374,7 +367,7 @@ void UIButtonsHandler() {
         break;
     case sectionMenu:
         if (buttonStatus[BUTTON_UP] == LOW) {
-            delay(50);
+            delay(UIDisplayButtonTimeoutPressing);
 
             if (UIDisplayMenuItemsObject.settingsIndexSelection > 0) {
                 UIDisplayMenuItemsObject.settingsIndexSelection--;
@@ -386,7 +379,7 @@ void UIButtonsHandler() {
             UIDisplayNeedRefresh = true;
         }
         if (buttonStatus[BUTTON_DOWN] == LOW) {
-            delay(50);
+            delay(UIDisplayButtonTimeoutPressing);
 
             if (UIDisplayMenuItemsObject.settingsIndexSelection < UIDisplayMenuItemsObject.settingsIndexLimit) {
                 UIDisplayMenuItemsObject.settingsIndexSelection++;
@@ -398,7 +391,7 @@ void UIButtonsHandler() {
             UIDisplayNeedRefresh = true;
         }
         if (buttonStatus[BUTTON_OK] == LOW) {
-            delay(50);
+            delay(UIDisplayButtonTimeoutPressing);
 
             switch (UIDisplayMenuItemsObject.settingsIndexSelection) {
             case 0:
@@ -421,7 +414,7 @@ void UIButtonsHandler() {
         break;
     case sectionMenuConnections:
         if (buttonStatus[BUTTON_UP] == LOW) {
-            delay(50);
+            delay(UIDisplayButtonTimeoutPressing);
 
             if (UIDisplayMenuItemsObject.settingsIndexSelection > 0) {
                 UIDisplayMenuItemsObject.settingsIndexSelection--;
@@ -433,7 +426,7 @@ void UIButtonsHandler() {
             UIDisplayNeedRefresh = true;
         }
         if (buttonStatus[BUTTON_DOWN] == LOW) {
-            delay(50);
+            delay(UIDisplayButtonTimeoutPressing);
 
             if (UIDisplayMenuItemsObject.settingsIndexSelection < UIDisplayMenuItemsObject.settingsIndexLimit) {
                 UIDisplayMenuItemsObject.settingsIndexSelection++;
@@ -445,7 +438,7 @@ void UIButtonsHandler() {
             UIDisplayNeedRefresh = true;
         }
         if (buttonStatus[BUTTON_RIGHT] == LOW) {
-            delay(50);
+            delay(UIDisplayButtonTimeoutPressing);
             
             if (UIDisplayMenuItemsObject.settingsIndexSelection == 0) {
                 modbusBaudrateListIndex++;
@@ -463,7 +456,7 @@ void UIButtonsHandler() {
             UIDisplayNeedRefresh = true;
         }
         if (buttonStatus[BUTTON_LEFT] == LOW) {
-            delay(50);
+            delay(UIDisplayButtonTimeoutPressing);
             if (UIDisplayMenuItemsObject.settingsIndexSelection == 0) {
                 modbusBaudrateListIndex--;
 
@@ -479,7 +472,7 @@ void UIButtonsHandler() {
             UIDisplayNeedRefresh = true;
         }
         if (buttonStatus[BUTTON_OK] == LOW) {
-            delay(50);
+            delay(UIDisplayButtonTimeoutPressing);
             switch (UIDisplayMenuItemsObject.settingsIndexSelection) {
             case 0:
                 break;
@@ -496,7 +489,7 @@ void UIButtonsHandler() {
         break;
     case sectionMenuTotalizers:
         if (buttonStatus[BUTTON_UP] == LOW) {
-            delay(50);
+            delay(UIDisplayButtonTimeoutPressing);
 
             if (UIDisplayMenuItemsObject.settingsIndexSelection > 0) {
                 UIDisplayMenuItemsObject.settingsIndexSelection--;
@@ -508,7 +501,7 @@ void UIButtonsHandler() {
             UIDisplayNeedRefresh = true;
         }
         if (buttonStatus[BUTTON_DOWN] == LOW) {
-            delay(50);
+            delay(UIDisplayButtonTimeoutPressing);
 
             if (UIDisplayMenuItemsObject.settingsIndexSelection < UIDisplayMenuItemsObject.settingsIndexLimit) {
                 UIDisplayMenuItemsObject.settingsIndexSelection++;
@@ -520,7 +513,7 @@ void UIButtonsHandler() {
             UIDisplayNeedRefresh = true;
         }
         if (buttonStatus[BUTTON_OK] == LOW) {
-            delay(50);
+            delay(UIDisplayButtonTimeoutPressing);
 
             switch (UIDisplayMenuItemsObject.settingsIndexSelection) {
             case 0:
@@ -542,7 +535,7 @@ void UIButtonsHandler() {
         break;
     case sectionMenuTotalizersSelectedRequestReset:
         if (buttonStatus[BUTTON_UP] == LOW) {
-            delay(50);
+            delay(UIDisplayButtonTimeoutPressing);
 
             if (UIDisplayMenuItemsObject.settingsIndexSelection > 0) {
                 UIDisplayMenuItemsObject.settingsIndexSelection--;
@@ -554,7 +547,7 @@ void UIButtonsHandler() {
             UIDisplayNeedRefresh = true;
         }
         if (buttonStatus[BUTTON_DOWN] == LOW) {
-            delay(50);
+            delay(UIDisplayButtonTimeoutPressing);
 
             if (UIDisplayMenuItemsObject.settingsIndexSelection < UIDisplayMenuItemsObject.settingsIndexLimit) {
                 UIDisplayMenuItemsObject.settingsIndexSelection++;
@@ -566,7 +559,7 @@ void UIButtonsHandler() {
             UIDisplayNeedRefresh = true;
         }
         if (buttonStatus[BUTTON_OK] == LOW) {
-            delay(50);
+            delay(UIDisplayButtonTimeoutPressing);
 
             switch (UIDisplayMenuItemsObject.settingsIndexSelection) {
             case 0:
@@ -584,7 +577,7 @@ void UIButtonsHandler() {
         break;
     case sectionMenuInformations:
         if (buttonStatus[BUTTON_UP] == LOW) {
-            delay(50);
+            delay(UIDisplayButtonTimeoutPressing);
 
             if (UIDisplayMenuItemsObject.settingsIndexSelection > 0) {
                 UIDisplayMenuItemsObject.settingsIndexSelection--;
@@ -596,7 +589,7 @@ void UIButtonsHandler() {
             UIDisplayNeedRefresh = true;
         }
         if (buttonStatus[BUTTON_DOWN] == LOW) {
-            delay(50);
+            delay(UIDisplayButtonTimeoutPressing);
 
             if (UIDisplayMenuItemsObject.settingsIndexSelection < UIDisplayMenuItemsObject.settingsIndexLimit) {
                 UIDisplayMenuItemsObject.settingsIndexSelection++;
@@ -608,7 +601,7 @@ void UIButtonsHandler() {
             UIDisplayNeedRefresh = true;
         }
         if (buttonStatus[BUTTON_OK] == LOW) {
-            delay(50);
+            delay(UIDisplayButtonTimeoutPressing);
 
             switch (UIDisplayMenuItemsObject.settingsIndexSelection) {
             case 0:

@@ -10,42 +10,45 @@ unsigned long intervalSD = 3000;                        // Timer for write data 
 
 void IODataSDFileWrite(const unsigned long &value, const unsigned int offset) {
     Wire.beginTransmission(0x50);
-    Wire.write((uint8_t)(offset >> 8));
-    Wire.write((uint8_t)(offset & 0xFF));
+    Wire.write((uint32_t)(offset >> 8));
+    Wire.write((uint32_t)(offset & 0xFF));
     // For big-endian EEPROM:
-    Wire.write((uint8_t)(value >> 24));
-    Wire.write((uint8_t)(value >> 16));
-    Wire.write((uint8_t)(value >> 8));
-    Wire.write((uint8_t)(value & 0xFF));
+    Wire.write((uint32_t)(value >> 24));
+    Wire.write((uint32_t)(value >> 16));
+    Wire.write((uint32_t)(value >> 8));
+    Wire.write((uint32_t)(value & 0xFF));
     // For little-endian EEPROM:
-    // Wire.write((uint8_t)(value & 0xFF));
-    // Wire.write((uint8_t)(value >> 8));
-    // Wire.write((uint8_t)(value >> 16));
-    // Wire.write((uint8_t)(value >> 24));
+    // Wire.write((uint32_t)(value & 0xFF));
+    // Wire.write((uint32_t)(value >> 8));
+    // Wire.write((uint32_t)(value >> 16));
+    // Wire.write((uint32_t)(value >> 24));
     Wire.endTransmission();
     delay(5);
 }
 
 void IODataSDFileRead(unsigned long &value, const unsigned int offset) {
   Wire.beginTransmission(0x50);
-  Wire.write((uint8_t)(offset >> 8));
-  Wire.write((uint8_t)(offset & 0xFF));
+  Wire.write((uint32_t)(offset >> 8));
+  Wire.write((uint32_t)(offset & 0xFF));
   Wire.endTransmission();
   delay(5);
   Wire.requestFrom(0x50, 4);
   if (Wire.available() >= 4) {
     unsigned long readValue = 0;
     // For big-endian EEPROM:
-    readValue = ((uint8_t)Wire.read()) << 24;
-    readValue |= ((uint8_t)Wire.read()) << 16;
-    readValue |= ((uint8_t)Wire.read()) << 8;
-    readValue |= ((uint8_t)Wire.read());
+    readValue = ((uint32_t)Wire.read()) << 24;
+    readValue |= ((uint32_t)Wire.read()) << 16;
+    readValue |= ((uint32_t)Wire.read()) << 8;
+    readValue |= ((uint32_t)Wire.read());
     // For little-endian EEPROM:
-    // readValue = ((uint8_t)Wire.read());
-    // readValue |= ((uint8_t)Wire.read()) << 8;
-    // readValue |= ((uint8_t)Wire.read()) << 16;
-    // readValue |= ((uint8_t)Wire.read()) << 24;
+    // readValue = ((uint32_t)Wire.read());
+    // readValue |= ((uint32_t)Wire.read()) << 8;
+    // readValue |= ((uint32_t)Wire.read()) << 16;
+    // readValue |= ((uint32_t)Wire.read()) << 24;
     value = readValue;
+  }
+  else {
+    value = 0;
   }
 }
 
