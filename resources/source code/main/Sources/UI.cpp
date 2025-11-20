@@ -32,7 +32,7 @@ UIDisplaySectionList UIDisplaySectionListObject = sectionDefault;
 bool UIDisplayNeedClear = true;
 bool UIDisplayNeedRefresh = true;
 
-static unsigned long UIDisplayTimeUpdate = 300;
+static unsigned long UIDisplayTimeUpdate = 107;
 static unsigned long UIDisplayTimeUpdateTimeLast = 0;
 
 static unsigned int UIDisplayButtonTimeoutPressing = 150;
@@ -81,28 +81,28 @@ void UIDisplayDefault() {
     if (currentTime - UIDisplayTimeUpdateTimeLast >= UIDisplayTimeUpdate) {
         UIDisplayTimeUpdateTimeLast = currentTime;
         if (UIDisplayNeedRefresh) {
-            MCPDisplayCursorSet(4, 0);
-            MCPDisplayPrint("       ");
+            // MCPDisplayCursorSet(4, 0);
+            // MCPDisplayPrint("       ");
             MCPDisplayCursorSet(4, 0);
             MCPDisplayPrint(deviceConfigurationModbusBaudrateGet());
 
-            MCPDisplayCursorSet(11, 0);
-            MCPDisplayPrint("         ");
+            // MCPDisplayCursorSet(11, 0);
+            // MCPDisplayPrint("         ");
             MCPDisplayCursorSet(11, 0);
             MCPDisplayPrint(deviceConfigurationModbusSlaveAddressGet());
 
-            MCPDisplayCursorSet(4, 1);
-            MCPDisplayPrint("                ");
+            // MCPDisplayCursorSet(4, 1);
+            // MCPDisplayPrint("                ");
             MCPDisplayCursorSet(4, 1);
             MCPDisplayPrint(totalizerCommonReturn());
 
-            MCPDisplayCursorSet(4, 2);
-            MCPDisplayPrint("                ");
+            // MCPDisplayCursorSet(4, 2);
+            // MCPDisplayPrint("                ");
             MCPDisplayCursorSet(4, 2);
             MCPDisplayPrint(totalizerDirectReturn());
 
-            MCPDisplayCursorSet(4, 3);
-            MCPDisplayPrint("                ");
+            // MCPDisplayCursorSet(4, 3);
+            // MCPDisplayPrint("                ");
             MCPDisplayCursorSet(4, 3);
             MCPDisplayPrint(totalizerReverseReturn());
 

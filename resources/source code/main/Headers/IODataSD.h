@@ -13,7 +13,7 @@ struct deviceData {
   unsigned long totalizerDirect;
   unsigned long totalizerReverse;
   unsigned long modbusBaudrate;
-  byte modbusSlaveAddress;
+  unsigned long modbusSlaveAddress;
 };
 extern deviceData deviceDataObject;
 

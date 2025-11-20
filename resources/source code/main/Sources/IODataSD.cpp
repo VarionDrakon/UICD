@@ -111,6 +111,8 @@ void IODataSDInitialize() {
   IODataSDFileRead(deviceDataObject.totalizerCommon, 0);
   IODataSDFileRead(deviceDataObject.totalizerDirect, 4);
   IODataSDFileRead(deviceDataObject.totalizerReverse,8);
+  IODataSDFileRead(deviceDataObject.modbusBaudrate, 12);
+  IODataSDFileRead(deviceDataObject.modbusSlaveAddress, 16);
 }
 
 /*
@@ -132,6 +134,8 @@ void IODataSDFileWritePeriodically() {
     IODataSDFileWrite(deviceDataObject.totalizerCommon, 0);
     IODataSDFileWrite(deviceDataObject.totalizerDirect, 4);
     IODataSDFileWrite(deviceDataObject.totalizerReverse,8);
+    IODataSDFileWrite(deviceDataObject.modbusBaudrate, 12);
+    IODataSDFileWrite(deviceDataObject.modbusSlaveAddress, 16);
 
     MCPDisplayCursorSet(19, 0);
     MCPDisplayPrint(" ");

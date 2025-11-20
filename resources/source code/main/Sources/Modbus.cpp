@@ -30,11 +30,7 @@ void modbusInitialize() {
       break;
     }
   }
-
-  if (modbusBaudrateValueFound == false) {
-    deviceDataObject.modbusBaudrate = modbusBaudrateList[modbusBaudrateListIndex];
-    deviceDataObject.modbusSlaveAddress = 10;
-  }
+  
   modbusHandlerReloader();
 }
 

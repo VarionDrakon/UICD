@@ -5,14 +5,14 @@ Adafruit_MCP23008 mcp;
 
 void setup() {
 
+  // deviceConfigurationModbusBaudrateSet(9600);
+  // deviceConfigurationModbusSlaveAddressSet(10);
+
   MCPDisplayInitialize(0x26, 20, 4);
 
   IODataSDInitialize();
 
   sensorsInitialize();
-
-  deviceConfigurationModbusBaudrateSet(9600);
-  deviceConfigurationModbusSlaveAddressSet(10);
 
   modbusInitialize();
 
