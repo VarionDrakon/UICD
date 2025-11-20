@@ -13,6 +13,8 @@
 
 #include "../Libs/Libs.h"
 
+extern char* dictionaryWords[];
+
 void MCPDisplayInitialize(byte address, byte column, byte row);
 
 void MCPDisplayWriteBits(byte value);
@@ -24,5 +26,11 @@ void MCPDisplayDataSend(byte data);
 void MCPDisplayCursorSet(byte column, byte row);
 
 void MCPDisplayPrint(const char* str);
+
+void MCPDisplayPrintUTF(const char* s);
+
+uint8_t MCPDisplayTranslateChar(uint16_t cp);
+
+void MCPDisplayLoadCustomChars();
 
 #endif

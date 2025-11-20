@@ -59,16 +59,16 @@ void UIDisplayDefault() {
         UIDisplayClear();
 
         MCPDisplayCursorSet(0, 0);
-        MCPDisplayPrint("B: ");
+        MCPDisplayPrintUTF("M: ");
 
         MCPDisplayCursorSet(0, 1);
-        MCPDisplayPrint("C:");
+        MCPDisplayPrintUTF("O:");
 
         MCPDisplayCursorSet(0, 2);
-        MCPDisplayPrint("D:");
+        MCPDisplayPrintUTF("B:");
 
         MCPDisplayCursorSet(0, 3);
-        MCPDisplayPrint("R:");
+        MCPDisplayPrintUTF("H:");
 
         UIDisplayTimeUpdateTimeLast = millis();
 
@@ -121,33 +121,41 @@ void UIDisplayMenuMain() {
     UIDisplayMenuItemsObject.settingsIndexLimit = 3;
 
     MCPDisplayCursorSet(0, 0);
-    MCPDisplayPrint("Connections");
+    MCPDisplayPrintUTF(dictionaryWords[5]);
 
     MCPDisplayCursorSet(0, 1);
-    MCPDisplayPrint("Totalizers");
+    MCPDisplayPrintUTF(dictionaryWords[6]);
 
     MCPDisplayCursorSet(0, 2);
-    MCPDisplayPrint("Informations");
+    MCPDisplayPrintUTF(dictionaryWords[7]);
 
     MCPDisplayCursorSet(0, 3);
-    MCPDisplayPrint("Exit");
+    MCPDisplayPrintUTF(dictionaryWords[8]);
 
     switch (UIDisplayMenuItemsObject.settingsIndexSelection) {
     case 0:
         MCPDisplayCursorSet(0, 0);
-        MCPDisplayPrint("> Connections");
+        MCPDisplayPrintUTF(dictionaryWords[0]);
+        MCPDisplayCursorSet(2, 0);
+        MCPDisplayPrintUTF(dictionaryWords[5]);
         break;
     case 1:
         MCPDisplayCursorSet(0, 1);
-        MCPDisplayPrint(">  Totalizers");
+        MCPDisplayPrintUTF(dictionaryWords[0]);
+        MCPDisplayCursorSet(2, 1);
+        MCPDisplayPrintUTF(dictionaryWords[6]);
         break;
     case 2:
         MCPDisplayCursorSet(0, 2);
-        MCPDisplayPrint("> Informations");
+        MCPDisplayPrintUTF(dictionaryWords[0]);
+        MCPDisplayCursorSet(2, 2);
+        MCPDisplayPrintUTF(dictionaryWords[7]);
         break;
     case 3:
         MCPDisplayCursorSet(0, 3);
-        MCPDisplayPrint("> Exit");
+        MCPDisplayPrintUTF(dictionaryWords[0]);
+        MCPDisplayCursorSet(2, 3);
+        MCPDisplayPrintUTF(dictionaryWords[8]);
         break;
     }
 };
@@ -162,18 +170,18 @@ void UIDisplayMenuConnection() {
     UIDisplayMenuItemsObject.settingsIndexLimit = 2;
 
     MCPDisplayCursorSet(1, 0);
-    MCPDisplayPrint("Menu:");
+    MCPDisplayPrintUTF(dictionaryWords[9]);
     MCPDisplayCursorSet(7, 0);
-    MCPDisplayPrint("Modbus");
+    MCPDisplayPrintUTF(dictionaryWords[14]);
 
     MCPDisplayCursorSet(0, 1);
-    MCPDisplayPrint("Baudrate");
+    MCPDisplayPrintUTF(dictionaryWords[1]);
 
     MCPDisplayCursorSet(0, 2);
-    MCPDisplayPrint("Address");
+    MCPDisplayPrintUTF(dictionaryWords[2]);
 
     MCPDisplayCursorSet(0, 3);
-    MCPDisplayPrint("Exit");
+    MCPDisplayPrintUTF(dictionaryWords[8]);
 
     MCPDisplayCursorSet(11, 1);
     MCPDisplayPrint(deviceConfigurationModbusBaudrateGet());
@@ -183,15 +191,21 @@ void UIDisplayMenuConnection() {
     switch (UIDisplayMenuItemsObject.settingsIndexSelection) {
     case 0:
         MCPDisplayCursorSet(0, 1);
-        MCPDisplayPrint("> Baudrate");
+        MCPDisplayPrintUTF(dictionaryWords[0]);
+        MCPDisplayCursorSet(2, 1);
+        MCPDisplayPrintUTF(dictionaryWords[1]);
         break;
     case 1:
         MCPDisplayCursorSet(0, 2);
-        MCPDisplayPrint("> Address");
+        MCPDisplayPrintUTF(dictionaryWords[0]);
+        MCPDisplayCursorSet(2, 2);
+        MCPDisplayPrintUTF(dictionaryWords[2]);
         break;
     case 2:
         MCPDisplayCursorSet(0, 3);
-        MCPDisplayPrint("> Exit");
+        MCPDisplayPrintUTF(dictionaryWords[0]);
+        MCPDisplayCursorSet(2, 3);
+        MCPDisplayPrintUTF(dictionaryWords[8]);
         break;
     }
 }
@@ -206,31 +220,37 @@ void UIDisplayMenuTotalizers() {
     UIDisplayMenuItemsObject.settingsIndexLimit = 2;
 
     MCPDisplayCursorSet(1, 0);
-    MCPDisplayPrint("Menu:");
+    MCPDisplayPrintUTF(dictionaryWords[9]);
     MCPDisplayCursorSet(7, 0);
-    MCPDisplayPrint("Totalizers");
+    MCPDisplayPrintUTF(dictionaryWords[6]);
 
     MCPDisplayCursorSet(0, 1);
-    MCPDisplayPrint("Reset totalizer: F");
+    MCPDisplayPrintUTF(dictionaryWords[15]);
 
     MCPDisplayCursorSet(0, 2);
-    MCPDisplayPrint("Reset totalizer: R");
+    MCPDisplayPrintUTF(dictionaryWords[16]);
 
     MCPDisplayCursorSet(0, 3);
-    MCPDisplayPrint("Exit");
+    MCPDisplayPrintUTF(dictionaryWords[8]);
 
     switch (UIDisplayMenuItemsObject.settingsIndexSelection) {
     case 0:
         MCPDisplayCursorSet(0, 1);
-        MCPDisplayPrint("> Reset totalizer: F");
+        MCPDisplayPrintUTF(dictionaryWords[0]);
+        MCPDisplayCursorSet(2, 1);
+        MCPDisplayPrintUTF(dictionaryWords[15]);
         break;
     case 1:
         MCPDisplayCursorSet(0, 2);
-        MCPDisplayPrint("> Reset totalizer: R");
+        MCPDisplayPrintUTF(dictionaryWords[0]);
+        MCPDisplayCursorSet(2, 2);
+        MCPDisplayPrintUTF(dictionaryWords[16]);
         break;
     case 2:
         MCPDisplayCursorSet(0, 3);
-        MCPDisplayPrint("> Exit");
+        MCPDisplayPrintUTF(dictionaryWords[0]);
+        MCPDisplayCursorSet(2, 3);
+        MCPDisplayPrintUTF(dictionaryWords[8]);
         break;
     }
 }
@@ -245,23 +265,25 @@ void UIDisplayMenuInformation() {
     UIDisplayMenuItemsObject.settingsIndexSelection = 0;
 
     MCPDisplayCursorSet(1, 0);
-    MCPDisplayPrint("Menu:");
+    MCPDisplayPrintUTF(dictionaryWords[9]);
     MCPDisplayCursorSet(7, 0);
-    MCPDisplayPrint("Info");
+    MCPDisplayPrintUTF(dictionaryWords[7]);
 
     MCPDisplayCursorSet(0, 1);
-    MCPDisplayPrint("None");
+    MCPDisplayPrintUTF(dictionaryWords[13]);
 
     MCPDisplayCursorSet(0, 2);
-    MCPDisplayPrint("None");
+    MCPDisplayPrintUTF(dictionaryWords[13]);
 
     MCPDisplayCursorSet(0, 3);
-    MCPDisplayPrint("Exit");
+    MCPDisplayPrint(dictionaryWords[8]);
 
     switch (UIDisplayMenuItemsObject.settingsIndexSelection) {
     case 0:
         MCPDisplayCursorSet(0, 3);
-        MCPDisplayPrint("> Exit");
+        MCPDisplayPrintUTF(dictionaryWords[0]);
+        MCPDisplayCursorSet(2, 3);
+        MCPDisplayPrintUTF(dictionaryWords[8]);
         break;
     }
 }
@@ -273,35 +295,46 @@ void UIDisplayMenuTotalizersSelectedRequestReset() {
     if (UIDisplayNeedRefresh == false) return;
     UIDisplayNeedRefresh = false;
     
-    char buffer[4];
     UIDisplayMenuItemsObject.settingsIndexLimit = 1;
 
     MCPDisplayCursorSet(1, 0);
-    MCPDisplayPrint("Menu:");
+    MCPDisplayPrintUTF(dictionaryWords[11]);
     MCPDisplayCursorSet(7, 0);
-    MCPDisplayPrint("Totalizers");
+    MCPDisplayPrintUTF(dictionaryWords[6]);
 
     MCPDisplayCursorSet(0, 1);
-    MCPDisplayPrint("Reset totalizer ");
-    MCPDisplayCursorSet(17, 1);
-    MCPDisplayPrint(itoa(UIDisplayMenuItemsObject.settingsIndexTotalizersSelected, buffer, 10));
+    MCPDisplayPrintUTF(dictionaryWords[10]);
+
+    if (UIDisplayMenuItemsObject.settingsIndexTotalizersSelected == 1) {
+        MCPDisplayCursorSet(17, 1);
+        MCPDisplayPrintUTF(dictionaryWords[18]);
+    }
+    else if (UIDisplayMenuItemsObject.settingsIndexTotalizersSelected == 2) {
+        MCPDisplayCursorSet(17, 1);
+        MCPDisplayPrintUTF(dictionaryWords[19]);
+    }
+
     MCPDisplayCursorSet(18, 1);
-    MCPDisplayPrint("?");
+    MCPDisplayPrintUTF(dictionaryWords[17]);
 
     MCPDisplayCursorSet(0, 2);
-    MCPDisplayPrint("Yes");
+    MCPDisplayPrintUTF(dictionaryWords[12]);
     MCPDisplayCursorSet(0, 3);
-    MCPDisplayPrint("No");
+    MCPDisplayPrintUTF(dictionaryWords[13]);
 
     switch (UIDisplayMenuItemsObject.settingsIndexSelection)
     {
     case 0:
         MCPDisplayCursorSet(0, 2);
-        MCPDisplayPrint("> Yes");
+        MCPDisplayPrintUTF(dictionaryWords[0]);
+        MCPDisplayCursorSet(2, 2);
+        MCPDisplayPrintUTF(dictionaryWords[12]);
         break;
     case 1:
         MCPDisplayCursorSet(0, 3);
-        MCPDisplayPrint("> No");
+        MCPDisplayPrintUTF(dictionaryWords[0]);
+        MCPDisplayCursorSet(2, 3);
+        MCPDisplayPrintUTF(dictionaryWords[13]);
         break;
     }
 }

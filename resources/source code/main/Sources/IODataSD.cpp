@@ -108,13 +108,6 @@ void IODataSDInitialize() {
   Wire.begin();
   Wire.setClock(1000000L);
 
-  MCPDisplayCommandSend(0x01);
-  delay(10);
-  
-  MCPDisplayCursorSet(3, 1);
-  MCPDisplayPrint("UICD loading...");
-  delay(500);
-
   IODataSDFileRead(deviceDataObject.totalizerCommon, 0);
   IODataSDFileRead(deviceDataObject.totalizerDirect, 4);
   IODataSDFileRead(deviceDataObject.totalizerReverse,8);
