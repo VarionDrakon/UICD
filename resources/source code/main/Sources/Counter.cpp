@@ -7,7 +7,7 @@ volatile uint8_t sensorState = 0;
 
 static volatile uint32_t lastFirstMicros = 0;
 static volatile uint32_t lastSecondMicros = 0;
-static const uint32_t debounceTime = 2000;
+static const uint32_t debounceTime = 100;
 
 void sensorsInitialize() {
   pinMode(SENSOR_FIRST_PINOUT, INPUT_PULLUP);
