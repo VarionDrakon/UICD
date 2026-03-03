@@ -95,7 +95,13 @@ void modbusHandlerResponse() {
 void modbusSettingsUpdater() {
   if (au16data[0] != deviceDataObject.modbusSlaveAddress || ((uint32_t)au16data[1] << 16 | au16data[2]) != deviceDataObject.modbusBaudrate) {
 
-    deviceDataObject.modbusSlaveAddress = au16data[0];
+
+    if (au16data[0] >= 1 && au16data[0] <= 247) {
+      deviceDataObject.modbusSlaveAddress = au16data[0];
+    } else {
+      au16data[0] = deviceDataObject.modbusSlaveAddress;
+    }
+
     deviceDataObject.modbusBaudrate = (uint32_t)au16data[1] << 16 | au16data[2];
 
     modbusHandlerReloader();

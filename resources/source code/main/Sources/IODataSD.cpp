@@ -96,6 +96,18 @@ void deviceConfigurationModbusSlaveAddressSet(byte value) {
   deviceDataObject.modbusSlaveAddress = value;
 }
 
+void modbusSlaveAddressAdd() {
+  if (deviceDataObject.modbusSlaveAddress < 247) {
+    deviceDataObject.modbusSlaveAddress++;
+  }
+}
+
+void modbusSlaveAddressReduce() {
+  if (deviceDataObject.modbusSlaveAddress > 0) {
+    deviceDataObject.modbusSlaveAddress--;
+  }
+}
+
 char* deviceConfigurationModbusBaudrateGet() {
   return ltoa(deviceDataObject.modbusBaudrate, deviceDataCharObject.modbusBaudrate, 10);
 }

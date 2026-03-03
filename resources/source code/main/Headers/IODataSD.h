@@ -42,6 +42,8 @@ void totalizerDirectValueAdd();
 void totalizerDirectValueReset();
 void totalizerReverseValueAdd();
 void totalizerReverseValueReset();
+void modbusSlaveAddressAdd();
+void modbusSlaveAddressReduce();
 void deviceConfigurationModbusBaudrateSet(unsigned long value);
 void deviceConfigurationModbusSlaveAddressSet(byte value);
 char* deviceConfigurationModbusBaudrateGet();

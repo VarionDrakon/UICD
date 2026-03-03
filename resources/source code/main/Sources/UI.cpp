@@ -56,28 +56,29 @@ void UIDisplayClear() {
 }
 
 void UIDisplayToVoidAndBack() {
+    if (UIDisplaySectionListObject == sectionDefault) {
+        MCPDisplayCursorSet(0, 0);
+        // MCPDisplayPrintUTF(".:`    `.  .   .:.` ");
+        MCPDisplayPrintUTF("                    ");
 
-    MCPDisplayCursorSet(0, 0);
-    // MCPDisplayPrintUTF(".:`    `.  .   .:.` ");
-    MCPDisplayPrintUTF("                    ");
+        MCPDisplayCursorSet(0, 1);
+        // MCPDisplayPrintUTF(".`.  . .`I`M:`    ..");
+        MCPDisplayPrintUTF("                    ");
 
-    MCPDisplayCursorSet(0, 1);
-    // MCPDisplayPrintUTF(".`.  . .`I`M:`    ..");
-    MCPDisplayPrintUTF("                    ");
+        MCPDisplayCursorSet(0, 2);
+        // MCPDisplayPrintUTF("   `.`.`.VOID,.`  ..");
+        MCPDisplayPrintUTF("                    ");
 
-    MCPDisplayCursorSet(0, 2);
-    // MCPDisplayPrintUTF("   `.`.`.VOID,.`  ..");
-    MCPDisplayPrintUTF("                    ");
+        MCPDisplayCursorSet(0, 3);
+        // MCPDisplayPrintUTF(". `       .  : .. . ");
+        MCPDisplayPrintUTF("                    ");
 
-    MCPDisplayCursorSet(0, 3);
-    // MCPDisplayPrintUTF(". `       .  : .. . ");
-    MCPDisplayPrintUTF("                    ");
+        delay(50);
 
-    delay(50);
-
-    UIDisplaySectionListObject = sectionDefault;
-    UIDisplayNeedClear = true;
-    UIDisplayNeedRefresh = true;
+        UIDisplaySectionListObject = sectionDefault;
+        UIDisplayNeedClear = true;
+        UIDisplayNeedRefresh = true;
+    }
 }
 
 void UIDisplayDefault() {
@@ -504,14 +505,12 @@ void UIButtonsHandler() {
             
             if (UIDisplayMenuItemsObject.settingsIndexSelection == 0) {
                 modbusBaudrateListIndex++;
-
                 if (modbusBaudrateListIndex > modbusBaudrateListIndexLimit) modbusBaudrateListIndex = 0;
                 deviceDataObject.modbusBaudrate = modbusBaudrateList[modbusBaudrateListIndex];
-
                 modbusHandlerReloader();
             }
             else if (UIDisplayMenuItemsObject.settingsIndexSelection == 1) {
-                deviceDataObject.modbusSlaveAddress++;
+                modbusSlaveAddressAdd();
                 modbusHandlerReloader();
             }
             UIDisplayNeedClear = true;
@@ -521,13 +520,12 @@ void UIButtonsHandler() {
             delay(UIDisplayButtonTimeoutPressing);
             if (UIDisplayMenuItemsObject.settingsIndexSelection == 0) {
                 modbusBaudrateListIndex--;
-
                 if (modbusBaudrateListIndex < 0) modbusBaudrateListIndex = modbusBaudrateListIndexLimit;
                 deviceDataObject.modbusBaudrate = modbusBaudrateList[modbusBaudrateListIndex];
                 modbusHandlerReloader();
             }
             else if (UIDisplayMenuItemsObject.settingsIndexSelection == 1) {
-                deviceDataObject.modbusSlaveAddress--;
+                modbusSlaveAddressReduce();
                 modbusHandlerReloader();
             }
             UIDisplayNeedClear = true;
