@@ -1,5 +1,6 @@
 #include "Arduino.h"
 #include "../Headers/Headers.h"
+#include "../FirmwareData.h"
 
 #define PIN_RIGHT 9 // [PB1] | Physical pinout of the microcircuit: 13
 #define PIN_UP    6 // [PB0] | Physical pinout of the microcircuit: 12
@@ -52,6 +53,31 @@ void UIDisplayInitialize() {
 
 void UIDisplayClear() {
     MCPDisplayCommandSend(0x01);
+}
+
+void UIDisplayToVoidAndBack() {
+
+    MCPDisplayCursorSet(0, 0);
+    // MCPDisplayPrintUTF(".:`    `.  .   .:.` ");
+    MCPDisplayPrintUTF("                    ");
+
+    MCPDisplayCursorSet(0, 1);
+    // MCPDisplayPrintUTF(".`.  . .`I`M:`    ..");
+    MCPDisplayPrintUTF("                    ");
+
+    MCPDisplayCursorSet(0, 2);
+    // MCPDisplayPrintUTF("   `.`.`.VOID,.`  ..");
+    MCPDisplayPrintUTF("                    ");
+
+    MCPDisplayCursorSet(0, 3);
+    // MCPDisplayPrintUTF(". `       .  : .. . ");
+    MCPDisplayPrintUTF("                    ");
+
+    delay(50);
+
+    UIDisplaySectionListObject = sectionDefault;
+    UIDisplayNeedClear = true;
+    UIDisplayNeedRefresh = true;
 }
 
 void UIDisplayDefault() {
@@ -269,11 +295,11 @@ void UIDisplayMenuInformation() {
     MCPDisplayCursorSet(7, 0);
     MCPDisplayPrintUTF(dictionaryWords[7]);
 
-    MCPDisplayCursorSet(0, 1);
-    MCPDisplayPrintUTF(dictionaryWords[13]);
+    MCPDisplayCursorSet(3, 1);
+    MCPDisplayPrintUTF(serialNumber);
 
-    MCPDisplayCursorSet(0, 2);
-    MCPDisplayPrintUTF(dictionaryWords[13]);
+    MCPDisplayCursorSet(3, 2);
+    MCPDisplayPrintUTF(firmwareVersion);
 
     MCPDisplayCursorSet(0, 3);
     MCPDisplayPrint(dictionaryWords[8]);
@@ -377,6 +403,9 @@ void UIDisplayHandler() {
         break;
     case sectionMenuInformations:
         UIDisplayMenuInformation();
+        break;
+    case sectionVoid:
+        UIDisplayDefault();
         break;
     }
 }

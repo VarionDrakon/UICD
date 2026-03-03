@@ -9,9 +9,9 @@
 #include "MCPDisplay.h"
 
 struct deviceData {
-  unsigned long totalizerCommon;
-  unsigned long totalizerDirect;
-  unsigned long totalizerReverse;
+  unsigned long totalizerCommon;  // Max: 4294967295
+  unsigned long totalizerDirect;  // Max: 4294967295 
+  unsigned long totalizerReverse; // Max: 4294967295 
   unsigned long modbusBaudrate;
   unsigned long modbusSlaveAddress;
 };

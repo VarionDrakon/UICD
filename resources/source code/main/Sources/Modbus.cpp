@@ -66,14 +66,12 @@ void modbusHandlerListener() {
 */
 void modbusHandlerResponse() {
   //Splitting into bytes array from long variable
-  if (deviceDataObject.totalizerCommon != 0) {
-    au16data[3] = (deviceDataObject.totalizerCommon >> 16) & 0xFFFF;   //getting (1 part) most significant and shift right 16 bits (0xFFFF - 4 bytes)
-    au16data[4] = deviceDataObject.totalizerCommon & 0xFFFF;           //filtering (2 part) results on 16 bits (0xFFFF - 4 bytes)
-    au16data[5] = (deviceDataObject.totalizerDirect >> 16) & 0xFFFF;   //getting (1 part) most significant and shift right 16 bits (0xFFFF - 4 bytes)
-    au16data[6] = deviceDataObject.totalizerDirect & 0xFFFF;           //filtering (2 part) results on 16 bits (0xFFFF - 4 bytes)
-    au16data[7] = (deviceDataObject.totalizerReverse >> 16) & 0xFFFF;  //getting (1 part) most significant and shift right 16 bits (0xFFFF - 4 bytes)
-    au16data[8] = deviceDataObject.totalizerReverse & 0xFFFF;          //filtering (2 part) results on 16 bits (0xFFFF - 4 bytes)
-  }
+  au16data[3] = (deviceDataObject.totalizerCommon >> 16) & 0xFFFF;   //getting (1 part) most significant and shift right 16 bits (0xFFFF - 4 bytes)
+  au16data[4] = deviceDataObject.totalizerCommon & 0xFFFF;           //filtering (2 part) results on 16 bits (0xFFFF - 4 bytes)
+  au16data[5] = (deviceDataObject.totalizerDirect >> 16) & 0xFFFF;   //getting (1 part) most significant and shift right 16 bits (0xFFFF - 4 bytes)
+  au16data[6] = deviceDataObject.totalizerDirect & 0xFFFF;           //filtering (2 part) results on 16 bits (0xFFFF - 4 bytes)
+  au16data[7] = (deviceDataObject.totalizerReverse >> 16) & 0xFFFF;  //getting (1 part) most significant and shift right 16 bits (0xFFFF - 4 bytes)
+  au16data[8] = deviceDataObject.totalizerReverse & 0xFFFF;          //filtering (2 part) results on 16 bits (0xFFFF - 4 bytes)
 }
 
 /*
@@ -102,12 +100,18 @@ void modbusSettingsUpdater() {
 
     modbusHandlerReloader();
 
-    MCPDisplayCursorSet(4, 0);
-    MCPDisplayPrint("                ");
+    UIDisplayToVoidAndBack();
+  }
+  if (((uint32_t)au16data[3] << 16 | au16data[4]) != deviceDataObject.totalizerCommon 
+      || ((uint32_t)au16data[5] << 16 | au16data[6]) != deviceDataObject.totalizerDirect  
+      || ((uint32_t)au16data[7] << 16 | au16data[8]) != deviceDataObject.totalizerReverse) {
+        
+    deviceDataObject.totalizerCommon  = ((uint32_t)au16data[3] << 16) | au16data[4];
+    deviceDataObject.totalizerDirect  = ((uint32_t)au16data[5] << 16) | au16data[6];
+    deviceDataObject.totalizerReverse = ((uint32_t)au16data[7] << 16) | au16data[8];
 
-    MCPDisplayCursorSet(4, 0);
-    MCPDisplayPrint(deviceConfigurationModbusBaudrateGet());
-    MCPDisplayCursorSet(11, 0);
-    MCPDisplayPrint(deviceConfigurationModbusSlaveAddressGet());
+    modbusHandlerReloader();
+
+    UIDisplayToVoidAndBack();
   }
 }

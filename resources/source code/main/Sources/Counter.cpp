@@ -7,7 +7,6 @@ volatile uint8_t sensorState = 0;
 
 static volatile uint32_t lastFirstMicros = 0;
 static volatile uint32_t lastSecondMicros = 0;
-static const uint32_t debounceTime = 100;
 
 void sensorsInitialize() {
   pinMode(SENSOR_FIRST_PINOUT, INPUT_PULLUP);
@@ -19,7 +18,6 @@ void sensorsInitialize() {
 
 void counterSensorFirst() {
   uint32_t now = micros();
-  if (now - lastFirstMicros < debounceTime) return;
   lastFirstMicros = now;
 
   if (sensorState == 0) {
@@ -33,7 +31,6 @@ void counterSensorFirst() {
 
 void counterSensorSecondary() {
   uint32_t now = micros();
-  if (now - lastSecondMicros < debounceTime) return;
   lastSecondMicros = now;
 
   if (sensorState == 0) {

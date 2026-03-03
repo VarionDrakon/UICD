@@ -13,7 +13,8 @@ enum UIDisplaySectionList {
     sectionMenuConnections,
     sectionMenuTotalizers,
     sectionMenuTotalizersSelectedRequestReset,
-    sectionMenuInformations
+    sectionMenuInformations,
+    sectionVoid
 };
 extern UIDisplaySectionList UIDisplaySectionListObject;
 
@@ -28,6 +29,8 @@ void UIDisplayInitialize();
 void UIButtonsHandler();
 
 void UIDisplayDefault();
+
+void UIDisplayToVoidAndBack();
 
 void UIDisplayMenuMain();
 

@@ -22,9 +22,9 @@ void setup() {
 
 void loop() {
 
-  modbusHandlerListener();
-
   modbusHandlerResponse();
+
+  modbusHandlerListener();
 
   modbusSettingsUpdater();
   
