@@ -103,7 +103,7 @@ void modbusSlaveAddressAdd() {
 }
 
 void modbusSlaveAddressReduce() {
-  if (deviceDataObject.modbusSlaveAddress > 0) {
+  if (deviceDataObject.modbusSlaveAddress > 1) {
     deviceDataObject.modbusSlaveAddress--;
   }
 }
