@@ -23,9 +23,9 @@ void setup() {
 void loop() {
   modbusHandlerListener();
 
-  modbusHandlerResponse();
-
   modbusSettingsUpdater();
+
+  modbusHandlerResponse();
   
   IODataSDFileWritePeriodically();
 

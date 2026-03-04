@@ -666,8 +666,5 @@ void UIButtonsHandler() {
 }
 
 void UIDisplayDelay() {
-    // static unsigned long lastPress = 0;
-    // if (millis() - lastPress < UIDisplayButtonTimeoutPressing) return;
-    // lastPress = millis();
     delay(UIDisplayButtonTimeoutPressing);
 }

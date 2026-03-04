@@ -111,10 +111,8 @@ void modbusSettingsUpdater() {
       || ((uint32_t)au16data[5] << 16 | au16data[6]) != deviceDataObject.totalizerDirect  
       || ((uint32_t)au16data[7] << 16 | au16data[8]) != deviceDataObject.totalizerReverse) {
         
-    deviceDataObject.totalizerCommon  = ((uint32_t)au16data[3] << 16) | au16data[4];
-    deviceDataObject.totalizerDirect  = ((uint32_t)au16data[5] << 16) | au16data[6];
-    deviceDataObject.totalizerReverse = ((uint32_t)au16data[7] << 16) | au16data[8];
-
-    modbusHandlerReloader();
+    // deviceDataObject.totalizerCommon  = ((uint32_t)au16data[3] << 16) | au16data[4];
+    // deviceDataObject.totalizerDirect  = ((uint32_t)au16data[5] << 16) | au16data[6];
+    // deviceDataObject.totalizerReverse = ((uint32_t)au16data[7] << 16) | au16data[8];
   }
 }

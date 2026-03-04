@@ -3,10 +3,6 @@
 #define SENSOR_FIRST_PINOUT 2
 #define SENSOR_SECOND_PINOUT 3
 
-static volatile uint32_t lastFirstMicros = 0;
-static volatile uint32_t lastSecondMicros = 0;
-static const uint32_t debounceTime = 100;
-
 void sensorsInitialize() {
   pinMode(SENSOR_FIRST_PINOUT, INPUT_PULLUP);
   pinMode(SENSOR_SECOND_PINOUT, INPUT_PULLUP);
@@ -16,13 +12,13 @@ void sensorsInitialize() {
 }
 
 void counterSensorFirst() {
-  if (digitalRead(SENSOR_SECOND_PINOUT) == LOW) {
+  if (digitalRead(SENSOR_SECOND_PINOUT) == HIGH) {
     counterSensorHandleForward();
   }
 }
 
 void counterSensorSecondary() {
-  if (digitalRead(SENSOR_FIRST_PINOUT) == LOW) {
+  if (digitalRead(SENSOR_FIRST_PINOUT) == HIGH) {
     counterSensorHandleBackward();
   }
 }
