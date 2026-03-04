@@ -1,12 +1,11 @@
 #include "../Headers/Headers.h"
 
-volatile uint8_t sensorState = 0;
-
 #define SENSOR_FIRST_PINOUT 2
 #define SENSOR_SECOND_PINOUT 3
 
 static volatile uint32_t lastFirstMicros = 0;
 static volatile uint32_t lastSecondMicros = 0;
+static const uint32_t debounceTime = 100;
 
 void sensorsInitialize() {
   pinMode(SENSOR_FIRST_PINOUT, INPUT_PULLUP);
@@ -17,45 +16,23 @@ void sensorsInitialize() {
 }
 
 void counterSensorFirst() {
-  uint32_t now = micros();
-  lastFirstMicros = now;
-
-  if (sensorState == 0) {
-    sensorState = 1;
-  }
-  else if (sensorState == 2) {
-    counterSensorHandleBackward();
-    sensorState = 0;
+  if (digitalRead(SENSOR_SECOND_PINOUT) == LOW) {
+    counterSensorHandleForward();
   }
 }
 
 void counterSensorSecondary() {
-  uint32_t now = micros();
-  lastSecondMicros = now;
-
-  if (sensorState == 0) {
-    sensorState = 2;
-  }
-  else if (sensorState == 1) {
-    counterSensorHandleForward();
-    sensorState = 0;
+  if (digitalRead(SENSOR_FIRST_PINOUT) == LOW) {
+    counterSensorHandleBackward();
   }
 }
 
 void counterSensorHandleForward() {
   totalizerDirectValueAdd();
   totalizerCommonValueAdd();
-  if (UIDisplaySectionListObject == sectionDefault) UIDisplayNeedRefresh = true; 
-  counterSensorsReset();
 }
 
 void counterSensorHandleBackward() {
   totalizerReverseValueAdd();
   totalizerCommonValueAdd();
-  if (UIDisplaySectionListObject == sectionDefault) UIDisplayNeedRefresh = true;
-  counterSensorsReset();
-}
-
-void counterSensorsReset() {
-  sensorState = 0;
 }

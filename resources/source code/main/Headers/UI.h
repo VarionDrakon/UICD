@@ -30,8 +30,6 @@ void UIButtonsHandler();
 
 void UIDisplayDefault();
 
-void UIDisplayToVoidAndBack();
-
 void UIDisplayMenuMain();
 
 void UIDisplayMenuConnection();
@@ -49,5 +47,9 @@ void UIDisplayMenuIndex(int menuIndexLimit, bool action = false);
 void UIDisplayHandler();
 
 void UIDisplayClear();
+
+void UIDisplayDelay();
+
+void UIDisplayToVoidAndBack();
 
 #endif

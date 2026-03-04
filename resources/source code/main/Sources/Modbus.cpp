@@ -39,7 +39,7 @@ void modbusHandlerReloader() {
   modbusBaudrateValueCurrent = deviceDataObject.modbusBaudrate;
   
   Serial.end();
-  delay(100);
+  delay(50);
   Serial.begin(modbusBaudrateValueCurrent, SERIAL_8N1);
   slave = Modbus(modbusSlaveAddressValueCurrent, modbusBaudrateValueCurrent, modbusPin);
   slave.start();
@@ -106,7 +106,6 @@ void modbusSettingsUpdater() {
 
     modbusHandlerReloader();
 
-    UIDisplayToVoidAndBack();
   }
   if (((uint32_t)au16data[3] << 16 | au16data[4]) != deviceDataObject.totalizerCommon 
       || ((uint32_t)au16data[5] << 16 | au16data[6]) != deviceDataObject.totalizerDirect  
@@ -117,7 +116,5 @@ void modbusSettingsUpdater() {
     deviceDataObject.totalizerReverse = ((uint32_t)au16data[7] << 16) | au16data[8];
 
     modbusHandlerReloader();
-
-    UIDisplayToVoidAndBack();
   }
 }

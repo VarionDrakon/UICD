@@ -118,7 +118,7 @@ char* deviceConfigurationModbusSlaveAddressGet() {
 
 void IODataSDInitialize() {  
   Wire.begin();
-  Wire.setClock(1000000L);
+  Wire.setClock(400000L);
 
   IODataSDFileRead(deviceDataObject.totalizerCommon, 0);
   IODataSDFileRead(deviceDataObject.totalizerDirect, 4);
