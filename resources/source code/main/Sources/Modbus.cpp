@@ -15,6 +15,7 @@ int modbusBaudrateListIndex = 3;
 const int modbusBaudrateListIndexLimit = 8;
 uint32_t modbusBaudrateList[modbusBaudrateListIndexLimit] = { 1200, 2400, 4800, 9600, 19200, 38400, 57600, 115200 };
 bool modbusBaudrateValueFound = false;
+bool modbusSettingsNeedRestart = true;
 
 byte modbusSlaveAddressValueCurrent = 0;
 unsigned long modbusBaudrateValueCurrent = 0;
@@ -23,6 +24,7 @@ unsigned long modbusBaudrateValueCurrent = 0;
 Modbus slave(modbusSlaveAddressValueCurrent, modbusBaudrateValueCurrent, modbusPin);
 
 void modbusInitialize() {
+  deviceDataObjectIsBusy = false;
 
   for (int i = 0; i < modbusBaudrateListIndexLimit; i++ ) {
     if (modbusBaudrateValueCurrent == modbusBaudrateList[i]) {
@@ -30,23 +32,32 @@ void modbusInitialize() {
       break;
     }
   }
-  
+
   modbusHandlerReloader();
+  modbusHandlerResponse();
 }
 
 void modbusHandlerReloader() {
-  modbusSlaveAddressValueCurrent = deviceDataObject.modbusSlaveAddress;
-  modbusBaudrateValueCurrent = deviceDataObject.modbusBaudrate;
-  
-  Serial.end();
-  delay(50);
-  Serial.begin(modbusBaudrateValueCurrent, SERIAL_8N1);
-  slave = Modbus(modbusSlaveAddressValueCurrent, modbusBaudrateValueCurrent, modbusPin);
-  slave.start();
+  if(!deviceDataObjectIsBusy && modbusSettingsNeedRestart) {
+    deviceDataObjectIsBusy = true;
 
-  au16data[0] = deviceDataObject.modbusSlaveAddress;
-  au16data[1] = (deviceDataObject.modbusBaudrate >> 16) & 0xFFFF;
-  au16data[2] = deviceDataObject.modbusBaudrate & 0xFFFF;
+    modbusSlaveAddressValueCurrent = deviceDataObject.modbusSlaveAddress;
+    modbusBaudrateValueCurrent = deviceDataObject.modbusBaudrate;
+    
+    Serial.end();
+    delay(50);
+    Serial.begin(modbusBaudrateValueCurrent, SERIAL_8N1);
+    slave = Modbus(modbusSlaveAddressValueCurrent, modbusBaudrateValueCurrent, modbusPin);
+    slave.start();
+
+    au16data[0] = deviceDataObject.modbusSlaveAddress;
+    au16data[1] = (deviceDataObject.modbusBaudrate >> 16) & 0xFFFF;
+    au16data[2] = deviceDataObject.modbusBaudrate & 0xFFFF;
+
+    if (UIDisplaySectionListObject == sectionDefault) UIDisplayNeedClear = true;
+    deviceDataObjectIsBusy = false;
+    modbusSettingsNeedRestart = false;
+  }
 }
 
 /*
@@ -92,27 +103,49 @@ void modbusHandlerResponse() {
 
       Updates display data
 */
-void modbusSettingsUpdater() {
+void modbusUpdater() {
   if (au16data[0] != deviceDataObject.modbusSlaveAddress || ((uint32_t)au16data[1] << 16 | au16data[2]) != deviceDataObject.modbusBaudrate) {
-
-
     if (au16data[0] >= 1 && au16data[0] <= 247) {
       deviceDataObject.modbusSlaveAddress = au16data[0];
-    } else {
-      au16data[0] = deviceDataObject.modbusSlaveAddress;
     }
 
-    deviceDataObject.modbusBaudrate = (uint32_t)au16data[1] << 16 | au16data[2];
+    unsigned long modbusBaudrateNewBuffer = ((uint32_t)au16data[1] << 16) | au16data[2];
+    if (modbusBaudrateNewBuffer != deviceDataObject.modbusBaudrate) {
+      deviceDataObject.modbusBaudrate = modbusBaudrateNewBuffer;
+    }
 
-    modbusHandlerReloader();
+    modbusSettingsNeedRestart = true;
+  }
 
+  modbusHandlerReloader();
+
+  if (deviceDataShadowObject.resetRequestExternal) {
+    // deviceDataShadowObject.totalizerCommon = ((uint32_t)au16data[3] << 16) | au16data[4];
+    deviceDataShadowObject.totalizerDirect = ((uint32_t)au16data[5] << 16) | au16data[6];
+    deviceDataShadowObject.totalizerReverse = ((uint32_t)au16data[7] << 16) | au16data[8];
   }
-  if (((uint32_t)au16data[3] << 16 | au16data[4]) != deviceDataObject.totalizerCommon 
-      || ((uint32_t)au16data[5] << 16 | au16data[6]) != deviceDataObject.totalizerDirect  
-      || ((uint32_t)au16data[7] << 16 | au16data[8]) != deviceDataObject.totalizerReverse) {
-        
-    // deviceDataObject.totalizerCommon  = ((uint32_t)au16data[3] << 16) | au16data[4];
-    // deviceDataObject.totalizerDirect  = ((uint32_t)au16data[5] << 16) | au16data[6];
-    // deviceDataObject.totalizerReverse = ((uint32_t)au16data[7] << 16) | au16data[8];
+
+  // unsigned long totalizerCommonCurrentBuffer = deviceDataObject.totalizerCommon;
+  unsigned long totalizerDirectCurrentBuffer = deviceDataObject.totalizerDirect;
+  unsigned long totalizerReverseCurrentBuffer = deviceDataObject.totalizerReverse;
+
+  if ( //deviceDataShadowObject.totalizerCommon != totalizerCommonCurrentBuffer || 
+      deviceDataShadowObject.totalizerDirect != totalizerDirectCurrentBuffer ||
+      deviceDataShadowObject.totalizerReverse != totalizerReverseCurrentBuffer) {
+
+    if (!deviceDataObjectIsBusy) {
+      deviceDataObjectIsBusy = true;
+
+      noInterrupts();
+      // deviceDataObject.totalizerCommon  = deviceDataShadowObject.totalizerCommon;
+      if (deviceDataShadowObject.totalizerDirect == 0) deviceDataObject.totalizerDirect  = deviceDataShadowObject.totalizerDirect;
+      if (deviceDataShadowObject.totalizerReverse == 0) deviceDataObject.totalizerReverse = deviceDataShadowObject.totalizerReverse;
+      interrupts();
+
+      if (UIDisplaySectionListObject == sectionDefault) UIDisplayNeedClear = true;
+      deviceDataShadowObject.resetRequestExternal = true;
+    }
   }
+  
+  modbusHandlerResponse();
 }

@@ -26,10 +26,20 @@ struct deviceDataChar {
 };
 extern deviceDataChar deviceDataCharObject;
 
+struct deviceDataShadow {
+  // unsigned long totalizerCommon;
+  unsigned long totalizerDirect;
+  unsigned long totalizerReverse;
+  bool resetRequestExternal;
+};
+extern deviceDataShadow deviceDataShadowObject;
+
+extern volatile bool deviceDataObjectIsBusy;
+extern const unsigned long watchdogTimeout;
+extern volatile unsigned long watchdogTimeSignalRefresh;
+
 extern volatile uint32_t autSvdTim;
 extern unsigned long intervalSD;
-// extern const char* dataFilenameSave;
-// extern const char* dataFilenameSaveTemp;
 
 void IODataSDFileWrite(const unsigned long &value, const unsigned int offset);
 void IODataSDFileRead(unsigned long &value, const unsigned int offset);
@@ -50,5 +60,6 @@ char* deviceConfigurationModbusBaudrateGet();
 char* deviceConfigurationModbusSlaveAddressGet();
 void IODataSDInitialize();
 void IODataSDFileWritePeriodically();
+void IODataWatchdogHandler();
 
 #endif

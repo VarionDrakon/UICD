@@ -2,11 +2,15 @@
 
 deviceData deviceDataObject;
 deviceDataChar deviceDataCharObject;
+deviceDataShadow deviceDataShadowObject;
 
-volatile uint32_t autSvdTim = 0;                        //Timer for autosave settings.
-unsigned long intervalSD = 3000;                        // Timer for write data SD.
-// const char* dataFilenameSave = "save.dat";              // File name for data saving/write.
-// const char* dataFilenameSaveTemp = "save.dat.temp";     // File name for data saving/write.
+volatile bool deviceDataObjectIsBusy = true;
+
+volatile uint32_t autSvdTim = 0;  //Timer for autosave settings.
+unsigned long intervalSD = 1000;  // Timer for write data SD.
+
+const unsigned long watchdogTimeout = 5000;
+volatile unsigned long watchdogTimeSignalRefresh = 0;
 
 void IODataSDFileWrite(const unsigned long &value, const unsigned int offset) {
     Wire.beginTransmission(0x50);
@@ -65,27 +69,41 @@ char* totalizerReverseReturn() {
 }
 
 void totalizerCommonValueAdd() {
+  if (!deviceDataObjectIsBusy) deviceDataObjectIsBusy = true;
   deviceDataObject.totalizerCommon++;
+  watchdogTimeSignalRefresh = millis();
 }
 
 void totalizerCommonValueReset() {
-  deviceDataObject.totalizerCommon = 0;
+  // if (!deviceDataObjectIsBusy) {
+  //   deviceDataObject.totalizerCommon = 0;
+  // }
 }
 
 void totalizerDirectValueAdd() {
+  if (!deviceDataObjectIsBusy) deviceDataObjectIsBusy = true;
   deviceDataObject.totalizerDirect++;
+  watchdogTimeSignalRefresh = millis();
 }
 
 void totalizerDirectValueReset() {
-  deviceDataObject.totalizerDirect = 0;
+  if (!deviceDataObjectIsBusy) {
+    deviceDataShadowObject.resetRequestExternal = false;
+    deviceDataShadowObject.totalizerDirect = 0;
+  }
 }
 
 void totalizerReverseValueAdd() {
+  if (!deviceDataObjectIsBusy) deviceDataObjectIsBusy = true;
   deviceDataObject.totalizerReverse++;
+  watchdogTimeSignalRefresh = millis();
 }
 
 void totalizerReverseValueReset() {
-  deviceDataObject.totalizerReverse = 0;
+  if (!deviceDataObjectIsBusy) {
+    deviceDataShadowObject.resetRequestExternal = false;
+    deviceDataShadowObject.totalizerReverse = 0;
+  }
 }
 
 void deviceConfigurationModbusBaudrateSet(unsigned long value) {
@@ -125,6 +143,8 @@ void IODataSDInitialize() {
   IODataSDFileRead(deviceDataObject.totalizerReverse,8);
   IODataSDFileRead(deviceDataObject.modbusBaudrate, 12);
   IODataSDFileRead(deviceDataObject.modbusSlaveAddress, 16);
+
+  deviceDataShadowObject.resetRequestExternal = true;
 }
 
 /*
@@ -140,8 +160,8 @@ void IODataSDInitialize() {
 void IODataSDFileWritePeriodically() {
   unsigned long currentMillisSaved = millis();
   if (currentMillisSaved - autSvdTim >= intervalSD) {
-    MCPDisplayCursorSet(19, 0);
-    MCPDisplayPrint("S");
+    // MCPDisplayCursorSet(19, 0);
+    // MCPDisplayPrint("S");
 
     IODataSDFileWrite(deviceDataObject.totalizerCommon, 0);
     IODataSDFileWrite(deviceDataObject.totalizerDirect, 4);
@@ -149,8 +169,14 @@ void IODataSDFileWritePeriodically() {
     IODataSDFileWrite(deviceDataObject.modbusBaudrate, 12);
     IODataSDFileWrite(deviceDataObject.modbusSlaveAddress, 16);
 
-    MCPDisplayCursorSet(19, 0);
-    MCPDisplayPrint(" ");
+    // MCPDisplayCursorSet(19, 0);
+    // MCPDisplayPrint(" ");
     autSvdTim = currentMillisSaved;
+  }
+}
+
+void IODataWatchdogHandler() {
+  if (millis() - watchdogTimeSignalRefresh >= watchdogTimeout) {
+    deviceDataObjectIsBusy = false;
   }
 }

@@ -5,9 +5,6 @@ Adafruit_MCP23008 mcp;
 
 void setup() {
 
-  // deviceConfigurationModbusBaudrateSet(9600);
-  // deviceConfigurationModbusSlaveAddressSet(10);
-
   MCPDisplayInitialize(0x26, 20, 4);
 
   IODataSDInitialize();
@@ -21,19 +18,24 @@ void setup() {
 }
 
 void loop() {
+  // if (deviceDataObjectIsBusy) {
+  //   MCPDisplayCursorSet(18, 0);
+  //   MCPDisplayPrint("B");
+  // }
+  // else {
+  //   MCPDisplayCursorSet(18, 0);
+  //   MCPDisplayPrint("F");
+  // }
+  
+  IODataWatchdogHandler();
+
+  modbusUpdater();
+
   modbusHandlerListener();
-
-  modbusSettingsUpdater();
-
-  modbusHandlerResponse();
   
   IODataSDFileWritePeriodically();
 
   UIButtonsHandler();
 
   UIDisplayHandler();
-
-  // deviceDataObject.modbusSlaveAddress = au16data[0];
-  // deviceDataObject.modbusBaudrate = au16data[1];
-  // deviceDataObject.modbusBaudrate = (deviceDataObject.modbusBaudrate << 16) | au16data[2];
 }

@@ -270,12 +270,9 @@ Loop through all MCP23008 pins from 0 to 7:
  - mcp.digitalWrite(MCP_RS, LOW); - Sets the RS pin to LOW, indicating that the next command will be a command, not data.
 */
 void MCPDisplayInitialize(byte address, byte column, byte row) {
-
   mcp.begin(address);
 
   MCPDisplayCommandSend(0x01);  // Clear the display (the longest command).
-
-  // delay(10);  // Strict adherence to timing diagrams from the datasheet.
 
   // Initialize every pins:
   for (int i = 0; i < 8; i++) {
@@ -287,37 +284,27 @@ void MCPDisplayInitialize(byte address, byte column, byte row) {
   mcp.digitalWrite(MCP_RS, LOW);
 
   MCPDisplayWriteBits(0x03);  // Send the most significant 4 bits of the command 0x30. This is a blinking display to wake it up and understand that we want to work in 8-bit mode.
-  // delay(15);                  // Strict adherence to timing diagrams from the datasheet.
   MCPDisplayWriteBits(0x03);
-  // delay(15);
   MCPDisplayWriteBits(0x03);
-  // delay(15);                  // Strict adherence to timing diagrams from the datasheet.
   MCPDisplayWriteBits(0x02);     // Here switch the screen to 4-bit mode and send the data in two portions of 4 bits.
-  // delay(15);                  // Strict adherence to timing diagrams from the datasheet.
 
   MCPDisplayCommandSend(0x28);  // 4-bit mode, 2 lines, 5x8 font.
-  // delay(5);                     // Strict adherence to timing diagrams from the datasheet.
   MCPDisplayCommandSend(0x0C);  // Turn on the display, turn off the cursor.
-  // delay(5);
   MCPDisplayCommandSend(0x01);
-  // delay(10);
   MCPDisplayCommandSend(0x06);  // Input mode: cursor moves to the right.
-  // delay(5);
 
   MCPDisplayLoadCustomChars();
 
   MCPDisplayCommandSend(0x01);
-  // delay(10);
   
   MCPDisplayCursorSet(2, 1);
   MCPDisplayPrintUTF("UICD BKЛЮЧAETCЯ...");
-  // MCPDisplayPrint("UICD loading...");
+
   delay(500);
 
   delay(1000);  // Waiting for the screen LEDs to warm up.
 
   MCPDisplayCommandSend(0x01);
-  // delay(10);
 }
 
 /*
@@ -338,22 +325,14 @@ void MCPDisplayWriteBits(byte value) {
   mcp.digitalWrite(MCP_D7, (value >> 3) & 0x01);
 
   mcp.digitalWrite(MCP_EN, LOW);
-  // delayMicroseconds(10);
   mcp.digitalWrite(MCP_EN, HIGH);
-  // delayMicroseconds(10);
   mcp.digitalWrite(MCP_EN, LOW);
-  // delayMicroseconds(100);
 }
 
 void MCPDisplayCommandSend(byte cmd) {
-  // modbusHandlerListener();
-
   mcp.digitalWrite(MCP_RS, LOW);    // We tell the display that we are sending a command.
   MCPDisplayWriteBits(cmd >> 4);    // Send the high-order 4 bits of the command.
   MCPDisplayWriteBits(cmd & 0x0F);  // Send the low-order 4 bits of the command.
-  // delay(2);                         // Wait until the display executes the command.
-
-  // modbusHandlerListener();
 }
 
 void MCPDisplayDataSend(byte data) {
@@ -362,9 +341,6 @@ void MCPDisplayDataSend(byte data) {
   mcp.digitalWrite(MCP_RS, HIGH);    // We tell the display that we are sending a data.
   MCPDisplayWriteBits(data >> 4);    // Send the high-order 4 bits of the command.
   MCPDisplayWriteBits(data & 0x0F);  // Send the low-order 4 bits of the command.
-  // delayMicroseconds(100);            // Wait until the display executes the command.
-
-  // modbusHandlerListener();
 }
 
 /*
@@ -382,10 +358,6 @@ The cursor position command always starts with 0x80:
   0x80 | (column + rowAddr[row]) - We take the base address of the row, add the offset (column), and combine it with the 0x80 command using the bitwise OR (|).
 */
 void MCPDisplayCursorSet(byte column, byte row) {
-  // modbusHandlerListener();
-
   byte rowAddr[] = { 0x00, 0x40, 0x14, 0x54 };
   MCPDisplayCommandSend(0x80 | (column + rowAddr[row]));
-
-  // modbusHandlerListener();
 }

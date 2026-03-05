@@ -56,6 +56,9 @@ void UIDisplayClear() {
 }
 
 void UIDisplayToVoidAndBack() {
+    if (UIDisplayNeedClear == true) {
+        UIDisplayClear();
+
         MCPDisplayCursorSet(0, 0);
         MCPDisplayPrintUTF("*  .   .`.    * .  ,");
 
@@ -67,6 +70,9 @@ void UIDisplayToVoidAndBack() {
 
         MCPDisplayCursorSet(0, 3);
         MCPDisplayPrintUTF(". *   .  .  `*   . *");
+        
+        UIDisplayNeedClear = false;
+    }
 }
 
 void UIDisplayDefault() {
@@ -481,10 +487,14 @@ void UIButtonsHandler() {
                 modbusBaudrateListIndex++;
                 if (modbusBaudrateListIndex > modbusBaudrateListIndexLimit) modbusBaudrateListIndex = 0;
                 deviceDataObject.modbusBaudrate = modbusBaudrateList[modbusBaudrateListIndex];
+
+                modbusSettingsNeedRestart = true;
                 modbusHandlerReloader();
             }
             else if (UIDisplayMenuItemsObject.settingsIndexSelection == 1) {
                 modbusSlaveAddressAdd();
+
+                modbusSettingsNeedRestart = true;
                 modbusHandlerReloader();
             }
             UIDisplayNeedClear = true;
@@ -495,10 +505,14 @@ void UIButtonsHandler() {
                 modbusBaudrateListIndex--;
                 if (modbusBaudrateListIndex < 0) modbusBaudrateListIndex = modbusBaudrateListIndexLimit;
                 deviceDataObject.modbusBaudrate = modbusBaudrateList[modbusBaudrateListIndex];
+                
+                modbusSettingsNeedRestart = true;
                 modbusHandlerReloader();
             }
             else if (UIDisplayMenuItemsObject.settingsIndexSelection == 1) {
                 modbusSlaveAddressReduce();
+
+                modbusSettingsNeedRestart = true;
                 modbusHandlerReloader();
             }
             UIDisplayNeedClear = true;

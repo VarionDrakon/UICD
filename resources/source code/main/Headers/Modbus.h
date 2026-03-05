@@ -9,6 +9,7 @@ extern int modbusBaudrateListIndex;
 extern const int modbusBaudrateListIndexLimit;
 extern uint32_t modbusBaudrateList[];
 extern bool modbusBaudrateValueFound;
+extern bool modbusSettingsNeedRestart;
 
 extern byte modbusSlaveAddressValueCurrent;
 extern uint32_t modbusBaudrateValueCurrent;
@@ -21,8 +22,8 @@ void modbusHandlerListener();
 
 void modbusHandlerResponse();
 
-void modbusSettingsUpdater();
+void modbusUpdaterRequest();
 
-void modbusSettingsUpdater();
+void modbusUpdater();
 
 #endif
