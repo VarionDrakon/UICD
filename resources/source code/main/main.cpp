@@ -17,16 +17,7 @@ void setup() {
 
 }
 
-void loop() {
-  // if (deviceDataObjectIsBusy) {
-  //   MCPDisplayCursorSet(18, 0);
-  //   MCPDisplayPrint("B");
-  // }
-  // else {
-  //   MCPDisplayCursorSet(18, 0);
-  //   MCPDisplayPrint("F");
-  // }
-  
+void loop() {  
   IODataWatchdogHandler();
 
   modbusUpdater();

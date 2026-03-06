@@ -2,6 +2,6 @@
 #define FIRMWAREDATA_H
 
 const char* serialNumber = "SN: 0000001";
-const char* firmwareVersion = "FW: v0.9";
+const char* firmwareVersion = "FW: v1.0";
 
 #endif
