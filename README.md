@@ -44,10 +44,23 @@
 This is the main project, if you need a project with a configurator and a ModBus implementation in QT, then you need to go here: [UICD.Configurator](https://github.com/VarionDrakon/UICD.Configurator)
 
 Here's what:
-* The ability to exchange `Holding Registers` via the ModBus protocol with the configurator.
-* Ready-made simple configurator for `UICD` (Recommended for use).
-* The source code and circuit board for `EasyEDA-Pro` (However, the source code is only for Arduino, the configurator is [here](https://github.com/VarionDrakon/UICD.Configurator))
-* Also, if you have poor visibility or like a light/dark theme, you can change it.
+
+Device:
+* Data exchange via the ModBus protocol.
+* Source code and board for EasyEDA-Pro.
+* High sensor counting speed achieved through the use of hardware interrupts and a clean input signal.
+* Dynamic baud rate and Modbus address adjustment.
+* Task queue and device busy mode (idle or operating).
+* Data storage on an I2C flash drive.
+* 20x4 display via I2C.
+* 24V input power and noise filtering.
+
+Configurator:
+* Ready-to-use, simple configurator for UICD.
+* Light/dark theme selection.
+* Windows and Linux (QT) support.
+* Portable operation.
+* Cyclic device polling capability.
 
 <br>
 You can also see a preliminary 2D view of the board:
