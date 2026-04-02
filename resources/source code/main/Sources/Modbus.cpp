@@ -12,8 +12,8 @@ Element (9):
 uint16_t au16data[length] = { 0, 0, 0, 0, 0, 0, 0, 0, 0 };  //Element [X] - Reserve for future
 
 int modbusBaudrateListIndex = 3;
-const int modbusBaudrateListIndexLimit = 8;
-uint32_t modbusBaudrateList[modbusBaudrateListIndexLimit] = { 1200, 2400, 4800, 9600, 19200, 38400, 57600, 115200 };
+const int modbusBaudrateListIndexLimit = 9;
+uint32_t modbusBaudrateList[modbusBaudrateListIndexLimit] = { 0, 1200, 2400, 4800, 9600, 19200, 38400, 57600, 115200 };
 bool modbusBaudrateValueFound = false;
 bool modbusSettingsNeedRestart = true;
 

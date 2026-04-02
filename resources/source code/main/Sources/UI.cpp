@@ -485,7 +485,9 @@ void UIButtonsHandler() {
             
             if (UIDisplayMenuItemsObject.settingsIndexSelection == 0) {
                 modbusBaudrateListIndex++;
-                if (modbusBaudrateListIndex > modbusBaudrateListIndexLimit) modbusBaudrateListIndex = 0;
+
+                if (modbusBaudrateListIndex >= modbusBaudrateListIndexLimit) modbusBaudrateListIndex = 0;
+
                 deviceDataObject.modbusBaudrate = modbusBaudrateList[modbusBaudrateListIndex];
 
                 modbusSettingsNeedRestart = true;
@@ -503,7 +505,9 @@ void UIButtonsHandler() {
             UIDisplayDelay();
             if (UIDisplayMenuItemsObject.settingsIndexSelection == 0) {
                 modbusBaudrateListIndex--;
-                if (modbusBaudrateListIndex < 0) modbusBaudrateListIndex = modbusBaudrateListIndexLimit;
+                
+                if (modbusBaudrateListIndex < 0) modbusBaudrateListIndex = modbusBaudrateListIndexLimit - 1;
+
                 deviceDataObject.modbusBaudrate = modbusBaudrateList[modbusBaudrateListIndex];
                 
                 modbusSettingsNeedRestart = true;

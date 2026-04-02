@@ -115,15 +115,11 @@ void deviceConfigurationModbusSlaveAddressSet(byte value) {
 }
 
 void modbusSlaveAddressAdd() {
-  if (deviceDataObject.modbusSlaveAddress < 247) {
-    deviceDataObject.modbusSlaveAddress++;
-  }
+    deviceDataObject.modbusSlaveAddress = (deviceDataObject.modbusSlaveAddress >= 247) ? 0 : deviceDataObject.modbusSlaveAddress + 1;
 }
 
 void modbusSlaveAddressReduce() {
-  if (deviceDataObject.modbusSlaveAddress > 1) {
-    deviceDataObject.modbusSlaveAddress--;
-  }
+    deviceDataObject.modbusSlaveAddress = (deviceDataObject.modbusSlaveAddress == 0) ? 247 : deviceDataObject.modbusSlaveAddress - 1;
 }
 
 char* deviceConfigurationModbusBaudrateGet() {

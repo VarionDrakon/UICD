@@ -22,6 +22,7 @@ struct menuItems;
 extern bool buttonStatus[5];
 extern bool UIDisplayNeedClear;
 extern bool UIDisplayNeedRefresh;
+
 void UIButtonsInitialize();
 
 void UIDisplayInitialize();

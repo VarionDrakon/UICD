@@ -19,7 +19,11 @@ void sensorsInitialize() {
 }
 
 void counterSensorFirst() {
-  if (passageState == STATE_IDLE) { 
+  if (passageState == STATE_S1_FIRST) {
+    passageState = STATE_IDLE;
+    return;
+  }
+  if (passageState == STATE_IDLE) {
     if (digitalRead(SENSOR_SECOND_PINOUT) == HIGH) {
       passageState = STATE_S1_FIRST;
     }
@@ -27,13 +31,17 @@ void counterSensorFirst() {
   }
   else if (passageState == STATE_S2_FIRST) {
     if (digitalRead(SENSOR_SECOND_PINOUT) == LOW) {
-          passageState = STATE_COUNTED;
-          counterSensorHandleBackward();
+        passageState = STATE_COUNTED;
+        counterSensorHandleBackward();
     }
   }
 }
 
-void counterSensorSecondary() {  
+void counterSensorSecondary() {
+  if (passageState == STATE_S2_FIRST) {
+    passageState = STATE_IDLE;
+    return;
+  }
   if (passageState == STATE_IDLE) {
     if (digitalRead(SENSOR_FIRST_PINOUT) == HIGH) {
       passageState = STATE_S2_FIRST;
