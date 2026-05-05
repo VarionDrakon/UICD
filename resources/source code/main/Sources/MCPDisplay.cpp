@@ -3,26 +3,26 @@
 extern Adafruit_MCP23008 mcp;
 
 char* dictionaryWords[] = {
-"> ",
-"Baudrate",
-"Address",
-"UICD",
-"BKЛЮЧAETCЯ",
-"CBЯ3b",
-"TOTAЛAИ3EPbI",
-"ИHФO",
-"HA3AД",
-"MEHЮ:",
-"CБPOCИTb",
-"OTKA3",
-"ДA",
-"HET",
-"Modbus",
-"CБPOC: B",
-"CБPOC: H",
-"?",
-"B",
-"H"
+"> ",                   // 0
+"Baudrate",             // 1
+"Address",              // 2
+"UICD",                 // 3 The first line of the loading screen.
+"BKЛЮЧAETCЯ",           // 4 The second line of the loading screen.
+"CBЯ3b",                // 5
+"TOTAЛAИ3EPbI",         // 6
+"ИHФO",                 // 7
+"HA3AД",                // 8
+"MEHЮ:",                // 9
+"CБPOCИTb",             // 10
+"OTKA3",                // 11
+"ДA",                   // 12
+"HET",                  // 13
+"Modbus",               // 14
+"CБPOC: B",             // 15
+"CБPOC: H",             // 16
+"?",                    // 17
+"B",                    // 18
+"H"                     // 19
 };
 
 /*
@@ -298,7 +298,10 @@ void MCPDisplayInitialize(byte address, byte column, byte row) {
   MCPDisplayCommandSend(0x01);
   
   MCPDisplayCursorSet(2, 1);
-  MCPDisplayPrintUTF("UICD BKЛЮЧAETCЯ...");
+  MCPDisplayPrintUTF(dictionaryWords[3]);
+
+  MCPDisplayCursorSet(3, 1);
+  MCPDisplayPrintUTF(dictionaryWords[4]);
 
   delay(500);
 

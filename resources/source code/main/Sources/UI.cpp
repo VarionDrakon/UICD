@@ -301,7 +301,7 @@ void UIDisplayMenuTotalizersSelectedRequestReset() {
         UIDisplayClear();
 
         MCPDisplayCursorSet(1, 0);
-        MCPDisplayPrintUTF(dictionaryWords[11]);
+        MCPDisplayPrintUTF(dictionaryWords[9]);
         MCPDisplayCursorSet(7, 0);
         MCPDisplayPrintUTF(dictionaryWords[6]);
 
