@@ -300,7 +300,7 @@ void MCPDisplayInitialize(byte address, byte column, byte row) {
   MCPDisplayCursorSet(2, 1);
   MCPDisplayPrintUTF(dictionaryWords[3]);
 
-  MCPDisplayCursorSet(3, 1);
+  MCPDisplayCursorSet(2, 2);
   MCPDisplayPrintUTF(dictionaryWords[4]);
 
   delay(500);
