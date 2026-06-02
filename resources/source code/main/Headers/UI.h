@@ -14,6 +14,7 @@ enum UIDisplaySectionList {
     sectionMenuTotalizers,
     sectionMenuTotalizersSelectedRequestReset,
     sectionMenuInformations,
+    sectionMenuCountMode,
     sectionVoid
 };
 extern UIDisplaySectionList UIDisplaySectionListObject;
@@ -26,6 +27,8 @@ extern bool UIDisplayNeedRefresh;
 void UIButtonsInitialize();
 
 void UIDisplayInitialize();
+
+void UIDisplayMenuScrollable(const char** items, int count, const char* title = nullptr);
 
 void UIButtonsHandler();
 
@@ -42,6 +45,8 @@ void UIDisplayMenuTotalizersSelectedRequestReset();
 void UIDisplayMenuTotalizersSelectedReset();
 
 void UIDisplayMenuInformation();
+
+void UIDisplayMenuCountMode();
 
 void UIDisplayMenuIndex(int menuIndexLimit, bool action = false);
 

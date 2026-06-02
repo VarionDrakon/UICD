@@ -26,6 +26,7 @@ struct UIDisplayMenuItems {
     int settingsIndexSelection = 0;
     int settingsIndexLimit = 0;
     int settingsIndexTotalizersSelected = 0;
+    int scrollOffset = 0;
 };
 UIDisplayMenuItems UIDisplayMenuItemsObject;
 
@@ -53,6 +54,48 @@ void UIDisplayInitialize() {
 
 void UIDisplayClear() {
     MCPDisplayCommandSend(0x01);
+}
+// Thank`s You for help me - claude.ai... But i hate ai :^
+void UIDisplayMenuScrollable(const char** items, int count, const char* title = nullptr) {
+    int visibleRows = (title != nullptr) ? 3 : 4;
+    int startRow    = (title != nullptr) ? 1 : 0;
+
+    if (UIDisplayMenuItemsObject.settingsIndexSelection < UIDisplayMenuItemsObject.scrollOffset)
+        UIDisplayMenuItemsObject.scrollOffset = UIDisplayMenuItemsObject.settingsIndexSelection;
+    if (UIDisplayMenuItemsObject.settingsIndexSelection >= UIDisplayMenuItemsObject.scrollOffset + visibleRows)
+        UIDisplayMenuItemsObject.scrollOffset = UIDisplayMenuItemsObject.settingsIndexSelection - visibleRows + 1;
+
+    if (UIDisplayNeedClear) {
+        UIDisplayClear();
+        if (title != nullptr) {
+            MCPDisplayCursorSet(0, 0);
+            MCPDisplayPrintUTF(title);
+        }
+        UIDisplayNeedClear = false;
+    }
+
+    for (int i = 0; i < visibleRows; i++) {
+        int realIndex = UIDisplayMenuItemsObject.scrollOffset + i;
+        int screenRow = startRow + i;
+
+        MCPDisplayCursorSet(0, screenRow);
+        if (realIndex < count) {
+            bool selected = (realIndex == UIDisplayMenuItemsObject.settingsIndexSelection);
+            MCPDisplayPrintUTF(selected ? dictionaryWords[0] : " ");
+            MCPDisplayCursorSet(2, screenRow);
+            MCPDisplayPrintUTF(items[realIndex]);
+        } else {
+            MCPDisplayPrintUTF("                    ");
+        }
+    }
+    if (UIDisplayMenuItemsObject.scrollOffset > 0) {
+        MCPDisplayCursorSet(19, startRow);
+        MCPDisplayPrintUTF("^");
+    }
+    if (UIDisplayMenuItemsObject.scrollOffset + visibleRows < count) {
+        MCPDisplayCursorSet(19, startRow + visibleRows - 1);
+        MCPDisplayPrintUTF("v");
+    }
 }
 
 void UIDisplayToVoidAndBack() {
@@ -120,51 +163,17 @@ void UIDisplayDefault() {
 };
 
 void UIDisplayMenuMain() {
-    if (UIDisplayNeedClear == true) {
-        UIDisplayClear();
-        MCPDisplayCursorSet(0, 0);
-        MCPDisplayPrintUTF(dictionaryWords[5]);
+    const char* items[] = {
+        dictionaryWords[5], 
+        dictionaryWords[6],
+        dictionaryWords[7],
+        dictionaryWords[20],
+        dictionaryWords[8],
+    };
+    int count = 5;
 
-        MCPDisplayCursorSet(0, 1);
-        MCPDisplayPrintUTF(dictionaryWords[6]);
-
-        MCPDisplayCursorSet(0, 2);
-        MCPDisplayPrintUTF(dictionaryWords[7]);
-
-        MCPDisplayCursorSet(0, 3);
-        MCPDisplayPrintUTF(dictionaryWords[8]);
-        
-        UIDisplayNeedClear = false;
-    }
-
-    UIDisplayMenuItemsObject.settingsIndexLimit = 3;
-
-    switch (UIDisplayMenuItemsObject.settingsIndexSelection) {
-    case 0:
-        MCPDisplayCursorSet(0, 0);
-        MCPDisplayPrintUTF(dictionaryWords[0]);
-        MCPDisplayCursorSet(2, 0);
-        MCPDisplayPrintUTF(dictionaryWords[5]);
-        break;
-    case 1:
-        MCPDisplayCursorSet(0, 1);
-        MCPDisplayPrintUTF(dictionaryWords[0]);
-        MCPDisplayCursorSet(2, 1);
-        MCPDisplayPrintUTF(dictionaryWords[6]);
-        break;
-    case 2:
-        MCPDisplayCursorSet(0, 2);
-        MCPDisplayPrintUTF(dictionaryWords[0]);
-        MCPDisplayCursorSet(2, 2);
-        MCPDisplayPrintUTF(dictionaryWords[7]);
-        break;
-    case 3:
-        MCPDisplayCursorSet(0, 3);
-        MCPDisplayPrintUTF(dictionaryWords[0]);
-        MCPDisplayCursorSet(2, 3);
-        MCPDisplayPrintUTF(dictionaryWords[8]);
-        break;
-    }
+    UIDisplayMenuItemsObject.settingsIndexLimit = count - 1;
+    UIDisplayMenuScrollable(items, count);
 };
 
 void UIDisplayMenuConnection() {
@@ -285,6 +294,7 @@ void UIDisplayMenuInformation() {
     }
     
     UIDisplayMenuItemsObject.settingsIndexSelection = 0;
+    UIDisplayMenuItemsObject.scrollOffset = 0;
 
     switch (UIDisplayMenuItemsObject.settingsIndexSelection) {
     case 0:
@@ -295,6 +305,68 @@ void UIDisplayMenuInformation() {
         break;
     }
 }
+
+void UIDisplayMenuCountMode() {
+    if (UIDisplayNeedClear == true) {
+        UIDisplayClear();
+ 
+        MCPDisplayCursorSet(1, 0);
+        MCPDisplayPrintUTF(dictionaryWords[9]);
+        MCPDisplayCursorSet(7, 0);
+        MCPDisplayPrintUTF(dictionaryWords[20]);
+ 
+        MCPDisplayCursorSet(0, 3);
+        MCPDisplayPrintUTF("  ");
+        MCPDisplayCursorSet(2, 3);
+        MCPDisplayPrintUTF(dictionaryWords[8]);
+ 
+        UIDisplayNeedClear = false;
+    }
+ 
+    if (counterMode == COUNTER_MODE_AUTO) {
+        UIDisplayMenuItemsObject.settingsIndexLimit = 1;
+    } else {
+        UIDisplayMenuItemsObject.settingsIndexLimit = 2;
+    }
+
+    {
+        bool sel = (UIDisplayMenuItemsObject.settingsIndexSelection == 0);
+        MCPDisplayCursorSet(0, 1);
+        MCPDisplayPrintUTF(sel ? dictionaryWords[0] : "  ");
+        MCPDisplayCursorSet(2, 1);
+        if (counterMode == COUNTER_MODE_AUTO) {
+            MCPDisplayPrintUTF(dictionaryWords[21]);
+        } else {
+            MCPDisplayPrintUTF(dictionaryWords[22]);
+            MCPDisplayPrintUTF("       ");
+        }
+    }
+
+    MCPDisplayCursorSet(0, 2);
+    if (counterMode == COUNTER_MODE_MANUAL) {
+        bool sel = (UIDisplayMenuItemsObject.settingsIndexSelection == 1);
+        MCPDisplayPrintUTF(sel ? dictionaryWords[0] : "  ");
+        MCPDisplayCursorSet(2, 2);
+        if (counterManualDirection == COUNTER_DIR_FORWARD) {
+            MCPDisplayPrintUTF(dictionaryWords[18]);
+        } else {
+            MCPDisplayPrintUTF(dictionaryWords[19]);
+        }
+        MCPDisplayPrintUTF("                    ");
+    } else {
+        MCPDisplayPrintUTF("                    ");
+    }
+ 
+    {
+        int backIndex = (counterMode == COUNTER_MODE_AUTO) ? 1 : 2;
+        bool sel = (UIDisplayMenuItemsObject.settingsIndexSelection == backIndex);
+        MCPDisplayCursorSet(0, 3);
+        MCPDisplayPrintUTF(sel ? dictionaryWords[0] : "  ");
+        MCPDisplayCursorSet(2, 3);
+        MCPDisplayPrintUTF(dictionaryWords[8]);
+    }
+}
+
 
 void UIDisplayMenuTotalizersSelectedRequestReset() {
     if (UIDisplayNeedClear == true) {
@@ -386,6 +458,9 @@ void UIDisplayHandler() {
     case sectionMenuInformations:
         UIDisplayMenuInformation();
         break;
+    case sectionMenuCountMode:
+        UIDisplayMenuCountMode();
+        break;
     case sectionVoid:
         UIDisplayToVoidAndBack();
         break;
@@ -433,6 +508,7 @@ void UIButtonsHandler() {
             }
             else {
                 UIDisplayMenuItemsObject.settingsIndexSelection = 0;
+                UIDisplayMenuItemsObject.scrollOffset = 0;
             }
             UIDisplayNeedClear = true;
         }
@@ -450,10 +526,14 @@ void UIButtonsHandler() {
                 UIDisplaySectionListObject = sectionMenuInformations;
                 break;
             case 3:
+                UIDisplaySectionListObject = sectionMenuCountMode;
+                break;
+            case 4:
                 UIDisplaySectionListObject = sectionDefault;
                 break;
             }
             UIDisplayMenuItemsObject.settingsIndexSelection = 0;
+            UIDisplayMenuItemsObject.scrollOffset = 0;
             UIDisplayNeedClear = true;
         }
         break;
@@ -477,6 +557,7 @@ void UIButtonsHandler() {
             }
             else {
                 UIDisplayMenuItemsObject.settingsIndexSelection = 0;
+                UIDisplayMenuItemsObject.scrollOffset = 0;
             }
             UIDisplayNeedClear = true;
         }
@@ -533,6 +614,7 @@ void UIButtonsHandler() {
                 break;
             }
             UIDisplayMenuItemsObject.settingsIndexSelection = 0;
+            UIDisplayMenuItemsObject.scrollOffset = 0;
             UIDisplayNeedClear = true;
         }
         break;
@@ -556,6 +638,7 @@ void UIButtonsHandler() {
             }
             else {
                 UIDisplayMenuItemsObject.settingsIndexSelection = 0;
+                UIDisplayMenuItemsObject.scrollOffset = 0;
             }
             UIDisplayNeedClear = true;
         }
@@ -576,6 +659,7 @@ void UIButtonsHandler() {
                 break;
             }
             UIDisplayMenuItemsObject.settingsIndexSelection = 0;
+            UIDisplayMenuItemsObject.scrollOffset = 0;
             UIDisplayNeedClear = true;
         }
         break;
@@ -599,6 +683,7 @@ void UIButtonsHandler() {
             }
             else {
                 UIDisplayMenuItemsObject.settingsIndexSelection = 0;
+                UIDisplayMenuItemsObject.scrollOffset = 0;
             }
             UIDisplayNeedClear = true;
         }
@@ -614,6 +699,7 @@ void UIButtonsHandler() {
                 break;
             }
             UIDisplayMenuItemsObject.settingsIndexSelection = 0;
+            UIDisplayMenuItemsObject.scrollOffset = 0;
             UIDisplayMenuItemsObject.settingsIndexTotalizersSelected = 0; // Reset selected totalizer!
             UIDisplayNeedClear = true;
         }
@@ -638,6 +724,7 @@ void UIButtonsHandler() {
             }
             else {
                 UIDisplayMenuItemsObject.settingsIndexSelection = 0;
+                UIDisplayMenuItemsObject.scrollOffset = 0;
             }
             UIDisplayNeedClear = true;
         }
@@ -650,9 +737,58 @@ void UIButtonsHandler() {
                 break;
             }
             UIDisplayMenuItemsObject.settingsIndexSelection = 0;
+            UIDisplayMenuItemsObject.scrollOffset = 0;
             UIDisplayNeedClear = true;
         }
         break;
+    case sectionMenuCountMode:
+    if (buttonStatus[BUTTON_UP] == LOW) {
+        UIDisplayDelay();
+        if (UIDisplayMenuItemsObject.settingsIndexSelection > 0) {
+            UIDisplayMenuItemsObject.settingsIndexSelection--;
+        } else {
+            UIDisplayMenuItemsObject.settingsIndexSelection =
+                UIDisplayMenuItemsObject.settingsIndexLimit;
+        }
+        UIDisplayNeedClear = true;
+    }
+    if (buttonStatus[BUTTON_DOWN] == LOW) {
+        UIDisplayDelay();
+        if (UIDisplayMenuItemsObject.settingsIndexSelection <
+                UIDisplayMenuItemsObject.settingsIndexLimit) {
+            UIDisplayMenuItemsObject.settingsIndexSelection++;
+        } else {
+            UIDisplayMenuItemsObject.settingsIndexSelection = 0;
+        }
+        UIDisplayNeedClear = true;
+    }
+    if (buttonStatus[BUTTON_RIGHT] == LOW || buttonStatus[BUTTON_LEFT] == LOW) {
+        UIDisplayDelay();
+ 
+        if (UIDisplayMenuItemsObject.settingsIndexSelection == 0) {
+            counterMode = (counterMode == COUNTER_MODE_AUTO) ? COUNTER_MODE_MANUAL : COUNTER_MODE_AUTO;
+            counterModeApply();
+
+            if (counterMode == COUNTER_MODE_AUTO && UIDisplayMenuItemsObject.settingsIndexSelection > 1) {
+                UIDisplayMenuItemsObject.settingsIndexSelection = 1;
+            }
+        }
+        else if (UIDisplayMenuItemsObject.settingsIndexSelection == 1 && counterMode == COUNTER_MODE_MANUAL) {
+            counterManualDirection = (counterManualDirection == COUNTER_DIR_FORWARD) ? COUNTER_DIR_BACKWARD : COUNTER_DIR_FORWARD;
+        }
+        UIDisplayNeedClear = true;
+    }
+    if (buttonStatus[BUTTON_OK] == LOW) {
+        UIDisplayDelay();
+ 
+        int backIndex = (counterMode == COUNTER_MODE_AUTO) ? 1 : 2;
+        if (UIDisplayMenuItemsObject.settingsIndexSelection == backIndex) {
+            UIDisplaySectionListObject = sectionMenu;
+            UIDisplayMenuItemsObject.settingsIndexSelection = 0;
+            UIDisplayNeedClear = true;
+        }
+    }
+    break;
     case sectionVoid:
         if (buttonStatus[BUTTON_OK] == LOW) {
             UIDisplayDelay();

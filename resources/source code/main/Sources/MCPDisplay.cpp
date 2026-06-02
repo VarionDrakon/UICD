@@ -22,7 +22,10 @@ char* dictionaryWords[] = {
 "CБPOC: H",             // 16
 "?",                    // 17
 "B",                    // 18
-"H"                     // 19
+"H",                    // 19
+"BИД CЧETA",            // 20
+"ABTOMATИЧECKИ",        // 21
+"BPYЧHYЮ"               // 22
 };
 
 /*
